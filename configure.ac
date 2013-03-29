@@ -3228,7 +3228,7 @@ fi
 # for target_alias and gcc doesn't manage it consistently.
 target_configargs="--cache-file=./config.cache ${target_configargs}"
 
-FLAGS_FOR_TARGET=
+FLAGS_FOR_TARGET="$ARCH_FLAGS_FOR_TARGET"
 case " $target_configdirs " in
  *" newlib "*)
   case " $target_configargs " in
