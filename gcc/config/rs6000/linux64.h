@@ -419,24 +419,19 @@ extern int dot_symbols;
 #undef	LINK_OS_DEFAULT_SPEC
 #define LINK_OS_DEFAULT_SPEC "%(link_os_linux)"
 
-#define GLIBC_DYNAMIC_LINKER32 "%(dynamic_linker_prefix)/lib/ld.so.1"
-
+#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld.so.1"
 #ifdef LINUX64_DEFAULT_ABI_ELFv2
-#define GLIBC_DYNAMIC_LINKER64 \
-"%{mabi=elfv1:%(dynamic_linker_prefix)/lib64/ld64.so.1;" \
-":%(dynamic_linker_prefix)/lib64/ld64.so.2}"
+#define GLIBC_DYNAMIC_LINKER64 "%{mabi=elfv1:" SYSTEMLIBS_DIR "ld64.so.1;:" SYSTEMLIBS_DIR "ld64.so.2}"
 #else
-#define GLIBC_DYNAMIC_LINKER64 \
-"%{mabi=elfv2:%(dynamic_linker_prefix)/lib64/ld64.so.2;" \
-":%(dynamic_linker_prefix)/lib64/ld64.so.1}"
+#define GLIBC_DYNAMIC_LINKER64 "%{mabi=elfv2:" SYSTEMLIBS_DIR "ld64.so.2;:" SYSTEMLIBS_DIR "ld64.so.1}"
 #endif
 
 #undef MUSL_DYNAMIC_LINKER32
 #define MUSL_DYNAMIC_LINKER32 \
-  "/lib/ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
+  SYSTEMLIBS_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
 #undef MUSL_DYNAMIC_LINKER64
 #define MUSL_DYNAMIC_LINKER64 \
-  "/lib/ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
+  SYSTEMLIBS_DIR "ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
 
 #undef  DEFAULT_ASM_ENDIAN
 #if (TARGET_DEFAULT & MASK_LITTLE_ENDIAN)

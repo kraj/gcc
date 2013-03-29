@@ -94,10 +94,10 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    GLIBC_DYNAMIC_LINKER must be defined for each target using them, or
    GLIBC_DYNAMIC_LINKER32 and GLIBC_DYNAMIC_LINKER64 for targets
    supporting both 32-bit and 64-bit compilation.  */
-#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
-#define UCLIBC_DYNAMIC_LINKER32 "/lib/ld-uClibc.so.0"
-#define UCLIBC_DYNAMIC_LINKER64 "/lib/ld64-uClibc.so.0"
-#define UCLIBC_DYNAMIC_LINKERX32 "/lib/ldx32-uClibc.so.0"
+#define UCLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-uClibc.so.0"
+#define UCLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-uClibc.so.0"
+#define UCLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld64-uClibc.so.0"
+#define UCLIBC_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ldx32-uClibc.so.0"
 #define BIONIC_DYNAMIC_LINKER "/system/bin/linker"
 #define BIONIC_DYNAMIC_LINKER32 "/system/bin/linker"
 #define BIONIC_DYNAMIC_LINKER64 "/system/bin/linker64"
