@@ -401,7 +401,7 @@ namespace std
 # ifdef __UCLIBC_HAS_XLOCALE__
 	  _M_data->_M_decimal_point = __cloc->decimal_point_wc;
 	  _M_data->_M_thousands_sep = __cloc->thousands_sep_wc;
-# else
+# elif defined __UCLIBC_HAS_LOCALE__
 	  _M_data->_M_decimal_point = __global_locale->decimal_point_wc;
 	  _M_data->_M_thousands_sep = __global_locale->thousands_sep_wc;
 # endif
@@ -556,7 +556,7 @@ namespace std
 # ifdef __UCLIBC_HAS_XLOCALE__
 	  _M_data->_M_decimal_point = __cloc->decimal_point_wc;
 	  _M_data->_M_thousands_sep = __cloc->thousands_sep_wc;
-# else
+# elif defined __UCLIBC_HAS_LOCALE__
 	  _M_data->_M_decimal_point = __global_locale->decimal_point_wc;
 	  _M_data->_M_thousands_sep = __global_locale->thousands_sep_wc;
 # endif
