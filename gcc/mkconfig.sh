@@ -77,7 +77,7 @@ if [ -n "$HEADERS" ]; then
     if [ $# -ge 1 ]; then
 	echo '#ifdef IN_GCC' >> ${output}T
 	for file in "$@"; do
-	    if test x"$file" = x"defaults.h"; then
+	    if test x"$file" = x"./defaults.h" -o x"$file" = x"defaults.h"; then
 		postpone_defaults_h="yes"
 	    else
 		echo "# include \"$file\"" >> ${output}T
@@ -106,7 +106,7 @@ esac
 
 # If we postponed including defaults.h, add the #include now.
 if test x"$postpone_defaults_h" = x"yes"; then
-    echo "# include \"defaults.h\"" >> ${output}T
+    echo "# include \"./defaults.h\"" >> ${output}T
 fi
 
 # Add multiple inclusion protection guard, part two.
