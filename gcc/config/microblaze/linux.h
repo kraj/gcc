@@ -28,7 +28,7 @@
 #undef TLS_NEEDS_GOT
 #define TLS_NEEDS_GOT 1
 
-#define GLIBC_DYNAMIC_LINKER "/lib/ld.so.1"
+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "/ld.so.1"
 #define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
 
 #if TARGET_BIG_ENDIAN_DEFAULT == 0 /* LE */
@@ -38,7 +38,7 @@
 #endif
 
 #undef MUSL_DYNAMIC_LINKER
-#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-microblaze" MUSL_DYNAMIC_LINKER_E ".so.1"
+#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-musl-microblaze" MUSL_DYNAMIC_LINKER_E ".so.1"
 
 #undef  SUBTARGET_EXTRA_SPECS
 #define SUBTARGET_EXTRA_SPECS \
