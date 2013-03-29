@@ -21986,11 +21986,11 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-  if test $glibcxx_cv_sys_sdt_h = yes; then
+#  if test $glibcxx_cv_sys_sdt_h = yes; then
 
-$as_echo "#define HAVE_SYS_SDT_H 1" >>confdefs.h
+#$as_echo "#define HAVE_SYS_SDT_H 1" >>confdefs.h
 
-  fi
+#  fi
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_sys_sdt_h" >&5
 $as_echo "$glibcxx_cv_sys_sdt_h" >&6; }
 
