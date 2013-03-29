@@ -771,10 +771,10 @@ GNU_USER_TARGET_CC1_SPEC
 
 #define MUSL_DYNAMIC_LINKER_E ENDIAN_SELECT("","le","")
 
-#define GLIBC_DYNAMIC_LINKER "/lib/ld.so.1"
+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld.so.1"
 #undef MUSL_DYNAMIC_LINKER
 #define MUSL_DYNAMIC_LINKER \
-  "/lib/ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
+  SYSTEMLIBS_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
 
 #ifndef GNU_USER_DYNAMIC_LINKER
 #define GNU_USER_DYNAMIC_LINKER GLIBC_DYNAMIC_LINKER
