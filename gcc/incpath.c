@@ -393,7 +393,9 @@ merge_include_chains (const char *sysroot, cpp_reader *pfile, int verbose)
          {
           if ((!strncmp (p->name, "/usr/include", 12))
               || (!strncmp (p->name, "/usr/local/include", 18))
-              || (!strncmp (p->name, "/usr/X11R6/include", 18)))
+              || (!strncmp (p->name, "/usr/X11R6/include", 18))
+              || (!strncmp (p->name, "/sw/include", 11))
+              || (!strncmp (p->name, "/opt/include", 12)))
             warning (OPT_Wpoison_system_directories,
                      "include location \"%s\" is unsafe for "
                      "cross-compilation",
