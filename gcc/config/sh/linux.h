@@ -61,10 +61,10 @@ along with GCC; see the file COPYING3.  If not see
 
 #undef MUSL_DYNAMIC_LINKER
 #define MUSL_DYNAMIC_LINKER \
-  "/lib/ld-musl-sh" MUSL_DYNAMIC_LINKER_E MUSL_DYNAMIC_LINKER_FP \
+  SYSTEMLIBS_DIR "ld-musl-sh" MUSL_DYNAMIC_LINKER_E MUSL_DYNAMIC_LINKER_FP \
   "%{mfdpic:-fdpic}.so.1"
 
-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
 
 #undef SUBTARGET_LINK_EMUL_SUFFIX
 #define SUBTARGET_LINK_EMUL_SUFFIX "%{mfdpic:_fd;:_linux}"
