@@ -2282,29 +2282,29 @@ mips*-*-linux*)				# Linux MIPS, either endian.
 			default_mips_arch=mips32
 			;;
 		mips64el-st-linux-gnu)
-			default_mips_abi=n32
+			default_mips_abi=64
 			tm_file="${tm_file} mips/st.h"
 			tmake_file="${tmake_file} mips/t-st"
 			enable_mips_multilibs="yes"
 			;;
 		mips64octeon*-*-linux*)
-			default_mips_abi=n32
+			default_mips_abi=64
 			tm_defines="${tm_defines} MIPS_CPU_STRING_DEFAULT=\\\"octeon\\\""
 			target_cpu_default=MASK_SOFT_FLOAT_ABI
 			enable_mips_multilibs="yes"
 			;;
 		mipsisa64r6*-*-linux*)
-			default_mips_abi=n32
+			default_mips_abi=64
 			default_mips_arch=mips64r6
 			enable_mips_multilibs="yes"
 			;;
 		mipsisa64r2*-*-linux*)
-			default_mips_abi=n32
+			default_mips_abi=64
 			default_mips_arch=mips64r2
 			enable_mips_multilibs="yes"
 			;;
 		mips64*-*-linux* | mipsisa64*-*-linux*)
-			default_mips_abi=n32
+			default_mips_abi=64
 			enable_mips_multilibs="yes"
 			;;
 	esac
