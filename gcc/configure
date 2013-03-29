@@ -1010,6 +1010,7 @@ with_system_zlib
 enable_maintainer_mode
 enable_link_mutex
 enable_version_specific_runtime_libs
+enable_poison_system_directories
 enable_plugin
 enable_host_shared
 enable_libquadmath_support
@@ -1766,6 +1767,8 @@ Optional Features:
   --enable-version-specific-runtime-libs
                           specify that runtime libraries should be installed
                           in a compiler-specific directory
+  --enable-poison-system-directories
+                          warn for use of native system header directories
   --enable-plugin         enable plugin support
   --enable-host-shared    build host code as shared libraries
   --disable-libquadmath-support
@@ -30275,6 +30278,22 @@ if test "${enable_version_specific_runtime_libs+set}" = set; then :
   enableval=$enable_version_specific_runtime_libs;
 fi
 
+
+# Check whether --enable-poison-system-directories was given.
+if test "${enable_poison_system_directories+set}" = set; then :
+  enableval=$enable_poison_system_directories;
+else
+  enable_poison_system_directories=no
+fi
+
+if test "x${enable_poison_system_directories}" != "xno"; then
+
+$as_echo "#define ENABLE_POISON_SYSTEM_DIRECTORIES 1" >>confdefs.h
+if test "$enable_poison_system_directories" = "error"; then
+$as_echo "#define POISON_BY_DEFAULT 1" >>confdefs.h
+fi
+
+fi
 
 # Substitute configuration variables
 
