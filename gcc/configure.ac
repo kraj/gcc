@@ -1968,8 +1968,8 @@ for f in $tm_file; do
        tm_include_list="${tm_include_list} $f"
        ;;
     defaults.h )
-       tm_file_list="${tm_file_list} \$(srcdir)/$f"
-       tm_include_list="${tm_include_list} $f"
+       tm_file_list="${tm_file_list} ./$f"
+       tm_include_list="${tm_include_list} ./$f"
        ;;
     * )
        tm_file_list="${tm_file_list} \$(srcdir)/config/$f"
