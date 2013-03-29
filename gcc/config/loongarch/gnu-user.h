@@ -31,11 +31,11 @@ along with GCC; see the file COPYING3.  If not see
 
 #undef GLIBC_DYNAMIC_LINKER
 #define GLIBC_DYNAMIC_LINKER \
-  "/lib" ABI_GRLEN_SPEC "/ld-linux-loongarch-" ABI_SPEC ".so.1"
+  SYSTEMLIBS_DIR "ld-linux-loongarch-" ABI_SPEC ".so.1"
 
 #undef MUSL_DYNAMIC_LINKER
 #define MUSL_DYNAMIC_LINKER \
-  "/lib" ABI_GRLEN_SPEC "/ld-musl-loongarch-" ABI_SPEC ".so.1"
+  SYSTEMLIBS_DIR "ld-musl-loongarch-" ABI_SPEC ".so.1"
 
 #undef GNU_USER_TARGET_LINK_SPEC
 #define GNU_USER_TARGET_LINK_SPEC \
