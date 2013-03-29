@@ -273,5 +273,10 @@ _GLIBCXX_END_NAMESPACE_VERSION
 #ifdef _GLIBCXX_LONG_DOUBLE_COMPAT
 #define _GLIBCXX_LDBL_COMPAT(dbl, ldbl) \
   extern "C" void ldbl (void) __attribute__ ((alias (#dbl)))
+#ifdef __UCLIBC__
+// This is because __c_locale is of type __ctype_touplow_t* which is short on uclibc. for glibc its int*
+_GLIBCXX_LDBL_COMPAT(_ZSt14__convert_to_vIdEvPKcRT_RSt12_Ios_IostateRKPs, _ZSt14__convert_to_vIeEvPKcRT_RSt12_Ios_IostateRKPs);
+#else
 _GLIBCXX_LDBL_COMPAT(_ZSt14__convert_to_vIdEvPKcRT_RSt12_Ios_IostateRKPi, _ZSt14__convert_to_vIeEvPKcRT_RSt12_Ios_IostateRKPi);
+#endif
 #endif // _GLIBCXX_LONG_DOUBLE_COMPAT

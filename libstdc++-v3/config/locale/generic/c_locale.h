@@ -40,13 +40,22 @@
 
 #include <clocale>
 
+#ifdef __UCLIBC__
+#include <features.h>
+#include <ctype.h>
+#endif
+
 #define _GLIBCXX_NUM_CATEGORIES 0
 
 namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
+#ifdef __UCLIBC__
+  typedef __ctype_touplow_t*	__c_locale;
+#else
   typedef int*			__c_locale;
+#endif
 
   // Convert numeric value of type double and long double to string and
   // return length of string.  If vsnprintf is available use it, otherwise

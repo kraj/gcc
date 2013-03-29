@@ -33,6 +33,11 @@
 
 // Information as gleaned from /usr/include/ctype.h
 
+#ifdef __UCLIBC__
+#include <features.h>
+#include <ctype.h>
+#endif
+
 namespace std _GLIBCXX_VISIBILITY(default)
 {
 _GLIBCXX_BEGIN_NAMESPACE_VERSION
@@ -41,7 +46,11 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
   struct ctype_base
   {
     // Non-standard typedefs.
+#ifdef __UCLIBC__
+    typedef const __ctype_touplow_t*	__to_type;
+#else
     typedef const int* 		__to_type;
+#endif
 
     // NB: Offsets into ctype<char>::_M_table force a particular size
     // on the mask type. Because of this, we don't use an enum.
