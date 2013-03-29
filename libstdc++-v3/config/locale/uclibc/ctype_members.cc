@@ -38,13 +38,6 @@
 #undef _LIBC
 #include <bits/c++locale_internal.h>
 
-#ifndef __UCLIBC_HAS_XLOCALE__
-#define __wctype_l(S, L)           wctype((S))
-#define __towupper_l(C, L)         towupper((C))
-#define __towlower_l(C, L)         towlower((C))
-#define __iswctype_l(C, M, L)      iswctype((C), (M))
-#endif
-
 namespace std
 {
   // NB: The other ctype<char> specializations are in src/locale.cc and

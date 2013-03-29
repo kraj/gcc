@@ -39,13 +39,10 @@
 #ifdef __UCLIBC_MJN3_ONLY__
 #warning fix gettext stuff
 #endif
+#undef gettext
 #ifdef __UCLIBC_HAS_GETTEXT_AWARENESS__
-extern "C" char *__dcgettext(const char *domainname,
-			     const char *msgid, int category);
-#undef gettext
-#define gettext(msgid) __dcgettext(NULL, msgid, LC_MESSAGES)
+#define gettext(msgid) dcgettext(NULL, msgid, LC_MESSAGES)
 #else
-#undef gettext
 #define gettext(msgid) (msgid)
 #endif
 

@@ -41,9 +41,6 @@
 #ifdef __UCLIBC_MJN3_ONLY__
 #warning tailor for stub locale support
 #endif
-#ifndef __UCLIBC_HAS_XLOCALE__
-#define __nl_langinfo_l(N, L)         nl_langinfo((N))
-#endif
 
 namespace std
 {

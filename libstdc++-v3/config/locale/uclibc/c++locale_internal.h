@@ -60,4 +60,49 @@ extern "C" __typeof(wcsxfrm_l) __wcsxfrm_l;
 extern "C" __typeof(wctype_l) __wctype_l;
 #endif
 
+# define __nl_langinfo_l nl_langinfo_l
+# define __strcoll_l strcoll_l
+# define __strftime_l strftime_l
+# define __strtod_l strtod_l
+# define __strtof_l strtof_l
+# define __strtold_l strtold_l
+# define __strxfrm_l strxfrm_l
+# define __newlocale newlocale
+# define __freelocale freelocale
+# define __duplocale duplocale
+# define __uselocale uselocale
+
+# ifdef _GLIBCXX_USE_WCHAR_T
+#  define __iswctype_l iswctype_l
+#  define __towlower_l towlower_l
+#  define __towupper_l towupper_l
+#  define __wcscoll_l wcscoll_l
+#  define __wcsftime_l wcsftime_l
+#  define __wcsxfrm_l wcsxfrm_l
+#  define __wctype_l wctype_l
+# endif
+
+#else
+# define __nl_langinfo_l(N, L)       nl_langinfo((N))
+# define __strcoll_l(S1, S2, L)      strcoll((S1), (S2))
+# define __strtod_l(S, E, L)         strtod((S), (E))
+# define __strtof_l(S, E, L)         strtof((S), (E))
+# define __strtold_l(S, E, L)        strtold((S), (E))
+# define __strxfrm_l(S1, S2, N, L)   strxfrm((S1), (S2), (N))
+# warning should dummy __newlocale check for C|POSIX ?
+# define __newlocale(a, b, c)        NULL
+# define __freelocale(a)             ((void)0)
+# define __duplocale(a)              __c_locale()
+//# define __uselocale ?
+//
+# ifdef _GLIBCXX_USE_WCHAR_T
+#  define __iswctype_l(C, M, L)       iswctype((C), (M))
+#  define __towlower_l(C, L)          towlower((C))
+#  define __towupper_l(C, L)          towupper((C))
+#  define __wcscoll_l(S1, S2, L)      wcscoll((S1), (S2))
+//#  define __wcsftime_l(S, M, F, T, L)  wcsftime((S), (M), (F), (T))
+#  define __wcsxfrm_l(S1, S2, N, L)   wcsxfrm((S1), (S2), (N))
+#  define __wctype_l(S, L)            wctype((S))
+# endif
+
 #endif // GLIBC 2.3 and later

@@ -36,15 +36,11 @@
 #ifdef __UCLIBC_MJN3_ONLY__
 #warning fix prototypes for *textdomain funcs
 #endif
-#ifdef __UCLIBC_HAS_GETTEXT_AWARENESS__
-extern "C" char *__textdomain(const char *domainname);
-extern "C" char *__bindtextdomain(const char *domainname,
-				  const char *dirname);
-#else
-#undef __textdomain
-#undef __bindtextdomain
-#define __textdomain(D)           ((void)0)
-#define __bindtextdomain(D,P)     ((void)0)
+#ifndef __UCLIBC_HAS_GETTEXT_AWARENESS__
+#undef textdomain
+#undef bindtextdomain
+#define textdomain(D)           ((void)0)
+#define bindtextdomain(D,P)     ((void)0)
 #endif
 
   // Non-virtual member functions.
@@ -70,7 +66,7 @@ extern "C" char *__bindtextdomain(const char *domainname,
     messages<_CharT>::open(const basic_string<char>& __s, const locale& __loc,
 			   const char* __dir) const
     {
-      __bindtextdomain(__s.c_str(), __dir);
+      bindtextdomain(__s.c_str(), __dir);
       return this->do_open(__s, __loc);
     }
 
@@ -90,7 +86,7 @@ extern "C" char *__bindtextdomain(const char *domainname,
     {
       // No error checking is done, assume the catalog exists and can
       // be used.
-      __textdomain(__s.c_str());
+      textdomain(__s.c_str());
       return 0;
     }
 

@@ -36,13 +36,6 @@
 #include <locale>
 #include <bits/c++locale_internal.h>
 
-#ifndef __UCLIBC_HAS_XLOCALE__
-#define __strcoll_l(S1, S2, L)      strcoll((S1), (S2))
-#define __strxfrm_l(S1, S2, N, L)   strxfrm((S1), (S2), (N))
-#define __wcscoll_l(S1, S2, L)      wcscoll((S1), (S2))
-#define __wcsxfrm_l(S1, S2, N, L)   wcsxfrm((S1), (S2), (N))
-#endif
-
 namespace std
 {
   // These are basically extensions to char_traits, and perhaps should

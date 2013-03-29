@@ -39,20 +39,6 @@
 #include <langinfo.h>
 #include <bits/c++locale_internal.h>
 
-#ifndef __UCLIBC_HAS_XLOCALE__
-#define __strtol_l(S, E, B, L)      strtol((S), (E), (B))
-#define __strtoul_l(S, E, B, L)     strtoul((S), (E), (B))
-#define __strtoll_l(S, E, B, L)     strtoll((S), (E), (B))
-#define __strtoull_l(S, E, B, L)    strtoull((S), (E), (B))
-#define __strtof_l(S, E, L)         strtof((S), (E))
-#define __strtod_l(S, E, L)         strtod((S), (E))
-#define __strtold_l(S, E, L)        strtold((S), (E))
-#warning should dummy __newlocale check for C|POSIX ?
-#define __newlocale(a, b, c)        NULL
-#define __freelocale(a)             ((void)0)
-#define __duplocale(a)              __c_locale()
-#endif
-
 namespace std
 {
   template<>
