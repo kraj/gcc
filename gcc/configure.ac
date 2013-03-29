@@ -4555,13 +4555,6 @@ x:
         rm -f conftest.*
       fi
     fi
-    if test $gcc_cv_as_ld_jalr_reloc = yes; then
-      if test x$target_cpu_default = x; then
-        target_cpu_default=MASK_RELAX_PIC_CALLS
-      else
-        target_cpu_default="($target_cpu_default)|MASK_RELAX_PIC_CALLS"
-      fi
-    fi
     AC_MSG_RESULT($gcc_cv_as_ld_jalr_reloc)
 
     AC_CACHE_CHECK([linker for .eh_frame personality relaxation],
