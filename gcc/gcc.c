@@ -4809,6 +4809,15 @@ set_collect_gcc_options (void)
 		sizeof ("COLLECT_GCC_OPTIONS=") - 1);
 
   first_time = TRUE;
+#ifdef HAVE_LD_SYSROOT
+  if (target_system_root_changed && target_system_root)
+    {
+      obstack_grow (&collect_obstack, "'--sysroot=", sizeof("'--sysroot=")-1);
+      obstack_grow (&collect_obstack, target_system_root,strlen(target_system_root));
+      obstack_grow (&collect_obstack, "'", 1);
+      first_time = FALSE;
+    }
+#endif
   for (i = 0; (int) i < n_switches; i++)
     {
       const char *const *args;
