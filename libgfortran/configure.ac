@@ -258,7 +258,7 @@ AC_SUBST(enable_static)
 
 # We need gfortran to compile parts of the library
 #AC_PROG_FC(gfortran)
-FC="$GFORTRAN"
+#FC="$GFORTRAN"
 AC_PROG_FC(gfortran)
 
 # extra LD Flags which are required for targets

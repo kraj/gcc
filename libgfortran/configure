@@ -13092,7 +13092,7 @@ esac
 
 # We need gfortran to compile parts of the library
 #AC_PROG_FC(gfortran)
-FC="$GFORTRAN"
+#FC="$GFORTRAN"
 ac_ext=${ac_fc_srcext-f}
 ac_compile='$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5'
 ac_link='$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_srcext conftest.$ac_ext $LIBS >&5'
