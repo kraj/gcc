@@ -91,10 +91,14 @@
 #define MUSL_DYNAMIC_LINKER \
   "/lib/ld-musl-arm" MUSL_DYNAMIC_LINKER_E "%{mfloat-abi=hard:hf}%{mfdpic:-fdpic}.so.1"
 
+/* For armv4 we pass --fix-v4bx to linker to support EABI */
+#undef TARGET_FIX_V4BX_SPEC
+#define TARGET_FIX_V4BX_SPEC "%{mcpu=arm8|mcpu=arm810|mcpu=strongarm*|march=armv4: --fix-v4bx}"
+
 /* At this point, bpabi.h will have clobbered LINK_SPEC.  We want to
    use the GNU/Linux version, not the generic BPABI version.  */
 #undef  LINK_SPEC
-#define LINK_SPEC EABI_LINK_SPEC					\
+#define LINK_SPEC TARGET_FIX_V4BX_SPEC EABI_LINK_SPEC			\
   LINUX_OR_ANDROID_LD (LINUX_TARGET_LINK_SPEC,				\
 		       LINUX_TARGET_LINK_SPEC " " ANDROID_LINK_SPEC)
 
