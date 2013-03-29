@@ -1952,6 +1952,10 @@ nostdinc++
 C++ ObjC++
 Do not search standard system include directories for C++.
 
+nostdlib++
+Driver
+Do not link standard C++ runtime library
+
 o
 C ObjC C++ ObjC++ Joined Separate
 ; Documented in common.opt
