@@ -6359,6 +6359,10 @@ func_mode_link ()
 	func_warning "ignoring multiple \`-rpath's for a libtool library"
 
       install_libdir="$1"
+      if test -n "$install_libdir"; then
+	func_normal_abspath "$install_libdir"
+	install_libdir=$func_normal_abspath_result
+      fi
 
       oldlibs=
       if test -z "$rpath"; then
