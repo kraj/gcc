@@ -66,5 +66,5 @@ along with GCC; see the file COPYING3.  If not see
   {".ii", "@c++-cpp-output", 0, 0, 0},
   {"@c++-cpp-output",
       "%{!E:%{!M:%{!MM:"
-      "  cc1plus -fpreprocessed %i %(cc1_options) %2"
+      "  cc1plus -fpreprocessed %i %I %(cc1_options) %2"
       "  %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 0},

@@ -1351,7 +1351,7 @@ static const struct compiler default_compilers[] =
 					   %W{o*:--output-pch=%*}}%V}}}}}}}", 0, 0, 0},
   {".i", "@cpp-output", 0, 0, 0},
   {"@cpp-output",
-   "%{!M:%{!MM:%{!E:cc1 -fpreprocessed %i %(cc1_options) %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 0},
+   "%{!M:%{!MM:%{!E:cc1 -fpreprocessed %i %I %(cc1_options) %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 0},
   {".s", "@assembler", 0, 0, 0},
   {"@assembler",
    "%{!M:%{!MM:%{!E:%{!S:as %(asm_debug) %(asm_options) %i %A }}}}", 0, 0, 0},
