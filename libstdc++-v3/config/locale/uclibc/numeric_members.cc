@@ -33,9 +33,14 @@
 
 // Written by Benjamin Kosnik <bkoz@redhat.com>
 
+#include <features.h>
+#ifdef __UCLIBC_HAS_LOCALE__
 #define _LIBC
 #include <locale>
 #undef _LIBC
+#else
+#include <locale>
+#endif
 #include <bits/c++locale_internal.h>
 
 #ifdef __UCLIBC_MJN3_ONLY__

@@ -53,12 +53,16 @@
   template<typename _CharT>
      messages<_CharT>::messages(__c_locale __cloc, const char* __s,
 				size_t __refs)
-     : facet(__refs), _M_c_locale_messages(_S_clone_c_locale(__cloc)),
-     _M_name_messages(__s)
+     : facet(__refs), _M_c_locale_messages(NULL),
+     _M_name_messages(NULL)
      {
-       char* __tmp = new char[std::strlen(__s) + 1];
-       std::strcpy(__tmp, __s);
+       const size_t __len = std::strlen(__s) + 1;
+       char* __tmp = new char[__len];
+       std::memcpy(__tmp, __s, __len);
        _M_name_messages = __tmp;
+
+       // Last to avoid leaking memory if new throws.
+       _M_c_locale_messages = _S_clone_c_locale(__cloc);
      }
 
   template<typename _CharT>

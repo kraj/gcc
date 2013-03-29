@@ -33,9 +33,14 @@
 
 // Written by Benjamin Kosnik <bkoz@redhat.com>
 
+#include <features.h>
+#ifdef __UCLIBC_HAS_LOCALE__
 #define _LIBC
 #include <locale>
 #undef _LIBC
+#else
+#include <locale>
+#endif
 #include <bits/c++locale_internal.h>
 
 #ifdef __UCLIBC_MJN3_ONLY__
@@ -206,7 +211,7 @@ namespace std
 	  }
 	break;
       default:
-	;
+	__ret = pattern();
       }
     return __ret;
   }
@@ -390,7 +395,9 @@ namespace std
 	  __c_locale __old = __uselocale(__cloc);
 #else
 	  // Switch to named locale so that mbsrtowcs will work.
-	  char* __old = strdup(setlocale(LC_ALL, NULL));
+  	  char* __old = setlocale(LC_ALL, NULL);
+          const size_t __llen = strlen(__old) + 1;
+          char* __sav = new char[__llen];
 	  setlocale(LC_ALL, __name);
 #endif
 
@@ -477,8 +484,8 @@ namespace std
 #ifdef __UCLIBC_HAS_XLOCALE__
 	      __uselocale(__old);
 #else
-	      setlocale(LC_ALL, __old);
-	      free(__old);
+	      setlocale(LC_ALL, __sav);
+	      delete [] __sav;
 #endif
 	      __throw_exception_again;
 	    }
@@ -498,8 +505,8 @@ namespace std
 #ifdef __UCLIBC_HAS_XLOCALE__
 	  __uselocale(__old);
 #else
-	  setlocale(LC_ALL, __old);
-	  free(__old);
+	  setlocale(LC_ALL, __sav);
+	  delete [] __sav;
 #endif
 	}
     }
@@ -545,8 +552,11 @@ namespace std
 	  __c_locale __old = __uselocale(__cloc);
 #else
 	  // Switch to named locale so that mbsrtowcs will work.
-	  char* __old = strdup(setlocale(LC_ALL, NULL));
-	  setlocale(LC_ALL, __name);
+          char* __old = setlocale(LC_ALL, NULL);
+          const size_t __llen = strlen(__old) + 1;
+          char* __sav = new char[__llen];
+          memcpy(__sav, __old, __llen);
+          setlocale(LC_ALL, __name);
 #endif
 
 #ifdef __UCLIBC_MJN3_ONLY__
@@ -633,8 +643,8 @@ namespace std
 #ifdef __UCLIBC_HAS_XLOCALE__
 	      __uselocale(__old);
 #else
-	      setlocale(LC_ALL, __old);
-	      free(__old);
+	      setlocale(LC_ALL, __sav);
+	      delete [] __sav;
 #endif
               __throw_exception_again;
 	    }
@@ -653,8 +663,8 @@ namespace std
 #ifdef __UCLIBC_HAS_XLOCALE__
 	  __uselocale(__old);
 #else
-	  setlocale(LC_ALL, __old);
-	  free(__old);
+	  setlocale(LC_ALL, __sav);
+	  delete [] __sav;
 #endif
 	}
     }

@@ -39,21 +39,23 @@
 #pragma GCC system_header
 
 #include <cstring>              // get std::strlen
-#include <cstdio>               // get std::snprintf or std::sprintf
+#include <cstdio>               // get std::vsnprintf or std::vsprintf
 #include <clocale>
 #include <langinfo.h>		// For codecvt
 #ifdef __UCLIBC_MJN3_ONLY__
 #warning fix this
 #endif
-#ifdef __UCLIBC_HAS_LOCALE__
+#ifdef _GLIBCXX_USE_ICONV
 #include <iconv.h>		// For codecvt using iconv, iconv_t
 #endif
-#ifdef __UCLIBC_HAS_GETTEXT_AWARENESS__
-#include <libintl.h> 		// For messages
+#ifdef HAVE_LIBINTL_H
+#include <libintl.h>		// For messages
 #endif
+#include <cstdarg>
 
 #ifdef __UCLIBC_MJN3_ONLY__
 #warning what is _GLIBCXX_C_LOCALE_GNU for
+// psm: used in os/gnu-linux/ctype_noninline.h
 #endif
 #define _GLIBCXX_C_LOCALE_GNU 1
 
@@ -78,23 +80,25 @@ namespace std
 #else
   typedef int*			__c_locale;
 #endif
-
-  // Convert numeric value of type _Tv to string and return length of
-  // string.  If snprintf is available use it, otherwise fall back to
-  // the unsafe sprintf which, in general, can be dangerous and should
+  // Convert numeric value of type double to string and return length of
+  // string.  If vsnprintf is available use it, otherwise fall back to
+  // the unsafe vsprintf which, in general, can be dangerous and should
   // be avoided.
-  template<typename _Tv>
-    int
-    __convert_from_v(char* __out,
-		     const int __size __attribute__ ((__unused__)),
-		     const char* __fmt,
-#ifdef __UCLIBC_HAS_XCLOCALE__
-		     _Tv __v, const __c_locale& __cloc, int __prec)
+    inline int
+    __convert_from_v(const __c_locale&
+#ifndef __UCLIBC_HAS_XCLOCALE__
+	__cloc __attribute__ ((__unused__))
+#endif
+		     ,
+		     char* __out,
+		     const int __size,
+		     const char* __fmt, ...)
     {
+      va_list __args;
+#ifdef __UCLIBC_HAS_XCLOCALE__
+
       __c_locale __old = __gnu_cxx::__uselocale(__cloc);
 #else
-		     _Tv __v, const __c_locale&, int __prec)
-    {
 # ifdef __UCLIBC_HAS_LOCALE__
       char* __old = std::setlocale(LC_ALL, NULL);
       char* __sav = new char[std::strlen(__old) + 1];
@@ -103,7 +107,9 @@ namespace std
 # endif
 #endif
 
-      const int __ret = std::snprintf(__out, __size, __fmt, __prec, __v);
+      va_start(__args, __fmt);
+      const int __ret = std::vsnprintf(__out, __size, __fmt, __args);
+      va_end(__args);
 
 #ifdef __UCLIBC_HAS_XCLOCALE__
       __gnu_cxx::__uselocale(__old);

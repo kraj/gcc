@@ -33,16 +33,20 @@
 
 // Written by Benjamin Kosnik <bkoz@redhat.com>
 
+#include <features.h>
+#ifdef __UCLIBC_HAS_LOCALE__
 #define _LIBC
 #include <locale>
 #undef _LIBC
+#else
+#include <locale>
+#endif
 #include <bits/c++locale_internal.h>
 
-namespace std
-{
+_GLIBCXX_BEGIN_NAMESPACE(std)
+
   // NB: The other ctype<char> specializations are in src/locale.cc and
   // various /config/os/* files.
-  template<>
     ctype_byname<char>::ctype_byname(const char* __s, size_t __refs)
     : ctype<char>(0, false, __refs)
     {
@@ -57,6 +61,8 @@ namespace std
 #endif
 	}
     }
+    ctype_byname<char>::~ctype_byname()
+    { }
 
 #ifdef _GLIBCXX_USE_WCHAR_T
   ctype<wchar_t>::__wmask_type
@@ -138,17 +144,33 @@ namespace std
   ctype<wchar_t>::
   do_is(mask __m, wchar_t __c) const
   {
-    // Highest bitmask in ctype_base == 10, but extra in "C"
-    // library for blank.
+    // The case of __m == ctype_base::space is particularly important,
+    // due to its use in many istream functions.  Therefore we deal with
+    // it first, exploiting the knowledge that on GNU systems _M_bit[5]
+    // is the mask corresponding to ctype_base::space.  NB: an encoding
+    // change would not affect correctness!
+
     bool __ret = false;
-    const size_t __bitmasksize = 11;
-    for (size_t __bitcur = 0; __bitcur <= __bitmasksize; ++__bitcur)
-      if (__m & _M_bit[__bitcur]
-	  && __iswctype_l(__c, _M_wmask[__bitcur], _M_c_locale_ctype))
-	{
-	  __ret = true;
-	  break;
-	}
+    if (__m == _M_bit[5])
+      __ret = __iswctype_l(__c, _M_wmask[5], _M_c_locale_ctype);
+    else
+      {
+	// Highest bitmask in ctype_base == 10, but extra in "C"
+	// library for blank.
+	const size_t __bitmasksize = 11;
+	for (size_t __bitcur = 0; __bitcur <= __bitmasksize; ++__bitcur)
+	  if (__m & _M_bit[__bitcur])
+	    {
+	      if (__iswctype_l(__c, _M_wmask[__bitcur], _M_c_locale_ctype))
+		{
+		  __ret = true;
+		  break;
+		}
+	      else if (__m == _M_bit[__bitcur])
+		break;
+	    }
+      }
+
     return __ret;
   }
 
@@ -290,4 +312,5 @@ namespace std
 #endif
   }
 #endif //  _GLIBCXX_USE_WCHAR_T
-}
+
+_GLIBCXX_END_NAMESPACE

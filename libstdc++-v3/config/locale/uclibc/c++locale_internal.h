@@ -31,6 +31,9 @@
 
 #include <bits/c++config.h>
 #include <clocale>
+#include <cstdlib>
+#include <cstring>
+#include <cstddef>
 
 #ifdef __UCLIBC_MJN3_ONLY__
 #warning clean this up
