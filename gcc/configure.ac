@@ -1948,10 +1948,20 @@ done
 tmake_file_=
 for f in ${tmake_file}
 do
-	if test -f ${srcdir}/config/$f
-	then
-		tmake_file_="${tmake_file_} \$(srcdir)/config/$f"
-	fi
+  case $f in
+    */t-linux64 )
+       if test -f ./config/$f
+       then
+         tmake_file_="${tmake_file_} ./config/$f"
+       fi
+       ;;
+    * )
+       if test -f ${srcdir}/config/$f
+       then
+         tmake_file_="${tmake_file_} \$(srcdir)/config/$f"
+       fi
+       ;;
+  esac
 done
 tmake_file="${tmake_file_}"
 
@@ -1962,6 +1972,10 @@ tm_file_list="options.h"
 tm_include_list="options.h insn-constants.h"
 for f in $tm_file; do
   case $f in
+    */linux64.h )
+       tm_file_list="${tm_file_list} ./config/$f"
+       tm_include_list="${tm_include_list} ./config/$f"
+       ;;
     ./* )
        f=`echo $f | sed 's/^..//'`
        tm_file_list="${tm_file_list} $f"
