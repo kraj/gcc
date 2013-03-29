@@ -67,10 +67,10 @@ along with GCC; see the file COPYING3.  If not see
 
 #define MULTILIB_DEFAULTS { "m64" }
 
-#define GLIBC_DYNAMIC_LINKER64 "/lib/ld64.so.1"
+#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld64.so.1"
 
 #undef MUSL_DYNAMIC_LINKER64
-#define MUSL_DYNAMIC_LINKER64 "/lib/ld-musl-s390x.so.1"
+#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-musl-s390x.so.1"
 
 #undef  LINK_SPEC
 #define LINK_SPEC \
