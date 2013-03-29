@@ -23,8 +23,8 @@ along with GCC; see the file COPYING3.  If not see
 #define EXTRA_SPECS \
 { "elf_dynamic_linker", ELF_DYNAMIC_LINKER },
 
-#define GLIBC_DYNAMIC_LINKER	"/lib/ld-linux.so.2"
-#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
+#define GLIBC_DYNAMIC_LINKER	SYSTEMLIBS_DIR "ld-linux.so.2"
+#define UCLIBC_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-uClibc.so.0"
 #if DEFAULT_LIBC == LIBC_UCLIBC
 #define CHOOSE_DYNAMIC_LINKER(G, U) "%{mglibc:" G ";:" U "}"
 #elif DEFAULT_LIBC == LIBC_GLIBC
