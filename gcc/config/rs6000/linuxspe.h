@@ -27,6 +27,3 @@
 #undef	TARGET_DEFAULT
 #define TARGET_DEFAULT MASK_STRICT_ALIGN
 #endif
-
-#undef  ASM_DEFAULT_SPEC
-#define	ASM_DEFAULT_SPEC "-mppc -mspe -me500"
