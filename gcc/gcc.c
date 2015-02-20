@@ -1464,13 +1464,6 @@ static const char *gcc_libexec_prefix;
 
 /* Default prefixes to attach to command names.  */
 
-#ifndef STANDARD_STARTFILE_PREFIX_1
-#define STANDARD_STARTFILE_PREFIX_1 "/lib/"
-#endif
-#ifndef STANDARD_STARTFILE_PREFIX_2
-#define STANDARD_STARTFILE_PREFIX_2 "/usr/lib/"
-#endif
-
 #ifdef CROSS_DIRECTORY_STRUCTURE  /* Don't use these prefixes for a cross compiler.  */
 #undef MD_EXEC_PREFIX
 #undef MD_STARTFILE_PREFIX
