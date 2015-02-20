@@ -5628,6 +5628,9 @@ func_mode_link ()
 	    absdir="$abs_ladir"
 	    libdir="$abs_ladir"
 	  else
+	    # Instead of using libdir from .la which usually points to a host path,
+	    # use the path the .la is contained in.
+	    libdir="$abs_ladir"
 	    dir="$libdir"
 	    absdir="$libdir"
 	  fi
