@@ -1492,4 +1492,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define DWARF_GNAT_ENCODINGS_DEFAULT DWARF_GNAT_ENCODINGS_GDB
 #endif
 
+/* Default prefixes to attach to command names.  */
+
+#ifndef STANDARD_STARTFILE_PREFIX_1
+#define STANDARD_STARTFILE_PREFIX_1 "/lib/"
+#endif
+#ifndef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_2 "/usr/lib/"
+#endif
+
 #endif  /* ! GCC_DEFAULTS_H */
