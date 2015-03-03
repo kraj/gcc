@@ -6004,12 +6004,13 @@ func_mode_link ()
 	      fi
 	    else
 	      # We cannot seem to hardcode it, guess we'll fake it.
+	      # Default if $libdir is not relative to the prefix:
 	      add_dir="-L$libdir"
-	      # Try looking first in the location we're being installed to.
+
 	      if test -n "$inst_prefix_dir"; then
 		case $libdir in
 		  [\\/]*)
-		    add_dir="$add_dir -L$inst_prefix_dir$libdir"
+		    add_dir="-L$inst_prefix_dir$libdir"
 		    ;;
 		esac
 	      fi
