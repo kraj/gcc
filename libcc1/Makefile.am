@@ -37,8 +37,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
 	    $(Wc)$(libiberty_normal)))
 libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))
 
-plugindir = $(libdir)/gcc/$(target_noncanonical)/$(gcc_version)/plugin
-cc1libdir = $(libdir)/$(libsuffix)
+cc1libdir = $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
+plugindir = $(cc1libdir)
 
 if ENABLE_PLUGIN
 plugin_LTLIBRARIES = libcc1plugin.la libcp1plugin.la
