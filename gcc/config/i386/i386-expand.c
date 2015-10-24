@@ -10976,10 +10976,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
     {
     case IX86_BUILTIN_CPU_INIT:
       {
-	/* Make it call __cpu_indicator_init in libgcc. */
+	/* Make it call __cpu_indicator_init_local in libgcc.a. */
 	tree call_expr, fndecl, type;
         type = build_function_type_list (integer_type_node, NULL_TREE); 
-	fndecl = build_fn_decl ("__cpu_indicator_init", type);
+	fndecl = build_fn_decl ("__cpu_indicator_init_local", type);
 	call_expr = build_call_expr (fndecl, 0); 
 	return expand_expr (call_expr, target, mode, EXPAND_NORMAL);
       }
