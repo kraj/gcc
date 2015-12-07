@@ -2617,7 +2617,7 @@ for_each_path (const struct path_prefix *paths,
       if (path == NULL)
 	{
 	  len = paths->max_len + extra_space + 1;
-	  len += MAX (MAX (suffix_len, multi_os_dir_len), multiarch_len);
+	  len += MAX ((suffix_len + multi_os_dir_len), multiarch_len);
 	  path = XNEWVEC (char, len);
 	}
 
@@ -2629,6 +2629,33 @@ for_each_path (const struct path_prefix *paths,
 	  /* Look first in MACHINE/VERSION subdirectory.  */
 	  if (!skip_multi_dir)
 	    {
+	      if (!(pl->os_multilib ? skip_multi_os_dir : skip_multi_dir))
+	        {
+	          const char *this_multi;
+	          size_t this_multi_len;
+
+	          if (pl->os_multilib)
+		    {
+		      this_multi = multi_os_dir;
+		      this_multi_len = multi_os_dir_len;
+		    }
+	          else
+		    {
+		      this_multi = multi_dir;
+		      this_multi_len = multi_dir_len;
+		    }
+
+	          /* Look in multilib MACHINE/VERSION subdirectory first */
+	          if (this_multi_len)
+	            {
+		      memcpy (path + len, this_multi, this_multi_len + 1);
+	              memcpy (path + len + this_multi_len, multi_suffix, suffix_len + 1);
+	              ret = callback (path, callback_info);
+	                if (ret)
+		          break;
+	            }
+	        }
+
 	      memcpy (path + len, multi_suffix, suffix_len + 1);
 	      ret = callback (path, callback_info);
 	      if (ret)
