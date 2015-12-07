@@ -1382,8 +1382,8 @@ add_prefixed_path (const char *suffix, incpath_kind chain)
   size_t prefix_len, suffix_len;
 
   suffix_len = strlen (suffix);
-  prefix     = iprefix ? iprefix : cpp_GCC_INCLUDE_DIR;
-  prefix_len = iprefix ? strlen (iprefix) : cpp_GCC_INCLUDE_DIR_len;
+  prefix     = iprefix ? iprefix : GCC_INCLUDE_DIRVAR;
+  prefix_len = iprefix ? strlen (iprefix) : strlen(GCC_INCLUDE_DIRVAR) - 7;
 
   path = (char *) xmalloc (prefix_len + suffix_len + 1);
   memcpy (path, prefix, prefix_len);

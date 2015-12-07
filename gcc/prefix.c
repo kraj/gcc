@@ -72,7 +72,9 @@ License along with GCC; see the file COPYING3.  If not see
 #include "prefix.h"
 #include "common/common-target.h"
 
-static const char *std_prefix = PREFIX;
+static const char PREFIXVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = PREFIX;
+
+static const char *std_prefix = PREFIXVAR;
 
 static const char *get_key_value (char *);
 static char *translate_name (char *);
@@ -212,7 +214,7 @@ translate_name (char *name)
 	prefix = getenv (key);
 
       if (prefix == 0)
-	prefix = PREFIX;
+	prefix = PREFIXVAR;
 
       /* We used to strip trailing DIR_SEPARATORs here, but that can
 	 sometimes yield a result with no separator when one was coded
