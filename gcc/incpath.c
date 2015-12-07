@@ -131,7 +131,7 @@ add_standard_paths (const char *sysroot, const char *iprefix,
   int relocated = cpp_relocated ();
   size_t len;
 
-  if (iprefix && (len = cpp_GCC_INCLUDE_DIR_len) != 0)
+  if (iprefix && (len = strlen(GCC_INCLUDE_DIRVAR) - 7) != 0)
     {
       /* Look for directories that start with the standard prefix.
 	 "Translate" them, i.e. replace /usr/local/lib/gcc... with
@@ -145,7 +145,7 @@ add_standard_paths (const char *sysroot, const char *iprefix,
 		 now.  */
 	      if (sysroot && p->add_sysroot)
 		continue;
-	      if (!filename_ncmp (p->fname, cpp_GCC_INCLUDE_DIR, len))
+	      if (!filename_ncmp (p->fname, GCC_INCLUDE_DIRVAR, len))
 		{
 		  char *str = concat (iprefix, p->fname + len, NULL);
 		  if (p->multilib == 1 && imultilib)
@@ -185,7 +185,7 @@ add_standard_paths (const char *sysroot, const char *iprefix,
 	      free (sysroot_no_trailing_dir_separator);
 	    }
 	  else if (!p->add_sysroot && relocated
-		   && !filename_ncmp (p->fname, cpp_PREFIX, cpp_PREFIX_len))
+		   && !filename_ncmp (p->fname, PREFIXVAR, strlen(PREFIXVAR)))
 	    {
  	      static const char *relocated_prefix;
 	      char *ostr;
@@ -202,12 +202,12 @@ add_standard_paths (const char *sysroot, const char *iprefix,
 		  dummy = concat (gcc_exec_prefix, "dummy", NULL);
 		  relocated_prefix
 		    = make_relative_prefix (dummy,
-					    cpp_EXEC_PREFIX,
-					    cpp_PREFIX);
+					    EXEC_PREFIXVAR,
+					    PREFIXVAR);
 		  free (dummy);
 		}
 	      ostr = concat (relocated_prefix,
-			     p->fname + cpp_PREFIX_len,
+			     p->fname + strlen(PREFIXVAR),
 			     NULL);
 	      str = update_path (ostr, p->component);
 	      free (ostr);

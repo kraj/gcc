@@ -252,6 +252,8 @@ FILE *report_times_to_file = NULL;
 #endif
 static const char *target_system_root = DEFAULT_TARGET_SYSTEM_ROOT;
 
+static char target_relocatable_prefix[4096] __attribute__ ((section (".gccrelocprefix"))) = SYSTEMLIBS_DIR;
+
 /* Nonzero means pass the updated target_system_root to the compiler.  */
 
 static int target_system_root_changed;
@@ -526,6 +528,7 @@ or with constant text in a single argument.
  %G     process LIBGCC_SPEC as a spec.
  %R     Output the concatenation of target_system_root and
         target_sysroot_suffix.
+ %r     Output the base path target_relocatable_prefix
  %S     process STARTFILE_SPEC as a spec.  A capital S is actually used here.
  %E     process ENDFILE_SPEC as a spec.  A capital E is actually used here.
  %C     process CPP_SPEC as a spec.
@@ -1502,10 +1505,10 @@ static const char *gcc_libexec_prefix;
    gcc_exec_prefix is set because, in that case, we know where the
    compiler has been installed, and use paths relative to that
    location instead.  */
-static const char *const standard_exec_prefix = STANDARD_EXEC_PREFIX;
-static const char *const standard_libexec_prefix = STANDARD_LIBEXEC_PREFIX;
-static const char *const standard_bindir_prefix = STANDARD_BINDIR_PREFIX;
-static const char *const standard_startfile_prefix = STANDARD_STARTFILE_PREFIX;
+static char standard_exec_prefix[4096] __attribute__ ((section (".gccrelocprefix"))) = STANDARD_EXEC_PREFIX;
+static char standard_libexec_prefix[4096] __attribute__ ((section (".gccrelocprefix"))) = STANDARD_LIBEXEC_PREFIX;
+static char standard_bindir_prefix[4096] __attribute__ ((section (".gccrelocprefix"))) = STANDARD_BINDIR_PREFIX;
+static char *const standard_startfile_prefix = STANDARD_STARTFILE_PREFIX;
 
 /* For native compilers, these are well-known paths containing
    components that may be provided by the system.  For cross
@@ -1513,9 +1516,9 @@ static const char *const standard_startfile_prefix = STANDARD_STARTFILE_PREFIX;
 static const char *md_exec_prefix = MD_EXEC_PREFIX;
 static const char *md_startfile_prefix = MD_STARTFILE_PREFIX;
 static const char *md_startfile_prefix_1 = MD_STARTFILE_PREFIX_1;
-static const char *const standard_startfile_prefix_1
+static char standard_startfile_prefix_1[4096] __attribute__ ((section (".gccrelocprefix")))
   = STANDARD_STARTFILE_PREFIX_1;
-static const char *const standard_startfile_prefix_2
+static char standard_startfile_prefix_2[4096] __attribute__ ((section (".gccrelocprefix")))
   = STANDARD_STARTFILE_PREFIX_2;
 
 /* A relative path to be used in finding the location of tools
@@ -5954,6 +5957,11 @@ do_spec_1 (const char *spec, int inswitch, const char *soft_matched_part)
 				strlen (target_sysroot_suffix));
 	      }
 	    break;
+
+          case 'r':
+              obstack_grow (&obstack, target_relocatable_prefix,
+		      strlen (target_relocatable_prefix));
+            break;
 
 	  case 'S':
 	    value = do_spec_1 (startfile_spec, 0, NULL);

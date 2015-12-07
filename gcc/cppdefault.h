@@ -33,7 +33,8 @@
 
 struct default_include
 {
-  const char *const fname;	/* The name of the directory.  */
+  const char *fname;     /* The name of the directory.  */
+
   const char *const component;	/* The component containing the directory
 				   (see update_path in prefix.c) */
   const char cplusplus;		/* Only look here if we're compiling C++.  */
@@ -50,17 +51,13 @@ struct default_include
 };
 
 extern const struct default_include cpp_include_defaults[];
-extern const char cpp_GCC_INCLUDE_DIR[];
-extern const size_t cpp_GCC_INCLUDE_DIR_len;
+extern char GCC_INCLUDE_DIRVAR[] __attribute__ ((section (".gccrelocprefix")));
 
 /* The configure-time prefix, i.e., the value supplied as the argument
    to --prefix=.  */
-extern const char cpp_PREFIX[];
+extern char PREFIXVAR[] __attribute__ ((section (".gccrelocprefix")));
 /* The length of the configure-time prefix.  */
-extern const size_t cpp_PREFIX_len;
-/* The configure-time execution prefix.  This is typically the lib/gcc
-   subdirectory of cpp_PREFIX.  */
-extern const char cpp_EXEC_PREFIX[];
+extern char EXEC_PREFIXVAR[] __attribute__ ((section (".gccrelocprefix")));
 /* The run-time execution prefix.  This is typically the lib/gcc
    subdirectory of the actual installation.  */
 extern const char *gcc_exec_prefix;
