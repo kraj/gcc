@@ -805,7 +805,7 @@ BUILD_LDFLAGS=@BUILD_LDFLAGS@
 BUILD_NO_PIE_FLAG = @BUILD_NO_PIE_FLAG@
 BUILD_LDFLAGS += $(BUILD_NO_PIE_FLAG)
 BUILD_CPPFLAGS= -I. -I$(@D) -I$(srcdir) -I$(srcdir)/$(@D) \
-		-I$(srcdir)/../include @INCINTL@ $(CPPINC) $(CPPFLAGS)
+		-I$(srcdir)/../include @INCINTL@ $(CPPINC) $(CPPFLAGS_FOR_BUILD)
 
 # Actual name to use when installing a native compiler.
 GCC_INSTALL_NAME := $(shell echo gcc|sed '$(program_transform_name)')
