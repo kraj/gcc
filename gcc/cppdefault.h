@@ -33,7 +33,8 @@
 
 struct default_include
 {
-  const char *const fname;	/* The name of the directory.  */
+  const char *fname;     /* The name of the directory.  */
+
   const char *const component;	/* The component containing the directory
 				   (see update_path in prefix.c) */
   const char cplusplus;		/* Only look here if we're compiling C++.  */
