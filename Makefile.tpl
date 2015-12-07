@@ -154,6 +154,7 @@ BUILD_EXPORTS = \
 	CC="$(CC_FOR_BUILD)"; export CC; \
 	CFLAGS="$(CFLAGS_FOR_BUILD)"; export CFLAGS; \
 	CONFIG_SHELL="$(SHELL)"; export CONFIG_SHELL; \
+	CPPFLAGS="$(CPPFLAGS_FOR_BUILD)"; export CPPFLAGS; \
 	CXX="$(CXX_FOR_BUILD)"; export CXX; \
 	CXXFLAGS="$(CXXFLAGS_FOR_BUILD)"; export CXXFLAGS; \
 	GFORTRAN="$(GFORTRAN_FOR_BUILD)"; export GFORTRAN; \
@@ -173,6 +174,9 @@ BUILD_EXPORTS = \
 # built for the build system to override those in BASE_FLAGS_TO_PASS.
 EXTRA_BUILD_FLAGS = \
 	CFLAGS="$(CFLAGS_FOR_BUILD)" \
+	CXXFLAGS="$(CXXFLAGS_FOR_BUILD)" \
+	CPP="$(CC_FOR_BUILD) -E" \
+	CPPFLAGS="$(CPPFLAGS_FOR_BUILD)" \
 	LDFLAGS="$(LDFLAGS_FOR_BUILD)"
 
 # This is the list of directories to built for the host system.
@@ -190,6 +194,7 @@ HOST_SUBDIR = @host_subdir@
 HOST_EXPORTS = \
 	$(BASE_EXPORTS) \
 	CC="$(CC)"; export CC; \
+	CPP="$(CC) -E"; export CPP; \
 	ADA_CFLAGS="$(ADA_CFLAGS)"; export ADA_CFLAGS; \
 	CFLAGS="$(CFLAGS)"; export CFLAGS; \
 	CONFIG_SHELL="$(SHELL)"; export CONFIG_SHELL; \
