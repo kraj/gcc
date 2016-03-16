@@ -31,6 +31,7 @@ along with GCC; see the file COPYING3.  If not see
 #include "langhooks.h"
 #include "dbgcnt.h"
 #include "debug.h"
+#include "file-map.h"
 #include "output.h"
 #include "plugin.h"
 #include "toplev.h"
@@ -361,6 +362,9 @@ handle_common_deferred_options (void)
 
 	case OPT_fdebug_prefix_map_:
 	  add_debug_prefix_map (opt->arg);
+
+	  /* Reuse -fdebug-prefix-map to replace -ffile-prefix-map */
+	  add_file_prefix_map (opt->arg);
 	  break;
 
 	case OPT_fdump_:
