@@ -26,6 +26,7 @@ along with this program; see the file COPYING3.  If not see
 #include "system.h"
 #include "cpplib.h"
 #include "internal.h"
+#include "file-map.h"
 
 typedef struct macro_arg macro_arg;
 /* This structure represents the tokens of a macro argument.  These
@@ -301,6 +302,7 @@ _cpp_builtin_macro_text (cpp_reader *pfile, cpp_hashnode *node,
 	    if (!name)
 	      abort ();
 	  }
+	name = remap_file_filename (name);
 	len = strlen (name);
 	buf = _cpp_unaligned_alloc (pfile, len * 2 + 3);
 	result = buf;

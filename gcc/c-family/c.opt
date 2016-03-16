@@ -1208,6 +1208,10 @@ fexec-charset=
 C ObjC C++ ObjC++ Joined RejectNegative
 -fexec-charset=<cset>	Convert all strings and character constants to character set <cset>.
 
+ffile-prefix-map=
+C ObjC C++ ObjC++ Joined RejectNegative
+-ffile-prefix-map=<old=new>	Map one directory name to another in __FILE__, __BASE_FILE__ and __builtin_FILE ()
+
 fextended-identifiers
 C ObjC C++ ObjC++
 Permit universal character names (\\u and \\U) in identifiers.
