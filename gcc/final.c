@@ -1554,16 +1554,25 @@ remap_debug_filename (const char *filename)
   const char *name;
   size_t name_len;
 
+  /* Support to remap filename with relative path  */
+  char *realpath = lrealpath (filename);
+  if (realpath == NULL)
+    return filename;
+
   for (map = debug_prefix_maps; map; map = map->next)
-    if (filename_ncmp (filename, map->old_prefix, map->old_len) == 0)
+    if (filename_ncmp (realpath, map->old_prefix, map->old_len) == 0)
       break;
   if (!map)
-    return filename;
-  name = filename + map->old_len;
+    {
+      free (realpath);
+      return filename;
+    }
+  name = realpath + map->old_len;
   name_len = strlen (name) + 1;
   s = (char *) alloca (name_len + map->new_len);
   memcpy (s, map->new_prefix, map->new_len);
   memcpy (s + map->new_len, name, name_len);
+  free (realpath);
   return ggc_strdup (s);
 }
 
