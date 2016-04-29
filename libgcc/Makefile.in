@@ -43,6 +43,7 @@ enable_vtable_verify = @enable_vtable_verify@
 enable_decimal_float = @enable_decimal_float@
 fixed_point = @fixed_point@
 with_aix_soname = @with_aix_soname@
+with_ldbl128 = @with_ldbl128@
 
 host_noncanonical = @host_noncanonical@
 real_host_noncanonical = @real_host_noncanonical@
