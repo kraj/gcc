@@ -619,6 +619,7 @@ build_vendor
 build_cpu
 build
 with_aix_soname
+with_ldbl128
 enable_vtable_verify
 enable_shared
 libgcc_topdir
@@ -668,6 +669,7 @@ with_cross_host
 with_ld
 enable_shared
 enable_vtable_verify
+with_long_double_128
 with_aix_soname
 enable_version_specific_runtime_libs
 with_slibdir
@@ -1329,6 +1331,7 @@ Optional Packages:
   --with-target-subdir=SUBDIR      Configuring in a subdirectory for target
   --with-cross-host=HOST           Configuring with a cross compiler
   --with-ld               arrange to use the specified ld (full pathname)
+  --with-long-double-128  use 128-bit long double by default
   --with-aix-soname=aix|svr4|both
                           shared library versioning (aka "SONAME") variant to
                           provide on AIX
@@ -2208,6 +2211,21 @@ if test "${enable_vtable_verify+set}" = set; then :
  esac
 else
   enable_vtable_verify=no
+fi
+
+
+
+
+# Check whether --with-long-double-128 was given.
+if test "${with_long_double_128+set}" = set; then :
+  withval=$with_long_double_128; with_ldbl128="$with_long_double_128"
+else
+  case "${host}" in
+ power*-*-musl*)
+   with_ldbl128="no";;
+ *) with_ldbl128="yes";;
+ esac
+
 fi
 
 

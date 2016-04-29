@@ -1,3 +1,6 @@
 SHLIB_MAPFILES += $(srcdir)/config/rs6000/libgcc-glibc.ver
 
-HOST_LIBGCC2_CFLAGS += -mlong-double-128 -mno-minimal-toc
+ifeq ($(with_ldbl128),yes)
+HOST_LIBGCC2_CFLAGS += -mlong-double-128
+endif
+HOST_LIBGCC2_CFLAGS += -mno-minimal-toc

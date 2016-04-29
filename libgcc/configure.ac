@@ -78,6 +78,18 @@ AC_ARG_ENABLE(vtable-verify,
 [enable_vtable_verify=no])
 AC_SUBST(enable_vtable_verify)
 
+AC_ARG_WITH(long-double-128,
+[AS_HELP_STRING([--with-long-double-128],
+    [use 128-bit long double by default])],
+      with_ldbl128="$with_long_double_128",
+[case "${host}" in
+ power*-*-musl*)
+   with_ldbl128="no";;
+ *) with_ldbl128="yes";;
+ esac
+])
+AC_SUBST(with_ldbl128)
+
 AC_ARG_WITH(aix-soname,
 [AS_HELP_STRING([--with-aix-soname=aix|svr4|both],
     [shared library versioning (aka "SONAME") variant to provide on AIX])],
