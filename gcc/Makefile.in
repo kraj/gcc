@@ -1005,10 +1005,10 @@ ALL_CXXFLAGS = $(T_CFLAGS) $(CFLAGS-$@) $(CXXFLAGS) $(INTERNAL_CFLAGS) \
 ALL_CPPFLAGS = $(INCLUDES) $(CPPFLAGS)
 
 # This is the variable to use when using $(COMPILER).
-ALL_COMPILERFLAGS = $(ALL_CXXFLAGS)
+ALL_COMPILERFLAGS = $(NO_PIE_CFLAGS) $(ALL_CXXFLAGS)
 
 # This is the variable to use when using $(LINKER).
-ALL_LINKERFLAGS = $(ALL_CXXFLAGS)
+ALL_LINKERFLAGS = $(NO_PIE_CFLAGS) $(ALL_CXXFLAGS)
 
 # Build and host support libraries.
 
