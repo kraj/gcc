@@ -94,6 +94,16 @@
 					 " -m elf32ppclinux")
 #endif
 
+/* link libssp_nonshared.a with musl */
+#if DEFAULT_LIBC == LIBC_MUSL
+#ifdef TARGET_LIBC_PROVIDES_SSP
+#undef LINK_SSP_SPEC
+#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
+		       "|fstack-protector-strong|fstack-protector-explicit" \
+		       ":-lssp_nonshared}"
+#endif
+#endif
+
 #undef LINK_OS_LINUX_SPEC
 #define LINK_OS_LINUX_SPEC LINK_OS_LINUX_EMUL " %{!shared: %{!static: \
   %{!static-pie: \

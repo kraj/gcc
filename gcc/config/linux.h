@@ -195,6 +195,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
     { GCC_INCLUDE_DIR, "GCC", 0, 1, 0, 0 },		\
     { 0, 0, 0, 0, 0, 0 }				\
   }
+#ifdef TARGET_LIBC_PROVIDES_SSP
+#undef LINK_SSP_SPEC
+#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
+		       "|fstack-protector-strong|fstack-protector-explicit" \
+		       ":-lssp_nonshared}"
+#endif
+
 #endif
 
 #if (DEFAULT_LIBC == LIBC_UCLIBC) && defined (SINGLE_LIBC) /* uClinux */

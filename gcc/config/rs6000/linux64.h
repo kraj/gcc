@@ -452,6 +452,16 @@ extern int dot_symbols;
 					   " -m elf64ppc")
 #endif
 
+/* link libssp_nonshared.a with musl */
+#if DEFAULT_LIBC == LIBC_MUSL
+#ifdef TARGET_LIBC_PROVIDES_SSP
+#undef LINK_SSP_SPEC
+#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
+		       "|fstack-protector-strong|fstack-protector-explicit" \
+		       ":-lssp_nonshared}"
+#endif
+#endif
+
 #define LINK_OS_LINUX_SPEC32 LINK_OS_LINUX_EMUL32 " %{!shared: %{!static: \
   %{!static-pie: \
     %{rdynamic:-export-dynamic} \
