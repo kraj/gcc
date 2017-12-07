@@ -1,5 +1,5 @@
 /* { dg-do compile } */
-/* { dg-options "-O -mno-sse -Wno-psabi -mtune=generic" } */
+/* { dg-options "-O -mno-sse -Wno-psabi -mtune=generic -mfpmath=387" } */
 
 struct A
 { 
