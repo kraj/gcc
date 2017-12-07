@@ -1,6 +1,7 @@
 /* Test whether all of the 64-bit function specific options are accepted
    without error.  */
 /* { dg-do compile { target { ! ia32 } } } */
+/* { dg-additional-options "-mfpmath=387" } */
 
 #include "funcspec-56.inc"
 

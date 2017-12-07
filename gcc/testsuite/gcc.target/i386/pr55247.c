@@ -1,6 +1,6 @@
 /* { dg-do compile { target { ! ia32 } } } */
 /* { dg-require-effective-target maybe_x32 } */
-/* { dg-options "-O2 -mno-sse -mno-mmx -mx32 -maddress-mode=long" } */
+/* { dg-options "-O2 -mno-sse -mno-mmx -mx32 -maddress-mode=long -mfpmath=387" } */
 
 typedef unsigned int uint32_t;
 typedef uint32_t Elf32_Word;
