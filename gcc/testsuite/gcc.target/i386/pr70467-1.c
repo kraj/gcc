@@ -1,6 +1,6 @@
 /* PR rtl-optimization/70467 */
 /* { dg-do compile } */
-/* { dg-options "-O2 -mno-sse" } */
+/* { dg-options "-O2 -mno-sse -mfpmath=387" } */
 
 void foo (unsigned long long *);
 

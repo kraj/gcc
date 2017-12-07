@@ -1,5 +1,5 @@
 /* { dg-do compile } */
-/* { dg-options "-mno-sse" } */
+/* { dg-options "-mno-sse -mfpmath=387" } */
 
 void foo ()
 {

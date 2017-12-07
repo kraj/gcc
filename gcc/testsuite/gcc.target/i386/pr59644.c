@@ -1,6 +1,6 @@
 /* PR target/59644 */
 /* { dg-do run { target lp64 } } */
-/* { dg-options "-O2 -ffreestanding -mno-sse -mpreferred-stack-boundary=3 -maccumulate-outgoing-args -mno-red-zone" } */
+/* { dg-options "-O2 -ffreestanding -mno-sse -mpreferred-stack-boundary=3 -maccumulate-outgoing-args -mno-red-zone -mfpmath=387" } */
 
 /* This test uses __builtin_trap () instead of e.g. abort,
    because due to -mpreferred-stack-boundary=3 it should not call
