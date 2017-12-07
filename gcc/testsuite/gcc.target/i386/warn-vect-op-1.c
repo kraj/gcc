@@ -1,5 +1,5 @@
 /* { dg-do compile { target { ! ia32 } } }  */
-/* { dg-options "-mno-sse -Wvector-operation-performance" }  */
+/* { dg-options "-mno-sse -Wvector-operation-performance -mfpmath=387" }  */
 #define vector(elcount, type)  \
 __attribute__((vector_size((elcount)*sizeof(type)))) type
 
