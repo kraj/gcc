@@ -3280,11 +3280,27 @@ cpp_spell_token (cpp_reader *pfile, const cpp_token *token,
     spell_ident:
     case SPELL_IDENT:
       if (forstring)
-	{
-	  memcpy (buffer, NODE_NAME (token->val.node.spelling),
-		  NODE_LEN (token->val.node.spelling));
-	  buffer += NODE_LEN (token->val.node.spelling);
-	}
+        {
+          if (token->type == CPP_NAME)
+            {
+              memcpy (buffer, NODE_NAME (token->val.node.spelling),
+                    NODE_LEN (token->val.node.spelling));
+              buffer += NODE_LEN (token->val.node.spelling);
+              break;
+            }
+          /* NAMED_OP, cannot use node.spelling */
+          if (token->flags & NAMED_OP)
+            {
+              const char *str = cpp_named_operator2name (token->type);
+              if (str)
+                {
+                  size_t len = strlen(str);
+                  memcpy(buffer, str, len);
+                  buffer += len;
+                }
+              break;
+            }
+        }
       else
 	buffer = _cpp_spell_ident_ucns (buffer, token->val.node.node);
       break;
