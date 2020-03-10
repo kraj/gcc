@@ -441,7 +441,7 @@ complete_all_modes (void)
 }
 
 /* For each mode in class CLASS, construct a corresponding complex mode.  */
-#define COMPLEX_MODES(C) make_complex_modes (MODE_##C, __FILE__, __LINE__)
+#define COMPLEX_MODES(C) make_complex_modes (MODE_##C, __FILE__, 0)
 static void
 make_complex_modes (enum mode_class cl,
 		    const char *file, unsigned int line)
@@ -500,7 +500,7 @@ make_complex_modes (enum mode_class cl,
    having as many components as necessary.  ORDER is the sorting order
    of the mode, with smaller numbers indicating a higher priority.  */
 #define VECTOR_MODES_WITH_PREFIX(PREFIX, C, W, ORDER) \
-  make_vector_modes (MODE_##C, #PREFIX, W, ORDER, __FILE__, __LINE__)
+  make_vector_modes (MODE_##C, #PREFIX, W, ORDER, __FILE__, 0)
 #define VECTOR_MODES(C, W) VECTOR_MODES_WITH_PREFIX (V, C, W, 0)
 static void ATTRIBUTE_UNUSED
 make_vector_modes (enum mode_class cl, const char *prefix, unsigned int width,
@@ -553,7 +553,7 @@ make_vector_modes (enum mode_class cl, const char *prefix, unsigned int width,
    BYTESIZE bytes in total.  */
 #define VECTOR_BOOL_MODE(NAME, COUNT, COMPONENT, BYTESIZE)		\
   make_vector_bool_mode (#NAME, COUNT, #COMPONENT, BYTESIZE,		\
-			 __FILE__, __LINE__)
+			 __FILE__, 0)
 static void ATTRIBUTE_UNUSED
 make_vector_bool_mode (const char *name, unsigned int count,
 		       const char *component, unsigned int bytesize,
@@ -575,7 +575,7 @@ make_vector_bool_mode (const char *name, unsigned int count,
 /* Input.  */
 
 #define _SPECIAL_MODE(C, N) \
-  make_special_mode (MODE_##C, #N, __FILE__, __LINE__)
+  make_special_mode (MODE_##C, #N, __FILE__, 0)
 #define RANDOM_MODE(N) _SPECIAL_MODE (RANDOM, N)
 #define CC_MODE(N) _SPECIAL_MODE (CC, N)
 
@@ -588,7 +588,7 @@ make_special_mode (enum mode_class cl, const char *name,
 
 #define INT_MODE(N, Y) FRACTIONAL_INT_MODE (N, -1U, Y)
 #define FRACTIONAL_INT_MODE(N, B, Y) \
-  make_int_mode (#N, B, Y, __FILE__, __LINE__)
+  make_int_mode (#N, B, Y, __FILE__, 0)
 
 static void
 make_int_mode (const char *name,
@@ -629,16 +629,16 @@ make_opaque_mode (const char *name,
 }
 
 #define FRACT_MODE(N, Y, F) \
-	make_fixed_point_mode (MODE_FRACT, #N, Y, 0, F, __FILE__, __LINE__)
+	make_fixed_point_mode (MODE_FRACT, #N, Y, 0, F, __FILE__, 0)
 
 #define UFRACT_MODE(N, Y, F) \
-	make_fixed_point_mode (MODE_UFRACT, #N, Y, 0, F, __FILE__, __LINE__)
+	make_fixed_point_mode (MODE_UFRACT, #N, Y, 0, F, __FILE__, 0)
 
 #define ACCUM_MODE(N, Y, I, F) \
-	make_fixed_point_mode (MODE_ACCUM, #N, Y, I, F, __FILE__, __LINE__)
+	make_fixed_point_mode (MODE_ACCUM, #N, Y, I, F, __FILE__, 0)
 
 #define UACCUM_MODE(N, Y, I, F) \
-	make_fixed_point_mode (MODE_UACCUM, #N, Y, I, F, __FILE__, __LINE__)
+	make_fixed_point_mode (MODE_UACCUM, #N, Y, I, F, __FILE__, 0)
 
 /* Create a fixed-point mode by setting CL, NAME, BYTESIZE, IBIT, FBIT,
    FILE, and LINE.  */
@@ -659,7 +659,7 @@ make_fixed_point_mode (enum mode_class cl,
 
 #define FLOAT_MODE(N, Y, F)             FRACTIONAL_FLOAT_MODE (N, -1U, Y, F)
 #define FRACTIONAL_FLOAT_MODE(N, B, Y, F) \
-  make_float_mode (#N, B, Y, #F, __FILE__, __LINE__)
+  make_float_mode (#N, B, Y, #F, __FILE__, 0)
 
 static void
 make_float_mode (const char *name,
@@ -676,7 +676,7 @@ make_float_mode (const char *name,
 #define DECIMAL_FLOAT_MODE(N, Y, F)	\
 	FRACTIONAL_DECIMAL_FLOAT_MODE (N, -1U, Y, F)
 #define FRACTIONAL_DECIMAL_FLOAT_MODE(N, B, Y, F)	\
-  make_decimal_float_mode (#N, B, Y, #F, __FILE__, __LINE__)
+  make_decimal_float_mode (#N, B, Y, #F, __FILE__, 0)
 
 static void
 make_decimal_float_mode (const char *name,
@@ -691,7 +691,7 @@ make_decimal_float_mode (const char *name,
 }
 
 #define RESET_FLOAT_FORMAT(N, F) \
-  reset_float_format (#N, #F, __FILE__, __LINE__)
+  reset_float_format (#N, #F, __FILE__, 0)
 static void ATTRIBUTE_UNUSED
 reset_float_format (const char *name, const char *format,
 		    const char *file, unsigned int line)
@@ -712,7 +712,7 @@ reset_float_format (const char *name, const char *format,
 
 /* __intN support.  */
 #define INT_N(M,PREC)				\
-  make_int_n (#M, PREC, __FILE__, __LINE__)
+  make_int_n (#M, PREC, __FILE__, 0)
 static void ATTRIBUTE_UNUSED
 make_int_n (const char *m, int bitsize,
             const char *file, unsigned int line)
@@ -741,7 +741,7 @@ make_int_n (const char *m, int bitsize,
 /* Partial integer modes are specified by relation to a full integer
    mode.  */
 #define PARTIAL_INT_MODE(M,PREC,NAME)				\
-  make_partial_integer_mode (#M, #NAME, PREC, __FILE__, __LINE__)
+  make_partial_integer_mode (#M, #NAME, PREC, __FILE__, 0)
 static void ATTRIBUTE_UNUSED
 make_partial_integer_mode (const char *base, const char *name,
 			   unsigned int precision,
@@ -768,7 +768,7 @@ make_partial_integer_mode (const char *base, const char *name,
 /* A single vector mode can be specified by naming its component
    mode and the number of components.  */
 #define VECTOR_MODE_WITH_PREFIX(PREFIX, C, M, N, ORDER) \
-  make_vector_mode (MODE_##C, #PREFIX, #M, N, ORDER, __FILE__, __LINE__);
+  make_vector_mode (MODE_##C, #PREFIX, #M, N, ORDER, __FILE__, 0);
 #define VECTOR_MODE(C, M, N) VECTOR_MODE_WITH_PREFIX(V, C, M, N, 0);
 static void ATTRIBUTE_UNUSED
 make_vector_mode (enum mode_class bclass,
@@ -815,7 +815,7 @@ make_vector_mode (enum mode_class bclass,
 
 /* Adjustability.  */
 #define _ADD_ADJUST(A, M, X, C1, C2) \
-  new_adjust (#M, &adj_##A, #A, #X, MODE_##C1, MODE_##C2, __FILE__, __LINE__)
+  new_adjust (#M, &adj_##A, #A, #X, MODE_##C1, MODE_##C2, __FILE__, 0)
 
 #define ADJUST_NUNITS(M, X)    _ADD_ADJUST (nunits, M, X, RANDOM, RANDOM)
 #define ADJUST_BYTESIZE(M, X)  _ADD_ADJUST (bytesize, M, X, RANDOM, RANDOM)
