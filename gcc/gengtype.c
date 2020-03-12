@@ -991,7 +991,7 @@ create_field_at (pair_p next, type_p type, const char *name, options_p opt,
 /* Create a fake field with the given type and name.  NEXT is the next
    field in the chain.  */
 #define create_field(next,type,name) \
-    create_field_all (next,type,name, 0, this_file, __LINE__)
+    create_field_all (next,type,name, 0, this_file, 0)
 
 /* Like create_field, but the field is only valid when condition COND
    is true.  */
@@ -1024,7 +1024,7 @@ create_optional_field_ (pair_p next, type_p type, const char *name,
 }
 
 #define create_optional_field(next,type,name,cond)	\
-       create_optional_field_(next,type,name,cond,__LINE__)
+       create_optional_field_(next,type,name,cond,0)
 
 /* Reverse a linked list of 'struct pair's in place.  */
 pair_p
@@ -5186,7 +5186,7 @@ main (int argc, char **argv)
       /* These types are set up with #define or else outside of where
          we can see them.  We should initialize them before calling
          read_input_list.  */
-#define POS_HERE(Call) do { pos.file = this_file; pos.line = __LINE__; \
+#define POS_HERE(Call) do { pos.file = this_file; pos.line = 0; \
 	Call;} while (0)
       POS_HERE (do_scalar_typedef ("CUMULATIVE_ARGS", &pos));
       POS_HERE (do_scalar_typedef ("REAL_VALUE_TYPE", &pos));
