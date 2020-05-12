@@ -107,7 +107,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 #ifdef EPERM
       operation_not_permitted = 		EPERM,
 #endif
-//    operation_not_supported = 		EOPNOTSUPP,
+      operation_not_supported = 		EOPNOTSUPP,
 #ifdef EWOULDBLOCK
       operation_would_block = 			EWOULDBLOCK,
 #endif
