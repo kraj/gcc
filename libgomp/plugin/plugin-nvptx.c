@@ -1981,8 +1981,6 @@ cleanup_and_alloc (int ord, size_t size, bool managed)
   ptx_dev->free_blocks = NULL;
   pthread_mutex_unlock (&ptx_dev->free_blocks_lock);
 
-  nvptx_stacks_free (ptx_dev, false);
-
   while (blocks)
     {
       tmp = blocks->next;
