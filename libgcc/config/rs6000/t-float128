@@ -103,7 +103,7 @@ $(ibm128_dec_objs)	: INTERNAL_CFLAGS += $(IBM128_CFLAGS_DECIMAL)
 $(fp128_softfp_src) : $(srcdir)/soft-fp/$(subst -sw,,$(subst kf,tf,$@)) $(fp128_dep)
 	@src="$(srcdir)/soft-fp/$(subst -sw,,$(subst kf,tf,$@))"; \
 	echo "Create $@"; \
-	(echo "/* file created from $$src */"; \
+	(echo "/* file created from `basename $$src` */"; \
 	 echo; \
 	 sed -f $(fp128_sed) < $$src) > $@
 
