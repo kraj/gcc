@@ -170,9 +170,9 @@ enum class aarch64_feature : unsigned char {
 #define DEF_AARCH64_ISA_MODE(IDENT) IDENT,
 #define AARCH64_OPT_EXTENSION(A, IDENT, C, D, E, F) IDENT,
 #define AARCH64_ARCH(A, B, IDENT, D, E) IDENT,
-#include "aarch64-isa-modes.def"
-#include "aarch64-option-extensions.def"
-#include "aarch64-arches.def"
+#include "config/aarch64/aarch64-isa-modes.def"
+#include "config/aarch64/aarch64-option-extensions.def"
+#include "config/aarch64/aarch64-arches.def"
 };
 
 /* Define unique flags for each of the above.  */
@@ -182,16 +182,16 @@ enum class aarch64_feature : unsigned char {
 #define DEF_AARCH64_ISA_MODE(IDENT) HANDLE (IDENT)
 #define AARCH64_OPT_EXTENSION(A, IDENT, C, D, E, F) HANDLE (IDENT)
 #define AARCH64_ARCH(A, B, IDENT, D, E) HANDLE (IDENT)
-#include "aarch64-isa-modes.def"
-#include "aarch64-option-extensions.def"
-#include "aarch64-arches.def"
+#include "config/aarch64/aarch64-isa-modes.def"
+#include "config/aarch64/aarch64-option-extensions.def"
+#include "config/aarch64/aarch64-arches.def"
 #undef HANDLE
 
 constexpr auto AARCH64_FL_SM_STATE = AARCH64_FL_SM_ON | AARCH64_FL_SM_OFF;
 
 constexpr unsigned int AARCH64_NUM_ISA_MODES = (0
 #define DEF_AARCH64_ISA_MODE(IDENT) + 1
-#include "aarch64-isa-modes.def"
+#include "config/aarch64/aarch64-isa-modes.def"
 );
 
 /* The mask of all ISA modes.  */
