@@ -161,8 +161,8 @@
 enum class aarch64_feature : unsigned char {
 #define AARCH64_OPT_EXTENSION(A, IDENT, C, D, E, F) IDENT,
 #define AARCH64_ARCH(A, B, IDENT, D, E) IDENT,
-#include "aarch64-option-extensions.def"
-#include "aarch64-arches.def"
+#include "config/aarch64/aarch64-option-extensions.def"
+#include "config/aarch64/aarch64-arches.def"
 };
 
 /* Define unique flags for each of the above.  */
@@ -171,8 +171,8 @@ enum class aarch64_feature : unsigned char {
     = aarch64_feature_flags (1) << int (aarch64_feature::IDENT);
 #define AARCH64_OPT_EXTENSION(A, IDENT, C, D, E, F) HANDLE (IDENT)
 #define AARCH64_ARCH(A, B, IDENT, D, E) HANDLE (IDENT)
-#include "aarch64-option-extensions.def"
-#include "aarch64-arches.def"
+#include "config/aarch64/aarch64-option-extensions.def"
+#include "config/aarch64/aarch64-arches.def"
 #undef HANDLE
 
 #endif
