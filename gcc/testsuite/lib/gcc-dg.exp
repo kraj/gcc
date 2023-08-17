@@ -240,8 +240,19 @@ proc schedule-cleanups { opts } {
 
 proc gcc-dg-test-1 { target_compile prog do_what extra_tool_flags } {
     # Set up the compiler flags, based on what we're going to do.
+    global do-what-limit
 
     set options [list]
+
+    if [info exists do-what-limit] then {
+        # Demote run tests to $do-what-limit if set
+	switch $do_what {
+	    run {
+    	        set do_what $do-what-limit
+  		set dg-do-what $do-what-limit
+	    }
+        }
+    }
 
     switch $do_what {
 	"preprocess" {

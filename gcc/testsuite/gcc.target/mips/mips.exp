@@ -709,7 +709,23 @@ proc mips_first_unsupported_option { upstatus } {
     global mips_option_tests
     upvar $upstatus status
 
+    if { [mips_have_test_option_p status "-mmsa"] } {
+        verbose -log "Found -mmsa"
+	if { ![check_mips_msa_hw_available] } {
+	    verbose -log "No MSA avail"
+	    return "-mmsa"
+	}
+    }
+    if { [mips_have_test_option_p status "-mloongson-mmi"] } {
+        verbose -log "Found -mloonson-mmi"
+        if { ![check_mips_loongson_mmi_hw_available] } {
+	    verbose -log "No MMI avail"
+   	    return "-mloonson-mmi"
+	}
+    }
+
     foreach { option code } [array get mips_option_tests] {
+
 	if { [mips_have_test_option_p status $option] } {
 	    regsub -all "\n" $code "\\n\\\n" asm
 	    # Use check_runtime from target-supports.exp, which caches
