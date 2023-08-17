@@ -3114,14 +3114,7 @@ proc check_mips_loongson_mmi_hw_available { } {
 	if { !([istarget mips*-*-*]) } {
 	    expr 0
 	} else {
-	    check_runtime_nocache mips_loongson_mmi_hw_available {
-	      #include <loongson-mmiintrin.h>
-	      int main()
-	      {
-		asm volatile ("paddw $f2,$f4,$f6");
-		return 0;
-	      }
-	    } "-mloongson-mmi"
+	    expr 0
 	}
     }]
 }
@@ -3135,29 +3128,7 @@ proc check_mips_msa_hw_available { } {
     if { !([istarget mips*-*-*]) } {
       expr 0
     } else {
-      check_runtime_nocache mips_msa_hw_available {
-	#if !defined(__mips_msa)
-	#error "MSA NOT AVAIL"
-	#else
-	#if !(((__mips == 64) || (__mips == 32)) && (__mips_isa_rev >= 2))
-	#error "MSA NOT AVAIL FOR ISA REV < 2"
-	#endif
-	#if !defined(__mips_hard_float)
-	#error "MSA HARD_FLOAT REQUIRED"
-	#endif
-	#if __mips_fpr != 64
-	#error "MSA 64-bit FPR REQUIRED"
-	#endif
-	#include <msa.h>
-
-	int main()
-	{
-	  v8i16 v = __builtin_msa_ldi_h (0);
-	  v[0] = 0;
-	  return v[0];
-	}
-	#endif
-      } "-mmsa"
+      expr 0
     }
   }]
 }
@@ -10705,6 +10676,7 @@ proc is-effective-target-keyword { arg } {
 
 proc et-dg-runtest { runtest testcases flags default-extra-flags } {
     global dg-do-what-default
+    global do-what-limit
     global EFFECTIVE_TARGETS
     global et_index
 
@@ -10712,6 +10684,7 @@ proc et-dg-runtest { runtest testcases flags default-extra-flags } {
 	foreach target $EFFECTIVE_TARGETS {
 	    set target_flags $flags
 	    set dg-do-what-default compile
+            set do-what-limit link
 	    set et_index [lsearch -exact $EFFECTIVE_TARGETS $target]
 	    if { [info procs add_options_for_${target}] != [list] } {
 		set target_flags [add_options_for_${target} "$flags"]
@@ -10719,8 +10692,10 @@ proc et-dg-runtest { runtest testcases flags default-extra-flags } {
 	    if { [info procs check_effective_target_${target}_runtime]
 		 != [list] && [check_effective_target_${target}_runtime] } {
 		set dg-do-what-default run
+		set do-what-limit run
 	    }
 	    $runtest $testcases $target_flags ${default-extra-flags}
+	    unset do-what-limit
 	}
     } else {
 	set et_index 0
@@ -12509,6 +12484,7 @@ proc check_effective_target_sigsetjmp {} {
 proc check_vect_support_and_set_flags { } {
     global DEFAULT_VECTCFLAGS
     global dg-do-what-default
+    global do-what-limit
     global EFFECTIVE_TARGETS
 
     if [istarget powerpc*-*-*] {
@@ -12540,6 +12516,7 @@ proc check_vect_support_and_set_flags { } {
 		set DEFAULT_VECTCFLAGS [linsert $DEFAULT_VECTCFLAGS 0 "-mcpu=970"]
 	    }
 	    set dg-do-what-default compile
+        set do-what-limit link
 	}
     } elseif { [check_effective_target_x86] } {
 	lappend DEFAULT_VECTCFLAGS "-msse2"
@@ -12547,6 +12524,7 @@ proc check_vect_support_and_set_flags { } {
 	    set dg-do-what-default run
 	} else {
 	    set dg-do-what-default compile
+        set do-what-limit link
 	}
     } elseif { [istarget mips*-*-*]
 	       && [check_effective_target_nomips16] } {
@@ -12566,6 +12544,7 @@ proc check_vect_support_and_set_flags { } {
 	    set dg-do-what-default run
 	} else {
 	    set dg-do-what-default compile
+        set do-what-limit link
 	}
     } elseif [istarget alpha*-*-*] {
 	# Alpha's vectorization capabilities are extremely limited.
@@ -12579,6 +12558,7 @@ proc check_vect_support_and_set_flags { } {
 	    set dg-do-what-default run
 	} else {
 	    set dg-do-what-default compile
+        set do-what-limit link
 	}
     } elseif [istarget ia64-*-*] {
 	set dg-do-what-default run
@@ -12592,6 +12572,7 @@ proc check_vect_support_and_set_flags { } {
 	    set dg-do-what-default run
 	} else {
 	    set dg-do-what-default compile
+        set do-what-limit link
 	}
     } elseif [istarget aarch64*-*-*] {
 	set dg-do-what-default run
@@ -12616,6 +12597,7 @@ proc check_vect_support_and_set_flags { } {
 	} else {
 	    lappend DEFAULT_VECTCFLAGS "-march=z14" "-mzarch"
 	    set dg-do-what-default compile
+        set do-what-limit link
 	}
     } elseif [istarget amdgcn-*-*] {
 	set dg-do-what-default run
