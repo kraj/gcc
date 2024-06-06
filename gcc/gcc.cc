@@ -6620,7 +6620,11 @@ do_spec_1 (const char *spec, int inswitch, const char *soft_matched_part)
 
 	      if (gcc_exec_prefix)
 		{
-		  do_spec_1 ("-iprefix", 1, NULL);
+      if (OPTION_MUSL)
+		    do_spec_1 ("-idirafter", 1, NULL);
+      else
+		    do_spec_1 ("-iprefix", 1, NULL);
+
 		  /* Make this a separate argument.  */
 		  do_spec_1 (" ", 0, NULL);
 		  do_spec_1 (gcc_exec_prefix, 1, NULL);
