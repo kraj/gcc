@@ -909,6 +909,12 @@ proper position among the other output files.  */
 #define ASM_MAP ""
 #endif
 
+#ifdef POISON_BY_DEFAULT
+#define POISON_IS_ERROR " -Werror=poison-system-directories"
+#else
+#define POISON_IS_ERROR
+#endif
+
 /* Assembler options for compressed debug sections.  */
 #if HAVE_LD_COMPRESS_DEBUG == 0
 /* Reject if the linker cannot write compressed debug sections.  */
@@ -1166,6 +1172,8 @@ proper position among the other output files.  */
    "%{fuse-ld=*:-fuse-ld=%*} " LINK_COMPRESS_DEBUG_SPEC \
    "%X %{o*} %{e*} %{N} %{n} %{r}\
     %{s} %{t} %{u*} %{z} %{Z} %{!nostdlib:%{!r:%{!nostartfiles:%S}}} \
+    %{Wno-poison-system-directories:--no-poison-system-directories} \
+    %{Werror=poison-system-directories:--error-poison-system-directories} \
     %{static|no-pie|static-pie:} %@{L*} %(link_libgcc) " \
     VTABLE_VERIFICATION_SPEC " " SANITIZER_EARLY_SPEC " %o "" \
     %{fopenacc|fopenmp|%:gt(%{ftree-parallelize-loops=*:%*} 1):\
@@ -1268,7 +1276,7 @@ static const char *cpp_options =
 "%(cpp_unique_options) %1 %{m*} %{std*&ansi&trigraphs} %{W*&pedantic*} %{w}\
  %{f*} %{g*:%{%:debug-level-gt(0):%{g*}\
  %{!fno-working-directory:-fworking-directory}}} %{O*}\
- %{undef} %{save-temps*:-fpch-preprocess}";
+ %{undef} %{save-temps*:-fpch-preprocess}" POISON_IS_ERROR;
 
 /* Pass -d* flags, possibly modifying -dumpdir, -dumpbase et al.
 
@@ -1297,7 +1305,7 @@ static const char *cc1_options =
  %{coverage:-fprofile-arcs -ftest-coverage}\
  %{fprofile-arcs|fcondition-coverage|fpath-coverage|fprofile-generate*|coverage:\
    %{!fprofile-update=single:\
-     %{pthread:-fprofile-update=prefer-atomic}}}";
+     %{pthread:-fprofile-update=prefer-atomic}}}" POISON_IS_ERROR;
 
 static const char *asm_options =
 "%{-target-help:%:print-asm-header()} "

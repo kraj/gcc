@@ -26,6 +26,7 @@
 #include "intl.h"
 #include "incpath.h"
 #include "cppdefault.h"
+#include "diagnostic-core.h"
 
 /* Microsoft Windows does not natively support inodes.
    VMS has non-numeric inodes.  */
@@ -273,6 +274,10 @@ remove_duplicates (cpp_reader *pfile, struct cpp_dir *head,
 			     cur->name, xstrerror (errno));
 	      reason = REASON_NOENT;
 	    }
+#ifdef ENABLE_POISON_SYSTEM_DIRECTORIES
+	  pcur = &cur->next;
+	  continue;
+#endif
 	}
       else if (!S_ISDIR (st.st_mode))
 	cpp_error_with_line (pfile, CPP_DL_WARNING, 0, 0,
@@ -411,6 +416,26 @@ merge_include_chains (const char *sysroot, cpp_reader *pfile, int verbose)
 	  fprintf (stderr, _("End of #embed search list.\n"));
 	}
     }
+
+#ifdef ENABLE_POISON_SYSTEM_DIRECTORIES
+  if (flag_poison_system_directories)
+    {
+       struct cpp_dir *p;
+
+       for (p = heads[INC_QUOTE]; p; p = p->next)
+	 {
+	  if ((!strncmp (p->name, "/usr/include", 12))
+	      || (!strncmp (p->name, "/usr/local/include", 18))
+	      || (!strncmp (p->name, "/usr/X11R6/include", 18))
+	      || (!strncmp (p->name, "/sw/include", 11))
+	      || (!strncmp (p->name, "/opt/include", 12)))
+	    warning (OPT_Wpoison_system_directories,
+		     "include location \"%s\" is unsafe for "
+		     "cross-compilation",
+		     p->name);
+	 }
+    }
+#endif
 }
 
 /* Use given -I paths for #include "..." but not #include <...>, and
