@@ -659,7 +659,7 @@ lhd_omp_deep_mapping_p (const gimple *, tree)
    are required for the tree containing a map clause.  */
 
 tree
-lhd_omp_deep_mapping_cnt (const gimple *, tree, gimple_seq *)
+lhd_omp_deep_mapping_cnt (gimple *, tree, gimple_seq *)
 {
   return NULL_TREE;
 }
@@ -668,7 +668,7 @@ lhd_omp_deep_mapping_cnt (const gimple *, tree, gimple_seq *)
    are required for the second argument that contains a map clause.  */
 
 void
-lhd_omp_deep_mapping (const gimple *, tree, unsigned HOST_WIDE_INT, tree, tree,
+lhd_omp_deep_mapping (gimple *, tree, unsigned HOST_WIDE_INT, tree, tree,
 		      tree, tree, tree, gimple_seq *)
 {
 }
