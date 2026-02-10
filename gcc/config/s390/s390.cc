@@ -7377,18 +7377,14 @@ s390_expand_vec_compare (rtx target, enum rtx_code cond,
     emit_insn (gen_rtx_SET (target, gen_rtx_NOT (mode, target)));
 }
 
-/* Expand the comparison CODE of CMP1 and CMP2 and copy 1 or 0 into
-   TARGET if either all (ALL_P is true) or any (ALL_P is false) of the
-   elements in CMP1 and CMP2 fulfill the comparison.
-   This function is only used in s390_expand_cstoreti4 and to emit patterns for
-   the vx builtins and therefore only handles comparison codes required by
-   those.  */
-void
-s390_expand_vec_compare_cc (rtx target, enum rtx_code code,
-			    rtx cmp1, rtx cmp2, bool all_p)
+/* Expand the comparison CODE of CMP1 and CMP2 and return a comparison suitable
+   for s390_emit_jump which jumps if all (ALLP is true) or any (ALL_P is false)
+   of the elements in CMP1 and CMP2 fulfill the comparison.  */
+rtx
+s390_expand_vec_compare_gen_cc (enum rtx_code code,
+				rtx cmp1, rtx cmp2, bool all_p)
 {
   machine_mode cc_producer_mode, cc_consumer_mode, scratch_mode;
-  rtx tmp_reg = gen_reg_rtx (SImode);
   bool swap_p = false;
 
   if (GET_MODE_CLASS (GET_MODE (cmp1)) == MODE_VECTOR_INT
@@ -7471,14 +7467,30 @@ s390_expand_vec_compare_cc (rtx target, enum rtx_code code,
 			       gen_rtx_COMPARE (cc_producer_mode, cmp1, cmp2)),
 			  gen_rtx_CLOBBER (VOIDmode,
 					   gen_rtx_SCRATCH (scratch_mode)))));
+
+  return gen_rtx_fmt_ee (code, VOIDmode,
+			 gen_rtx_REG (cc_consumer_mode, CC_REGNUM),
+			 const0_rtx);
+}
+
+/* Expand the comparison CODE of CMP1 and CMP2 and copy 1 or 0 into
+   TARGET if either all (ALL_P is true) or any (ALL_P is false) of the
+   elements in CMP1 and CMP2 fulfill the comparison.
+   This function is only used in s390_expand_cstoreti4 and to emit patterns for
+   the vx builtins and therefore only handles comparison codes required by
+   those.  */
+void
+s390_expand_vec_compare_cc (rtx target, enum rtx_code code,
+			    rtx cmp1, rtx cmp2, bool all_p)
+{
+  rtx cond = s390_expand_vec_compare_gen_cc (code, cmp1, cmp2, all_p);
+  rtx tmp_reg = gen_reg_rtx (SImode);
+
   emit_move_insn (target, const0_rtx);
   emit_move_insn (tmp_reg, const1_rtx);
 
   emit_move_insn (target,
-		  gen_rtx_IF_THEN_ELSE (SImode,
-		    gen_rtx_fmt_ee (code, VOIDmode,
-				    gen_rtx_REG (cc_consumer_mode, CC_REGNUM),
-				    const0_rtx),
+		  gen_rtx_IF_THEN_ELSE (SImode, cond,
 					tmp_reg, target));
 }
 

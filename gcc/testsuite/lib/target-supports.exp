@@ -4752,6 +4752,8 @@ proc check_effective_target_vect_early_break { } {
 	|| [istarget amdgcn-*-*]
 	|| [check_effective_target_riscv_v]
 	|| [check_effective_target_loongarch_sx]
+	|| ([istarget s390*-*-*]
+	     && [check_effective_target_s390_vx])
 	}}]
 }
 
@@ -4769,6 +4771,8 @@ proc check_effective_target_vect_early_break_hw { } {
 	|| [istarget amdgcn-*-*]
 	|| [check_effective_target_riscv_v_ok]
 	|| [check_effective_target_loongarch_sx_hw]
+	|| ([istarget s390*-*-*]
+	     && [check_effective_target_s390_vx])
 	}}]
 }
 

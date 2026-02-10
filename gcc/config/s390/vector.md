@@ -3967,3 +3967,63 @@
   operands[8] = gen_reg_rtx (V16QImode);
   operands[9] = gen_reg_rtx (V16QImode);
 })
+
+(define_expand "vec_cbranch_any<mode>"
+  [(set (pc)
+	(if_then_else (match_operator 0 "comparison_operator"
+		       [(match_operand:VIT_HW_VXE3_T 1 "register_operand" "")
+		        (match_operand:VIT_HW_VXE3_T 2 "register_operand" "")])
+		      (label_ref (match_operand 3 "" ""))
+		      (pc)))]
+  "TARGET_VX"
+{
+  s390_emit_jump (operands[3],
+    s390_expand_vec_compare_gen_cc (GET_CODE (operands[0]),
+				    operands[1], operands[2], false));
+  DONE;
+})
+
+(define_expand "vec_cbranch_all<mode>"
+  [(set (pc)
+	(if_then_else (match_operator 0 "comparison_operator"
+		       [(match_operand:VIT_HW_VXE3_T 1 "register_operand" "")
+		        (match_operand:VIT_HW_VXE3_T 2 "register_operand" "")])
+		      (label_ref (match_operand 3 "" ""))
+		      (pc)))]
+  "TARGET_VX"
+{
+  s390_emit_jump (operands[3],
+    s390_expand_vec_compare_gen_cc (GET_CODE (operands[0]),
+				    operands[1], operands[2], true));
+  DONE;
+})
+
+(define_expand "vec_cbranch_any<mode>"
+  [(set (pc)
+	(if_then_else (match_operator 0 "comparison_operator"
+		       [(match_operand:VECF_HW 1 "register_operand" "")
+		        (match_operand:VECF_HW 2 "register_operand" "")])
+		      (label_ref (match_operand 3 "" ""))
+		      (pc)))]
+  "TARGET_VX"
+{
+  s390_emit_jump (operands[3],
+    s390_expand_vec_compare_gen_cc (GET_CODE (operands[0]),
+				    operands[1], operands[2], false));
+  DONE;
+})
+
+(define_expand "vec_cbranch_all<mode>"
+  [(set (pc)
+	(if_then_else (match_operator 0 "comparison_operator"
+		       [(match_operand:VECF_HW 1 "register_operand" "")
+		        (match_operand:VECF_HW 2 "register_operand" "")])
+		      (label_ref (match_operand 3 "" ""))
+		      (pc)))]
+  "TARGET_VX"
+{
+  s390_emit_jump (operands[3],
+    s390_expand_vec_compare_gen_cc (GET_CODE (operands[0]),
+				    operands[1], operands[2], true));
+  DONE;
+})
