@@ -243,6 +243,10 @@ gomp_team_start (void (*fn) (void *), void *data, unsigned nthreads,
     .taskgroup = taskgroup
   };
 
+  unsigned actual_thread_count = __builtin_gcn_dim_size (1);
+  if (nthreads > actual_thread_count)
+    nthreads = actual_thread_count;
+
   if (nthreads != 1)
     {
       /* When there's more than one thread, we expect that we're operating on

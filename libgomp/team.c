@@ -187,7 +187,7 @@ gomp_new_team (unsigned nthreads)
 #ifndef HAVE_SYNC_BUILTINS
       gomp_mutex_init (&team->work_share_list_free_lock);
 #endif
-      gomp_barrier_init (&team->barrier, nthreads);
+      nthreads = gomp_barrier_init (&team->barrier, nthreads);
       gomp_mutex_init (&team->task_lock);
 
       team->nthreads = nthreads;

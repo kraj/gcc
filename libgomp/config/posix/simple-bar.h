@@ -36,16 +36,16 @@ typedef struct
   gomp_barrier_t bar;
 } gomp_simple_barrier_t;
 
-static inline void
+static inline unsigned int
 gomp_simple_barrier_init (gomp_simple_barrier_t *bar, unsigned count)
 {
-  gomp_barrier_init (&bar->bar, count);
+  return gomp_barrier_init (&bar->bar, count);
 }
 
-static inline void
+static inline unsigned int
 gomp_simple_barrier_reinit (gomp_simple_barrier_t *bar, unsigned count)
 {
-  gomp_barrier_reinit (&bar->bar, count);
+  return gomp_barrier_reinit (&bar->bar, count);
 }
 
 static inline void

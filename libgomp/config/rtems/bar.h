@@ -54,19 +54,23 @@ typedef unsigned int gomp_barrier_state_t;
 #define BAR_CANCELLED		4
 #define BAR_INCR		8
 
-static inline void gomp_barrier_init (gomp_barrier_t *bar, unsigned count)
+static inline unsigned int
+gomp_barrier_init (gomp_barrier_t *bar, unsigned count)
 {
   bar->total = count;
   bar->awaited = count;
   bar->awaited_final = count;
   bar->generation = 0;
   _Futex_Initialize (&bar->futex);
+  return count;
 }
 
-static inline void gomp_barrier_reinit (gomp_barrier_t *bar, unsigned count)
+static inline unsigned int
+gomp_barrier_reinit (gomp_barrier_t *bar, unsigned count)
 {
   __atomic_add_fetch (&bar->awaited, count - bar->total, MEMMODEL_ACQ_REL);
   bar->total = count;
+  return count;
 }
 
 static inline void gomp_barrier_destroy (gomp_barrier_t *bar)

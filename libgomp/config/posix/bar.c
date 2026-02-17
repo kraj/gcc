@@ -31,7 +31,7 @@
 #include "libgomp.h"
 
 
-void
+unsigned int
 gomp_barrier_init (gomp_barrier_t *bar, unsigned count)
 {
   gomp_mutex_init (&bar->mutex1);
@@ -44,6 +44,7 @@ gomp_barrier_init (gomp_barrier_t *bar, unsigned count)
   bar->arrived = 0;
   bar->generation = 0;
   bar->cancellable = false;
+  return count;
 }
 
 void
@@ -61,12 +62,13 @@ gomp_barrier_destroy (gomp_barrier_t *bar)
   gomp_sem_destroy (&bar->sem2);
 }
 
-void
+unsigned int
 gomp_barrier_reinit (gomp_barrier_t *bar, unsigned count)
 {
   gomp_mutex_lock (&bar->mutex1);
   bar->total = count;
   gomp_mutex_unlock (&bar->mutex1);
+  return count;
 }
 
 void

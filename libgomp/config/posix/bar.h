@@ -58,8 +58,8 @@ typedef unsigned int gomp_barrier_state_t;
 #define BAR_CANCELLED		4
 #define BAR_INCR		8
 
-extern void gomp_barrier_init (gomp_barrier_t *, unsigned);
-extern void gomp_barrier_reinit (gomp_barrier_t *, unsigned);
+extern unsigned int gomp_barrier_init (gomp_barrier_t *, unsigned);
+extern unsigned int gomp_barrier_reinit (gomp_barrier_t *, unsigned);
 extern void gomp_barrier_destroy (gomp_barrier_t *);
 
 extern void gomp_barrier_wait (gomp_barrier_t *);

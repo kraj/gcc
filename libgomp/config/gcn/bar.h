@@ -53,18 +53,28 @@ typedef unsigned int gomp_barrier_state_t;
 #define BAR_CANCELLED		4
 #define BAR_INCR		8
 
-static inline void gomp_barrier_init (gomp_barrier_t *bar, unsigned count)
+static inline unsigned int
+gomp_barrier_init (gomp_barrier_t *bar, unsigned count)
 {
+  unsigned actual_thread_count = __builtin_gcn_dim_size (1);
+  if (count > actual_thread_count)
+    count = actual_thread_count;
   bar->total = count;
   bar->awaited = count;
   bar->awaited_final = count;
   bar->generation = 0;
+  return count;
 }
 
-static inline void gomp_barrier_reinit (gomp_barrier_t *bar, unsigned count)
+static inline unsigned int
+gomp_barrier_reinit (gomp_barrier_t *bar, unsigned count)
 {
+  unsigned actual_thread_count = __builtin_gcn_dim_size (1);
+  if (count > actual_thread_count)
+    count = actual_thread_count;
   __atomic_add_fetch (&bar->awaited, count - bar->total, MEMMODEL_RELAXED);
   bar->total = count;
+  return count;
 }
 
 static inline void gomp_barrier_destroy (gomp_barrier_t *bar)
