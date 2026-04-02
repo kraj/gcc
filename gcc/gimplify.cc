@@ -11402,6 +11402,14 @@ omp_group_base (omp_mapping_group *grp, unsigned int *chained,
     case GOMP_MAP_ALWAYS_PRESENT_FROM:
     case GOMP_MAP_ALWAYS_PRESENT_TO:
     case GOMP_MAP_ALWAYS_PRESENT_TOFROM:
+    case GOMP_MAP_NONCONTIG_ARRAY_ALLOC:
+    case GOMP_MAP_NONCONTIG_ARRAY_FROM:
+    case GOMP_MAP_NONCONTIG_ARRAY_TO:
+    case GOMP_MAP_NONCONTIG_ARRAY_TOFROM:
+    case GOMP_MAP_NONCONTIG_ARRAY_FORCE_ALLOC:
+    case GOMP_MAP_NONCONTIG_ARRAY_FORCE_FROM:
+    case GOMP_MAP_NONCONTIG_ARRAY_FORCE_TO:
+    case GOMP_MAP_NONCONTIG_ARRAY_FORCE_TOFROM:
     case GOMP_MAP_ALLOC:
     case GOMP_MAP_RELEASE:
     case GOMP_MAP_DELETE:
@@ -14001,6 +14009,7 @@ gimplify_scan_omp_clauses (tree *list_p, gimple_seq *pre_p,
       || code == OMP_TARGET_DATA
       || code == OMP_TARGET_ENTER_DATA
       || code == OMP_TARGET_EXIT_DATA
+      || code == OMP_TARGET_UPDATE
       || code == OACC_DATA
       || code == OACC_KERNELS
       || code == OACC_PARALLEL
@@ -16219,7 +16228,15 @@ gimplify_adjust_omp_clauses (gimple_seq *pre_p, gimple_seq body, tree *list_p,
 	  gimplify_omp_ctxp = ctx->outer_context;
 	  gimple_seq *seq_p;
 	  seq_p = enter_omp_iterator_loop_context (c, loops_seq_p, pre_p);
-	  if (gimplify_expr (&OMP_CLAUSE_SIZE (c), seq_p, NULL,
+	  if (GOMP_MAP_NONCONTIG_ARRAY_P (OMP_CLAUSE_MAP_KIND (c)))
+	    {
+	      gcc_assert (OMP_CLAUSE_SIZE (c)
+			  && TREE_CODE (OMP_CLAUSE_SIZE (c)) == TREE_LIST);
+	      /* For non-contiguous array maps, OMP_CLAUSE_SIZE is a TREE_LIST
+		 of the individual array dimensions, which gimplify_expr doesn't
+		 handle, so skip the call to gimplify_expr here.  */
+	    }
+	  else if (gimplify_expr (&OMP_CLAUSE_SIZE (c), seq_p, NULL,
 				  is_gimple_val, fb_rvalue) == GS_ERROR)
 	    {
 	      gimplify_omp_ctxp = ctx;
