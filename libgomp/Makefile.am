@@ -71,7 +71,7 @@ libgomp_la_SOURCES = alloc.c atomic.c barrier.c critical.c env.c error.c \
 	oacc-host.c oacc-init.c oacc-mem.c oacc-async.c oacc-plugin.c \
 	oacc-cuda.c priority_queue.c affinity-fmt.c teams.c allocator.c \
 	simple-allocator.c oacc-profiling.c oacc-target.c target-indirect.c \
-	target-cxa-dso-dtor.c
+	target-cxa-dso-dtor.c oacc-profiling-acc_register_library.c
 
 include $(top_srcdir)/plugin/Makefrag.am
 
