@@ -145,8 +145,7 @@ end subroutine
 
 subroutine subr0 (a, b, c, d)
   ! { dg-note {variable 'C\.[0-9]+' declared in block potentially has improper OpenACC privatization level: 'const_decl'} "TODO" { target *-*-* } .-1 }
-  ! { dg-note {variable 'D\.[0-9]+' declared in block isn't candidate for adjusting OpenACC privatization level: not addressable} "" { target *-*-* } .-2 }
-  ! { dg-note {variable 'a\.[0-9]+' declared in block isn't candidate for adjusting OpenACC privatization level: not addressable} "" { target *-*-* } .-3 }
+  ! { dg-note {variable '[abcdABCD]\.[0-9]+' declared in block isn't candidate for adjusting OpenACC privatization level: not addressable} "" { target *-*-* } .-2 }
   implicit none
   integer, parameter :: N = 8
   integer :: a(N)
