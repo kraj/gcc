@@ -795,6 +795,8 @@ extern int in_typeof;
 extern int in_generic;
 extern bool c_in_omp_for;
 extern bool c_omp_array_section_p;
+extern bool c_omp_array_shaping_op_p;
+extern bool c_omp_has_array_shape_p;
 
 extern tree c_last_sizeof_arg;
 extern location_t c_last_sizeof_loc;
@@ -874,6 +876,8 @@ extern tree build_component_ref (location_t, tree, tree, location_t,
 extern tree handle_counted_by_for_component_ref (location_t, tree);
 extern tree build_array_ref (location_t, tree, tree);
 extern tree build_omp_array_section (location_t, tree, tree, tree, tree);
+extern tree create_omp_arrayshape_type (tree expr,
+					vec<tree> *omp_shape_dims);
 extern tree build_external_ref (location_t, tree, bool, tree *);
 extern void pop_maybe_used (bool);
 extern struct maybe_used_decl *save_maybe_used ();
