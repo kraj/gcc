@@ -1,5 +1,9 @@
 /* { dg-additional-options "-std=c++20" } */
 
+/* FIXME: See XFAIL below.  Until this is fixed, this test won't compile
+   and will result in a bogus UNRESOLVED.  */
+/* { dg-do compile } */
+
 #include <ranges>
 #include <span>
 #include <type_traits>
@@ -35,6 +39,8 @@ bool test(Rn&& range)
   std::size_t size = vec.size();
   bool ok;
   #pragma omp target map(from: ok) map(tofrom: data[ :size]) map(to: size)
+  /* <https://baylibre.slack.com/archives/C06TTV7HMMG/p1748508583437829>
+     { dg-bogus {sorry, unimplemented: unsupported map expression '<lambda closure object>.*} TODO { xfail *-*-* } .-2 } */
     {
       std::vector<value_type> orig = {data, data + size};
       std::span<value_type> span = {data, size};

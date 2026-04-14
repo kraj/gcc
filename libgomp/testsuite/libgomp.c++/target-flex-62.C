@@ -1,5 +1,9 @@
 /* { dg-additional-options -std=c++23 } */
 
+/* FIXME: See XFAIL below.  Until this is fixed, this test won't compile
+   and will result in a bogus UNRESOLVED.  */
+/* { dg-do compile } */
+
 /* std::views stuff.  Also tests std::tuple with std::views::zip.  */
 
 #include <algorithm>
@@ -21,6 +25,8 @@ bool f()
 
   bool ok;
   #pragma omp target defaultmap(none) map(from: ok) map(to: arr_fwd[ :8], arr_rev[ :8])
+  /* <https://baylibre.slack.com/archives/C06TTV7HMMG/p1748508583437829>
+     { dg-bogus {sorry, unimplemented: unsupported map expression '<lambda closure object>.*} TODO { xfail *-*-* } .-2 } */
     {
       std::span<const int> fwd = {arr_fwd, 8};
       std::span<const int> rev = {arr_rev, 8};

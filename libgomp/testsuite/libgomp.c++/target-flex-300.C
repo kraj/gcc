@@ -1,5 +1,9 @@
 /* { dg-additional-options -std=c++23 } */
 
+/* FIXME: See XFAIL below.  Until this is fixed, this test won't compile
+   and will result in a bogus UNRESOLVED.  */
+/* { dg-do compile } */
+
 /* numerics  */
 
 #include <algorithm>
@@ -23,6 +27,8 @@ bool test(std::size_t arg)
   int *data = vec.data();
   std::size_t size = vec.size();
   #pragma omp target defaultmap(none) map(from: ok, midpoint_out) map(tofrom: data[ :size]) map(to: arg, size)
+  /* <https://baylibre.slack.com/archives/C06TTV7HMMG/p1748508583437829>
+     { dg-bogus {sorry, unimplemented: unsupported map expression '<lambda closure object>.*} TODO { xfail *-*-* } .-2 } */
     {
       std::span span = {data, size};
       bool inner_ok = true;

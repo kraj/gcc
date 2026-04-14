@@ -1,5 +1,9 @@
 /* { dg-additional-options "-std=c++20" } */
 
+/* FIXME: See XFAIL below.  Until this is fixed, this test won't compile
+   and will result in a bogus UNRESOLVED.  */
+/* { dg-do compile } */
+
 /* ranged algorithms c++20 */
 
 #include <algorithm>
@@ -22,6 +26,8 @@ bool test(const T (&arr)[Size])
   #pragma omp target defaultmap(none) \
 		     map(from: ok, out_2x_arr[ :Size], out_shifted_arr[ :Size]) \
 		     map(to: arr[ :Size])
+  /* <https://baylibre.slack.com/archives/C06TTV7HMMG/p1748508583437829>
+     { dg-bogus {sorry, unimplemented: unsupported map expression '<lambda closure object>.*} TODO { xfail *-*-* } .-4 } */
     {
       std::vector<T> vec(Size);
       std::vector<T> mutated(Size);
