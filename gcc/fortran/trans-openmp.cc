@@ -5852,7 +5852,10 @@ gfc_trans_omp_clauses (stmtblock_t *block, gfc_omp_clauses *clauses,
 		  gcc_unreachable ();
 		}
 
+	      /* FIXME: Currently no support for strided target updates with
+		 iterators.  */
 	      if ((list == OMP_LIST_TO || list == OMP_LIST_FROM)
+		  && !iterator
 		  && (!n->expr
 		       || (n->expr
 			   && n->expr->ref
