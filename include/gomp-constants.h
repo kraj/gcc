@@ -224,6 +224,8 @@ enum gomp_map_kind
        also serves as an effective 'firstprivate' clause for the allocator
        variable.  */
     GOMP_MAP_USES_ALLOCATORS =		(GOMP_MAP_DEEP_COPY | 3),
+    GOMP_MAP_TO_GRID =			(GOMP_MAP_DEEP_COPY | 4),
+    GOMP_MAP_FROM_GRID =		(GOMP_MAP_DEEP_COPY | 5),
 
     /* Internal to GCC, not used in libgomp.  */
     /* Do not map, but pointer assign a pointer instead.  */
@@ -245,7 +247,12 @@ enum gomp_map_kind
     GOMP_MAP_UNSET =			(GOMP_MAP_LAST | 8),
     /* Used to record the name of a named mapper.  */
     GOMP_MAP_PUSH_MAPPER_NAME =		(GOMP_MAP_LAST | 9),
-    GOMP_MAP_POP_MAPPER_NAME =		(GOMP_MAP_LAST | 10)
+    GOMP_MAP_POP_MAPPER_NAME =		(GOMP_MAP_LAST | 10),
+    /* Used to hold a TREE_LIST of grouped nodes in an 'omp declare mapper'
+       definition (only for Fortran at present).  */
+    GOMP_MAP_MAPPING_GROUP =		(GOMP_MAP_LAST | 11),
+    GOMP_MAP_GRID_DIM =			(GOMP_MAP_LAST | 12),
+    GOMP_MAP_GRID_STRIDE =		(GOMP_MAP_LAST | 13)
   };
 
 #define GOMP_MAP_COPY_TO_P(X) \
