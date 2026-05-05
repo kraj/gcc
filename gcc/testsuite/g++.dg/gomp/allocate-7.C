@@ -1,5 +1,4 @@
 /* { dg-do compile { target c++20 } } */
-/* { dg-skip-if "" { ilp32 } } */
 /* { dg-additional-options "-fdump-tree-gimple" } */
 
 #include "allocate-allocator-handle.h"
@@ -37,8 +36,11 @@ struct S0 {
 };
 
 struct S1 {
-  int _v[2];
-  S1(int v) : _v{v, v} {}
+  int _v[32];
+  S1(int v) : _v{v, v, v, v, v, v, v, v,
+		 v, v, v, v, v, v, v, v,
+		 v, v, v, v, v, v, v, v,
+		 v, v, v, v, v, v, v, v} {}
   operator int() const { return 42; }
 };
 

@@ -1,5 +1,4 @@
 /* { dg-do compile { target c++11 } } */
-/* { dg-skip-if "" { ilp32 } } */
 /* { dg-additional-options "-fdump-tree-gimple" } */
 
 #include "allocate-allocator-handle.h"
@@ -23,7 +22,7 @@ struct S0 {
 };
 
 struct S1 {
-  int _v[2];
+  int _v[32];
   S1(int v) : _v() {
     int *end = _v + sizeof(_v) / sizeof(*_v);
     for (int *it = _v; it != end; ++it)
