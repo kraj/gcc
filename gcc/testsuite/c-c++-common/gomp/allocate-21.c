@@ -262,8 +262,8 @@ void f_with_parm_and_allocator0(int p) /* { dg-note "parameter 'p' declared here
 
 void f_with_parm_and_allocator1(int p) /* { dg-note "parameter 'p' declared here" "" { target c++ } } */
 {
-  int v0; /* { dg-note "to be allocated variable declared here" "" { xfail c++ } } */
-  omp_allocator_handle_t alloc0 = omp_default_mem_alloc; /* { dg-note "declared here" "" { xfail c++ } } */
+  int v0; /* { dg-note "to be allocated variable declared here" } */
+  omp_allocator_handle_t alloc0 = omp_default_mem_alloc; /* { dg-note "declared here" } */
   /* { dg-error "function parameter 'p' may not appear as list item in an 'allocate' directive" "" { target c } .+2 } */
   /* { dg-error "variable 'alloc0' used in the 'allocator' clause must be declared before 'v0'" "" { target c } .+1 } */
   #pragma omp allocate(\
@@ -271,7 +271,7 @@ void f_with_parm_and_allocator1(int p) /* { dg-note "parameter 'p' declared here
   v0)\
   allocator(alloc0)
   /* { dg-error "function parameter 'p' may not appear as list item in an 'allocate' directive" "" { target c++ } .-3 } */
-  /* { dg-error "variable 'alloc0' used in the 'allocator' clause must be declared before 'v0'" "" { target c++ xfail c++ } .-2 } */
+  /* { dg-error "variable 'alloc0' used in the 'allocator' clause must be declared before 'v0'" "" { target c++ } .-2 } */
 
   int v1; /* { dg-note "declared here" } */
   {
@@ -285,8 +285,8 @@ void f_with_parm_and_allocator1(int p) /* { dg-note "parameter 'p' declared here
     /* { dg-error "'allocate' directive must be in the same scope as 'v1'" "" { target c++ } .-3 } */
   }
   {
-    int v3; /* { dg-note "to be allocated variable declared here" "" { xfail c++ } } */
-    omp_allocator_handle_t alloc2 = omp_default_mem_alloc; /* { dg-note "declared here" "" { xfail c++ } } */
+    int v3; /* { dg-note "to be allocated variable declared here" } */
+    omp_allocator_handle_t alloc2 = omp_default_mem_alloc; /* { dg-note "declared here" } */
     /* { dg-error "variable 'alloc2' used in the 'allocator' clause must be declared before 'v3'" "" { target c } .+2 } */
     /* { dg-error "'allocate' directive must be in the same scope as 'v1'" "" { target c } .+1 } */
     #pragma omp allocate(\
@@ -294,7 +294,7 @@ void f_with_parm_and_allocator1(int p) /* { dg-note "parameter 'p' declared here
     v3\
     ) allocator(alloc2)
     /* { dg-error "'allocate' directive must be in the same scope as 'v1'" "" { target c++ } .-3 } */
-    /* { dg-error "variable 'alloc2' used in the 'allocator' clause must be declared before 'v3'" "" { target c++ xfail c++ } .-2 } */
+    /* { dg-error "variable 'alloc2' used in the 'allocator' clause must be declared before 'v3'" "" { target c++ } .-2 } */
   }
 }
 

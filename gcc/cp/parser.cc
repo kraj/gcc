@@ -47500,6 +47500,10 @@ cp_parser_omp_allocate (cp_parser *parser, cp_token *pragma_tok)
   nl = nreverse (nl);
 
   const tree directive_ctx = current_scope ();
+  /* Used for diagnostics of the allocator clause's expr in
+     check_omp_allocate_allocator_r.  We only keep this locally, nl is still
+     what ultimately gets passed along to finish_omp_allocate.  */
+  hash_map<tree, location_t> arg_map;
   {
     auto var_is_in_scope = [&] (tree var_decl)
       {
@@ -47635,6 +47639,7 @@ cp_parser_omp_allocate (cp_parser *parser, cp_token *pragma_tok)
 				       arg_loc_wrapper,
 				       *attr_chain);
 	    }
+	    arg_map.put (var, arg_loc);
 	    /* Keep the node.  */
 	    chain = &TREE_CHAIN (node);
 	  }
@@ -47682,6 +47687,130 @@ cp_parser_omp_allocate (cp_parser *parser, cp_token *pragma_tok)
       parens.require_close (parser);
     } while (true);
   cp_parser_require_pragma_eol (parser, pragma_tok);
+
+  /* Used in check_omp_allocate_allocator_r callback.  */
+  struct omp_alloc_expr_ctx
+  {
+    location_t alloc_expr_loc;
+    tree first_arg;
+    hash_map<tree, location_t>& arg_map;
+    hash_set<tree>& declared_after_first_arg;
+    /* Vars used erroneously in the alloc expr.  */
+    hash_set<tree> diagnosed;
+  };
+  /* Callback for cp_walk_tree.  Always returns NULL_TREE so we diagnose as
+     much as possible.  */
+  auto check_omp_allocate_allocator_r = [] (tree *tp, int *ws, void *data)
+    {
+      gcc_assert (tp != nullptr && ws != nullptr && data != nullptr);
+      /* Uses of variables in unevaluated contexts are permitted.  */
+      if (TREE_CODE (*tp) == DECLTYPE_TYPE)
+	{
+	  *ws = 0;
+	  return NULL_TREE;
+	}
+      /* Unwrap manually so we have a location for diagnostics.  */
+      tree var_in_expr = tree_strip_any_location_wrapper (*tp);
+      if (!VAR_P (var_in_expr))
+	return NULL_TREE;
+      /* We can technically allow more than this, but it gets a bit more hazy.
+	 In particular just 'static' should be okay, but it would need to be
+	 constant initialized.  It just doesn't make sense to allow it.
+	 (It can still be used as long as it is declared before.)  */
+      if (DECL_DECLARED_CONSTEXPR_P (var_in_expr)
+	  && TREE_STATIC (var_in_expr))
+	return NULL_TREE;
+      /* Don't walk wrappers of vars, unwrap them manually (see above).  */
+      if (location_wrapper_p (*tp))
+	*ws = 0;
+
+      omp_alloc_expr_ctx& ctx = *static_cast<omp_alloc_expr_ctx *>(data);
+      /* Don't repeat diagnostics if we find the same var used twice.  */
+      if (ctx.diagnosed.contains (var_in_expr))
+	return NULL_TREE;
+
+      /* Don't evaluate the location until we need it.  */
+      auto make_alloc_expr_loc = [&] ()
+	{
+	  const location_t alloc_expr_loc = ctx.alloc_expr_loc;
+	  const location_t loc = EXPR_LOCATION (*tp);
+	  /* If *tp has a meaningful location, use it for the caret.  */
+	  return loc == UNKNOWN_LOCATION
+		 ? alloc_expr_loc
+		 : make_location (loc, alloc_expr_loc, alloc_expr_loc);
+	};
+
+      if (const location_t *const arg_loc = ctx.arg_map.get (var_in_expr))
+	{
+	  auto_diagnostic_group d;
+	  error_at (make_alloc_expr_loc (),
+		    "variable %qD used in %<allocate%> directive must "
+		    "not be used in its %<allocator%> clause", var_in_expr);
+	  inform (DECL_SOURCE_LOCATION (var_in_expr), "declared here");
+	  inform (*arg_loc,
+		  "used in allocate directive here");
+	  ctx.diagnosed.add (var_in_expr);
+	  return NULL_TREE;
+	}
+      if (ctx.declared_after_first_arg.contains (var_in_expr))
+	{
+	  auto_diagnostic_group d;
+	  error_at (make_alloc_expr_loc (),
+		    "variable %qD used in the %<allocator%> clause "
+		    "must be declared before %qD",
+		    var_in_expr, ctx.first_arg);
+	  inform (DECL_SOURCE_LOCATION (var_in_expr), "declared here");
+	  inform (DECL_SOURCE_LOCATION (ctx.first_arg),
+		  "first to be allocated variable declared here");
+	  ctx.diagnosed.add (var_in_expr);
+	  return NULL_TREE;
+	}
+      return NULL_TREE;
+    };
+
+  /* Diagnose invalid uses of variables in the allocator clause's expr.
+     If we want to warn about variables that are potentially modified, either
+     by their address being taken or a reference being bound, it must be done
+     in cp/semantics.cc:finish_omp_allocate instead as such cases can
+     potentially be dependent.  */
+  if (allocator != NULL_TREE && !arg_map.is_empty ())
+    {
+      hash_set<tree> declared_after_first_arg;
+      const tree first_arg = [&] ()
+	{
+	  tree var = current_binding_level->names;
+	  size_t remaining_args = arg_map.elements ();
+	  for (; var != NULL_TREE; var = DECL_CHAIN (var))
+	    {
+	      gcc_assert (remaining_args != 0);
+	      if (!VAR_P (var))
+		continue;
+	      if (!arg_map.get (var))
+		{
+		  /* We haven't seen every arg in arg_map, this var is declared
+		     after at least one of the args.  */
+		  declared_after_first_arg.add (var);
+		  continue;
+		}
+	      --remaining_args;
+	      if (remaining_args == 0)
+		break;
+	    }
+	  /* We stop the above loop before advancing the chain so VAR is the
+	     first variable declared (not to be confused with the first arg)
+	     that was passed into the allocate directive.  */
+	  return var;
+	} (); /* IILE.  */
+
+      gcc_assert (first_arg != NULL_TREE && arg_map.get (first_arg));
+      omp_alloc_expr_ctx ctx = {allocator.get_location (), first_arg, arg_map,
+				declared_after_first_arg, hash_set<tree>()};
+      tree a = allocator.get_value ();
+      cp_walk_tree (&a, check_omp_allocate_allocator_r, &ctx, nullptr);
+      /* Don't try to do anything else with an invalid allocator expr.  */
+      if (!ctx.diagnosed.is_empty ())
+	allocator = cp_expr (error_mark_node, UNKNOWN_LOCATION);
+    }
 
   /* Some codes, such as template parameters, don't get wrapped by
      maybe_wrap_with_location despite not being able to carry a location.

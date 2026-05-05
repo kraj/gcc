@@ -47,9 +47,9 @@ f2 ()
 int
 g ()
 {
-  int n = 5;  /* { dg-note "to be allocated variable declared here" "" { xfail c++ } } */
-  omp_allocator_handle_t my_allocator = omp_low_lat_mem_alloc;  /* { dg-note "declared here" "" { xfail c++ } } */
-  #pragma omp allocate(n) allocator(my_allocator)  /* { dg-error "variable 'my_allocator' used in the 'allocator' clause must be declared before 'n'" "" { xfail c++ } } */
+  int n = 5;  /* { dg-note "to be allocated variable declared here" } */
+  omp_allocator_handle_t my_allocator = omp_low_lat_mem_alloc;  /* { dg-note "declared here" } */
+  #pragma omp allocate(n) allocator(my_allocator)  /* { dg-error "variable 'my_allocator' used in the 'allocator' clause must be declared before 'n'" } */
   n = 7;
   return n;
 }

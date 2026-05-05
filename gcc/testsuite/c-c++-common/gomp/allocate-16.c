@@ -14,15 +14,16 @@ omp_allocator_handle_t foo(int, int *);
 void
 f ()
 {
-  int v;  /* { dg-note "to be allocated variable declared here" "" { xfail c++ } } */
+  int v;  /* { dg-note "to be allocated variable declared here" } */
   static const int n = 5;
   int a = 1;
-  /* { dg-note "declared here" "" { xfail c++ } .-1 } */
+  /* { dg-note "declared here" "" { target *-*-* } .-1 } */
   int b[n];
-  /* { dg-note "declared here" "" { target c++ xfail c++ } .-1 } */
+  /* { dg-note "declared here" "" { target c++ } .-1 } */
   b[a] = 5;
   #pragma omp allocate (v) allocator (foo (a, &b[a]))
-  /* { dg-error "variable 'a' used in the 'allocator' clause must be declared before 'v'" "" { xfail c++ } .-1 } */
+  /* { dg-error "variable 'a' used in the 'allocator' clause must be declared before 'v'" "" { target *-*-* } .-1 } */
+  /* { dg-error "variable 'b' used in the 'allocator' clause must be declared before 'v'" "" { target c++ } .-2 } */
 }
 
 void

@@ -39,9 +39,10 @@ bar ()
   /* { dg-error "expected end of line before '\\(' token" "" { target *-*-* } .-1 } */
 #pragma omp allocate(a2) allocator(b)
   /* { dg-error "'allocator' clause expression has type 'int' rather than 'omp_allocator_handle_t'" "" { target c } .-1 } */
-  /* { dg-error "invalid conversion from 'int' to 'omp_allocator_handle_t'" "" { target c++ } .-2 } */
+  /* { dg-error "variable 'b' used in the 'allocator' clause must be declared before 'a2'" "" { target c++ } .-2 } */
   /* We have diverging behavior here between c and c++ due to a difference in
-     order of diagnostics, as well as diverging semantics, this should probably be unified.  */
+     order of diagnostics, as well as diverging semantics, this should probably be unified.
+     Really this is probably very bugged in C.  */
 }
 
 
