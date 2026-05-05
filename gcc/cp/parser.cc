@@ -47564,6 +47564,19 @@ cp_parser_omp_allocate (cp_parser *parser, cp_token *pragma_tok)
 	    continue;
 	  }
 
+	if (DECL_DECLARED_CONSTEXPR_P (var))
+	  {
+	    auto_diagnostic_group d;
+	    error_at (arg_loc,
+		      "constexpr variable %qD may not appear as list item in "
+		      "an %<allocate%> directive", var);
+	    inform (DECL_SOURCE_LOCATION (var),
+		    "%qD declared here", var);
+	    /* Remove the node.  */
+	    *chain = TREE_CHAIN (node);
+	    continue;
+	  }
+
 	/* Do this before checking if the var was used in another allocate
 	   directive, as the latter diagnostic implies that removing the var
 	   from the previous directive would fix the problem.  */

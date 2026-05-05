@@ -48,3 +48,45 @@ void instantiate_var_templ()
   dependent_var_templ<int const&&>(); /* { dg-message "required from here" } */
 }
 
+
+/* Diagnostics for constexpr vars used in an allocate directive.  */
+
+void cx_var()
+{
+  constexpr int cx = 42; /* { dg-note "'cx' declared here" } */
+  #pragma omp allocate(cx) /* { dg-error "constexpr variable 'cx' may not appear as list item in an 'allocate' directive" } */
+}
+
+template<typename>
+void cx_var_templ_not_instantiated()
+{
+  constexpr int cx = 42; /* { dg-note "'cx' declared here" } */
+  #pragma omp allocate(cx) /* { dg-error "constexpr variable 'cx' may not appear as list item in an 'allocate' directive" } */
+}
+
+template<typename>
+void cx_var_templ()
+{
+  constexpr int cx = 42; /* { dg-note "'cx' declared here" } */
+  #pragma omp allocate(cx) /* { dg-error "constexpr variable 'cx' may not appear as list item in an 'allocate' directive" } */
+}
+
+template<typename T>
+void dependent_cx_var_templ_not_instantiated()
+{
+  constexpr T cx = 42; /* { dg-note "'cx' declared here" } */
+  #pragma omp allocate(cx) /* { dg-error "constexpr variable 'cx' may not appear as list item in an 'allocate' directive" } */
+}
+
+template<typename T>
+void dependent_cx_var_templ()
+{
+  constexpr T cx = 42; /* { dg-note "'cx' declared here" } */
+  #pragma omp allocate(cx) /* { dg-error "constexpr variable 'cx' may not appear as list item in an 'allocate' directive" } */
+}
+
+void instantiate_cx_templ()
+{
+  cx_var_templ<void>();
+  dependent_cx_var_templ<int>();
+}
