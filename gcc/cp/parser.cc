@@ -56890,9 +56890,6 @@ cp_parser_omp_construct (cp_parser *parser, cp_token *pragma_tok, bool *if_p)
     case PRAGMA_OACC_WAIT:
       stmt = cp_parser_oacc_wait (parser, pragma_tok);
       break;
-    case PRAGMA_OMP_ALLOCATE:
-      cp_parser_omp_allocate (parser, pragma_tok);
-      return;
     case PRAGMA_OMP_ATOMIC:
       cp_parser_omp_atomic (parser, pragma_tok, false);
       return;
@@ -57602,7 +57599,9 @@ cp_parser_pragma (cp_parser *parser, enum pragma_context context, bool *if_p)
       cp_parser_omp_construct (parser, pragma_tok, if_p);
       return true;
     case PRAGMA_OMP_ALLOCATE:
+      /* The allocate directive is not a construct.  */
       cp_parser_omp_allocate (parser, pragma_tok);
+      /* EOL is handled in cp_parser_omp_allocate, don't break.  */
       return false;
     case PRAGMA_OACC_ATOMIC:
     case PRAGMA_OACC_CACHE:
