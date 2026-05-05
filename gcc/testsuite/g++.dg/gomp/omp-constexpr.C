@@ -31,7 +31,8 @@ h ()
 constexpr int
 i ()
 {
-  int a [[omp::decl(allocate, align(128))]] = 42;  /* { dg-error "OpenMP directives may not appear in 'constexpr' functions" }  */
+  int a [[omp::decl(allocate, align(128))]] = 42;  /* { dg-error "OpenMP directives may not appear in 'constexpr' functions" "" { xfail *-*-* } }  */
+  /* { dg-message "allocate directive not supported in 'omp::decl'" "" { target *-*-* } .-1 } */
   return a;
 } // { dg-error "not a return-statement" "" { target c++11_down } }
 

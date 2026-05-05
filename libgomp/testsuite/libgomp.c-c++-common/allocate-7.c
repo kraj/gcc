@@ -1,8 +1,11 @@
-/* { dg-do run } */
+/* { dg-do run { target c } } */
+
+/* In C++, omp allocate in an omp::decl attribute is not currently supported.  */
 
 #include <omp.h>
 
 int AAA [[omp::decl(allocate,allocator(omp_low_lat_mem_alloc),align(4096))]];
+
 
 #ifndef __cplusplus
   _Static_assert (_Alignof(AAA) == _Alignof(int), "wrong alignment");

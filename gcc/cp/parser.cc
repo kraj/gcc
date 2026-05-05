@@ -54763,7 +54763,8 @@ cp_parser_late_parsing_omp_declare_simd (cp_parser *parser, tree attrs,
 bool
 cp_maybe_parse_omp_decl (tree decl, tree d)
 {
-  gcc_assert (TREE_CODE (d) == DEFERRED_PARSE);
+  gcc_assert (TREE_CODE (d) == DEFERRED_PARSE
+	      && TREE_PUBLIC (d));
   cp_token *first = DEFPARSE_TOKENS (d)->first;
   cp_token *last = DEFPARSE_TOKENS (d)->last;
   const char *directive[3] = {};
@@ -54800,6 +54801,13 @@ cp_maybe_parse_omp_decl (tree decl, tree d)
 
   if (!flag_openmp && !dir->simd)
     return true;
+
+  if (dir->id == PRAGMA_OMP_ALLOCATE)
+    {
+      sorry_at (first->location,
+		"allocate directive not supported in %<omp::decl%>");
+      return true;
+    }
 
   cp_parser *parser = the_parser;
   cp_lexer *lexer = cp_lexer_alloc ();
