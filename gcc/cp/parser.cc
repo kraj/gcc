@@ -47505,25 +47505,41 @@ cp_parser_omp_allocate (cp_parser *parser, cp_token *pragma_tok)
      what ultimately gets passed along to finish_omp_allocate.  */
   hash_map<tree, location_t> arg_map;
   {
-    auto var_is_in_scope = [&] (tree var_decl)
-      {
-	/* (OpenMP 6.0 311:11-12) An allocate directive must appear in the same
-	   scope as the declarations of each of its list items and must follow
-	   all such declarations.
+    /* To avoid quadratic complexity in the block scope case we need to keep
+       some state.  Our hash_set utility has a lazy option, but it sucks so
+       we'll just bite the allocation unconditionally.  */
+    auto var_is_in_scope
+      = [&, vars_in_scope = hash_set<tree>(),
+	 block_var = current_binding_level->names] (tree var_decl) mutable
+	  {
+	    /* (OpenMP 6.0 311:11-12) An allocate directive must appear in the
+	       same scope as the declarations of each of its list items and
+	       must follow all such declarations.
 
-	   Note that it states declarations, not definitions, thus we can rely
-	   on VAR_DECL's CP_DECL_CONTEXT.  This will correctly reject an
-	   allocate directive applied to a definition in a different scope.  */
-	if (!DECL_DECLARES_FUNCTION_P (directive_ctx))
-	  return CP_DECL_CONTEXT (var_decl) == directive_ctx;
-	/* This is O(n^2), caching names during traversal might be better.  */
-	for (tree block_var = current_binding_level->names;
-	     block_var != NULL_TREE;
-	     block_var = DECL_CHAIN (block_var))
-	  if (block_var == var_decl)
-	    return true;
-	return false;
-      };
+	       Note that it states declarations, not definitions, well-formed
+	       uses of this directive will always be in the same scope as the
+	       DECL_CONTEXT of VAR_DECL.  */
+	    if (!DECL_DECLARES_FUNCTION_P (directive_ctx))
+	      return CP_DECL_CONTEXT (var_decl) == directive_ctx;
+	    /* We can't rely on this for block scope though and must traverse
+	       the decls in this scope instead.
+	       As noted above, to avoid quadratic complexity we keep state
+	       across multiple calls, caching as we go to avoid going through
+	       all names in this scope up front.  */
+	    if (vars_in_scope.contains (var_decl))
+	      return true;
+	    /* We initialize block_var in the captures.  */
+	    for (; block_var != NULL_TREE; block_var = DECL_CHAIN (block_var))
+	      {
+		/* Matches don't have to be cached, duplicate var_decl args are
+		   diagnosed before scope is diagnosed.  */
+		if (block_var == var_decl)
+		  return true;
+		else if (VAR_P (block_var))
+		  vars_in_scope.add (block_var);
+	      }
+	    return false;
+	  };
     hash_map<tree, location_t> seen_args;
     /* The head might have an error and need to be removed.  */
     tree *chain = &nl;
