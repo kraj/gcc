@@ -12698,6 +12698,28 @@ finish_omp_allocate (const location_t loc, const tree var_list,
      still need access to them when diagnosing the allocator clause.  */
   hash_set<tree> deferred_erroneous_var_nodes;
 
+  /* Due to a workaround for static local variables in implicit constexpr
+     functions, this case does not work properly.  */
+  if (any_static_vars
+      && DECL_DECLARES_FUNCTION_P (context)
+      && maybe_constexpr_fn (context))
+    {
+      auto_diagnostic_group d;
+      sorry_at (loc, "static variables are not supported in an %<allocate%> "
+		     "directive in an implicit constexpr function");
+      emit_diag_for_var_group (tree_static_p,
+			       &inform,
+			       G_("static variables appear in the "
+				  "%<allocate%> directive here"),
+			       var_list);
+      for (tree vn = var_list; vn != NULL_TREE; vn = TREE_CHAIN (vn))
+	{
+	  if (!tree_static_p (TREE_PURPOSE (vn)))
+	    continue;
+	  deferred_erroneous_var_nodes.add (vn);
+	}
+    }
+
   const auto ref_var_p
     = [] (const_tree t) -> bool { return TYPE_REF_P (TREE_TYPE (t)); };
   if (any_of_vars (ref_var_p))
