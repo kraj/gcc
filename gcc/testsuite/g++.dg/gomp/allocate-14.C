@@ -121,9 +121,9 @@ void nttp_allocator_static()
 {
   static int a; /* { dg-note "'a' declared here" } */
   #pragma omp allocate(a) allocator(Alloc)
-  /* { dg-error "'allocator' clause requires a constant predefined allocator" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'allocator' clause requires a constant predefined allocator" "" { target *-*-* } .-1 } */
   /* { dg-note "because one or more variables with static storage duration appear in the 'allocate' directive" "" { target *-*-* } .-2 } */
-  /* { dg-note "expression evaluates to '1024'" "" { xfail *-*-* } .-3 }*/
+  /* { dg-note "expression evaluates to '1024'" "" { target *-*-* } .-3 }*/
 }
 
 template<omp_allocator_handle_t Alloc>
@@ -145,9 +145,9 @@ void nttp_dependent_type_allocator_static_0()
 {
   static int a; /* { dg-note "'a' declared here" } */
   #pragma omp allocate(a) allocator(Alloc)
-  /* { dg-error "'allocator' clause requires a constant predefined allocator" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'allocator' clause requires a constant predefined allocator" "" { target *-*-* } .-1 } */
   /* { dg-note "because one or more variables with static storage duration appear in the 'allocate' directive" "" { target *-*-* } .-2 } */
-  /* { dg-note "expression evaluates to '1024'" "" { xfail *-*-* } .-3 }*/
+  /* { dg-note "expression evaluates to '1024'" "" { target *-*-* } .-3 }*/
 }
 
 template<typename AllocT, AllocT Alloc>
@@ -266,7 +266,7 @@ template<int Align>
 void nttp_align()
 {
   int a;
-  #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+  #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" } */
 }
 
 template<int Align>
@@ -289,7 +289,7 @@ template<typename AlignT, AlignT Align>
 void nttp_dependent_type_align_0()
 {
   int a;
-  #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+  #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" } */
 }
 
 template<typename AlignT, AlignT Align>
@@ -420,7 +420,7 @@ void all_dependent_2()
   int b = 42;
   Var a = b;
   #pragma omp allocate(a) allocator(Alloc) align(Align)
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
 }
 
 template<typename Var,
@@ -444,7 +444,7 @@ void all_dependent_4()
   Var a = b; /* { dg-note "'a' declared here" } */
   #pragma omp allocate(a) allocator(Alloc) align(Align)
   /* { dg-error "variables with reference type may not appear in an 'allocate' directive" "" { target *-*-* } .-1 } */
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-2 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-2 } */
 }
 
 template<typename Var,
@@ -456,7 +456,7 @@ void all_dependent_5()
   Var a = b;
   #pragma omp allocate(a) allocator(Alloc) align(Align)
   /* { dg-error "invalid conversion from 'int' to 'omp_allocator_handle_t'" "" { target *-*-* } .-1 } */
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-2 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-2 } */
 }
 
 template<typename Var,
@@ -469,7 +469,7 @@ void all_dependent_6()
   #pragma omp allocate(a) allocator(Alloc) align(Align)
   /* { dg-error "variables with reference type may not appear in an 'allocate' directive" "" { target *-*-* } .-1 } */
   /* { dg-error "invalid conversion from 'int' to 'omp_allocator_handle_t'" "" { target *-*-* } .-2 } */
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-3 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-3 } */
 }
 
 void instantiate_all_dependent()
@@ -603,7 +603,7 @@ template<int Align>
 void templ_no_vars_dep_align_invalid()
 {
   #pragma omp allocate() align(Align) /* { dg-error "expected unqualified-id before '\\\)' token" } */
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
 }
 template void templ_no_vars_dep_align_invalid<42>();
 
@@ -876,7 +876,7 @@ template<int Align>
 void templ_invalid_vars_param_dependent_align_invalid(int p) /* { dg-note "parameter 'p' declared here" } */
 {
   #pragma omp allocate(p) align(Align) /* { dg-error "function parameter 'p' may not appear as list item in an 'allocate' directive" } */
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
 }
 template void templ_invalid_vars_param_dependent_align_invalid<42>(int);
 
@@ -908,7 +908,7 @@ void templ_invalid_vars_out_of_scope_dependent_align_invalid()
   int a; /* { dg-note "declared here" } */
   {
     #pragma omp allocate(a) align(Align) /* { dg-error "'allocate' directive must be in the same scope as 'a'" } */
-    /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+    /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
   }
 }
 template void templ_invalid_vars_out_of_scope_dependent_align_invalid<42>();
@@ -944,7 +944,7 @@ void templ_invalid_vars_out_of_scope_and_param_dependent_align_invalid(int p) /*
   {
     #pragma omp allocate(a, p) align(Align) /* { dg-error "'allocate' directive must be in the same scope as 'a'" } */
     /* { dg-error "function parameter 'p' may not appear as list item in an 'allocate' directive" "" { target *-*-* } .-1 } */
-    /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-2 } */
+    /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-2 } */
   }
 }
 template void templ_invalid_vars_out_of_scope_and_param_dependent_align_invalid<42>(int);
@@ -1001,7 +1001,7 @@ void multiple_uses_dep_directive_before_invalid_align()
 {
   int a;
   #pragma omp allocate(a) align(Align) /* { dg-note "'a' previously appeared here" } */
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
   #pragma omp allocate(a) /* { dg-error "'a' already appeared as list item in an 'allocate' directive" } */
 }
 template void multiple_uses_dep_directive_before_invalid_align<42>();
@@ -1032,11 +1032,6 @@ void multiple_uses_dep_directive_after_invalid_align()
   int a;
   #pragma omp allocate(a) /* { dg-note "'a' previously appeared here" } */
   #pragma omp allocate(a) align(Align) /* { dg-error "'a' already appeared as list item in an 'allocate' directive" } */
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
 }
 template void multiple_uses_dep_directive_after_invalid_align<42>();
-
-/* These are fixed by the later location wrapping patch.  */
-/* { dg-bogus "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } 0 } */
-/* { dg-bogus "'allocator' clause requires a constant predefined allocator" "" { xfail *-*-* } 0 } */
-/* { dg-bogus "expression evaluates to '1024'" "" { xfail *-*-* } 0 } */

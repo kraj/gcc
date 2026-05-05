@@ -31,7 +31,7 @@ auto lambda_0_bad_align()
 	  int b = 42;
 	  decltype(p3) a = b;
 	  #pragma omp allocate(a) align(Align) allocator(p2)
-	  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+	  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
 	  return a;
 	};
       };
@@ -87,7 +87,7 @@ auto lambda_0_all()
 	  decltype(p3) a = b; /* { dg-message "'a' declared here" } */
 	  #pragma omp allocate(a) align(Align) allocator(p2)
 	  /* { dg-error "variables with reference type may not appear in an 'allocate' directive" "" { target *-*-* } .-1 } */
-	  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-2 } */
+	  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-2 } */
 	  /* { dg-error "invalid conversion from 'int' to 'omp_allocator_handle_t'" "" { target *-*-* } .-3 } */
 	  return a;
 	};
@@ -212,18 +212,18 @@ auto lambda_1_bad_align()
 {
   return [](auto p0){
     int a = 42;
-    #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+    #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" } */
     return [](auto p1){
       int a = 42;
-      #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+      #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" } */
       return [](auto p2){
 	int a = 42;
-	#pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+	#pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" } */
 	return [p2](auto p3){
 	  int b = 42;
 	  decltype(p3) a = b;
 	  #pragma omp allocate(a) align(Align) allocator(p2)
-	  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+	  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
 	  return a;
 	};
       };
@@ -284,19 +284,19 @@ auto lambda_1_all()
 {
   return [](auto p0){
     int a = 42;
-    #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+    #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" } */
     return [](auto p1){
       int a = 42;
-      #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+      #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" } */
       return [](auto p2){
 	int a = 42;
-	#pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+	#pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" } */
 	return [p2](auto p3){
 	  int b = 42;
 	  decltype(p3) a = b; /* { dg-message "'a' declared here" } */
 	  #pragma omp allocate(a) align(Align) allocator(p2)
 	  /* { dg-error "variables with reference type may not appear in an 'allocate' directive" "" { target *-*-* } .-1 } */
-	  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-2 } */
+	  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-2 } */
 	  /* { dg-error "invalid conversion from 'int' to 'omp_allocator_handle_t'" "" { target *-*-* } .-3 } */
 	  return a;
 	};
@@ -555,6 +555,3 @@ void instantiate_lambdas_2()
     auto c3 = c2.operator()<int&>(a); /* { dg-message "required from here" } */
   }
 }
-
-/* This is fixed by the later location wrapping patch.  */
-/* { dg-bogus "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } 0 } */

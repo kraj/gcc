@@ -47683,13 +47683,35 @@ cp_parser_omp_allocate (cp_parser *parser, cp_token *pragma_tok)
     } while (true);
   cp_parser_require_pragma_eol (parser, pragma_tok);
 
+  /* Some codes, such as template parameters, don't get wrapped by
+     maybe_wrap_with_location despite not being able to carry a location.
+     We need a location to issue good diagnostics in finish_omp_allocate.  */
+  auto maybe_force_wrap_with_location = [] (cp_expr expr_with_loc) -> tree
+    {
+      tree expr = expr_with_loc.get_value ();
+      if (!expr || error_operand_p (expr))
+	return expr;
+      /* In most situations, expr will already have been wrapped.  */
+      if (CAN_HAVE_LOCATION_P (expr))
+	return expr;
+
+      location_t expr_loc = expr_with_loc.get_location ();
+      /* Copied from tree.cc:maybe_wrap_with_location.  */
+      const tree_code code
+	= (((CONSTANT_CLASS_P (expr) && TREE_CODE (expr) != STRING_CST)
+	    || (TREE_CODE (expr) == CONST_DECL && !TREE_STATIC (expr)))
+	   ? NON_LVALUE_EXPR : VIEW_CONVERT_EXPR);
+      tree wrapper = build1_loc (expr_loc, code, TREE_TYPE (expr), expr);
+      EXPR_LOCATION_WRAPPER_P (wrapper) = 1;
+      return wrapper;
+    };
   /* We can still diagnose some things about allocator/alignment even if nl
      is NULL_TREE.  */
 
   finish_omp_allocate (pragma_tok->location,
 		       nl,
-		       allocator,
-		       alignment,
+		       maybe_force_wrap_with_location (allocator),
+		       maybe_force_wrap_with_location (alignment),
 		       directive_ctx);
 }
 

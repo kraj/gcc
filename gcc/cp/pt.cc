@@ -20482,11 +20482,25 @@ tsubst_stmt (tree t, tree args, tsubst_flags_t complain, tree in_decl)
     case OMP_ALLOCATE:
       {
 	gcc_assert (flag_openmp);
-
-	tree alloc
-	  = tsubst_expr (OMP_ALLOCATE_ALLOCATOR (t), args, complain, in_decl);
-	tree align
-	  = tsubst_expr (OMP_ALLOCATE_ALIGN (t), args, complain, in_decl);
+	/* We force a location wrapper in some cases that don't get wrapped by
+	   maybe_wrap_with_location, tsubst_expr doesn't rewrap them in those
+	   cases so we have to do it.  */
+	auto subst_and_rewrap = [&] (const tree expr)
+	  {
+	    if (!expr || expr == error_mark_node)
+	      return expr;
+	    tree ret = tsubst_expr (tree_strip_any_location_wrapper (expr),
+				    args, complain, in_decl);
+	    if (location_wrapper_p (expr) && !CAN_HAVE_LOCATION_P (ret))
+	      {
+		ret = build1_loc (EXPR_LOCATION (expr), TREE_CODE (expr),
+				  TREE_TYPE (ret), ret);
+		EXPR_LOCATION_WRAPPER_P (ret) = 1;
+	      }
+	    return ret;
+	  };
+	tree alloc = subst_and_rewrap (OMP_ALLOCATE_ALLOCATOR (t));
+	tree align = subst_and_rewrap (OMP_ALLOCATE_ALIGN (t));
 	tree vars = copy_list (OMP_ALLOCATE_VARS (t));
 	for (tree node = vars; node != NULL_TREE; node = TREE_CHAIN (node))
 	  {

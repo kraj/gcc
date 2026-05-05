@@ -34,7 +34,7 @@ void auto_nttp_allocator_static_0()
   static int a;
   #pragma omp allocate(a) allocator(Alloc)
   /* { dg-error "invalid conversion from 'int' to 'omp_allocator_handle_t'" "" { target *-*-* } .-1 } */
-  /* { dg-error "'allocator' clause requires a constant predefined allocator" "" { xfail *-*-* } .-2 } */
+  /* { dg-error "'allocator' clause requires a constant predefined allocator" "" { target *-*-* } .-2 } */
 }
 
 template<auto Alloc>
@@ -49,7 +49,7 @@ void auto_nttp_allocator_static_2()
 {
   static int a;
   #pragma omp allocate(a) allocator(Alloc)
-  /* { dg-error "'allocator' clause requires a constant predefined allocator" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'allocator' clause requires a constant predefined allocator" "" { target *-*-* } .-1 } */
 }
 
 template<auto Alloc>
@@ -76,8 +76,6 @@ void instantiate_auto_nttp_allocator_static()
 
 #undef DEFINITELY_NOT_PREDEFINED
 
-/* { dg-bogus "'allocator' clause requires a constant predefined allocator" "" { xfail *-*-* } 0 } */
-
 /* Invalid align clause */
 
 template<auto Align>
@@ -91,7 +89,7 @@ template<auto Align>
 void auto_nttp_align_0()
 {
   int a;
-  #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } } */
+  #pragma omp allocate(a) align(Align) /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } } */
 }
 
 template<auto Align>
@@ -99,7 +97,7 @@ void auto_nttp_align_1()
 {
   int a;
   #pragma omp allocate(a) align(Align)
-  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } .-1 } */
+  /* { dg-error "'align' clause argument needs to be positive constant power of two integer expression" "" { target *-*-* } .-1 } */
   /* { dg-error {could not convert 'nullptr' from 'std::nullptr_t' to '(?:long )?unsigned int'} "" { target *-*-* } .-2 } */
 }
 
@@ -111,5 +109,3 @@ void instantiate_auto_nttp_align()
   auto_nttp_align_1<32>(); /* { dg-bogus "required from here" } */
   auto_nttp_align_1<nullptr>(); /* { dg-message "required from here" } */
 }
-
-/* { dg-bogus "'align' clause argument needs to be positive constant power of two integer expression" "" { xfail *-*-* } 0 } */
