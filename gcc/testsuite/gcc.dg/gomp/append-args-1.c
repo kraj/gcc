@@ -40,8 +40,8 @@ void variant_fn3();
 #pragma omp declare variant(variant_fn3) match(construct={dispatch}) append_args(interop(target)) \
                                          adjust_args(need_device_ptr: x,y)
 void bar3();
-/* { dg-error "'x' undeclared here \\(not in a function\\)" "" { target *-*-* } .-2 }  */
-/* { dg-error "'y' undeclared here \\(not in a function\\)" "" { target *-*-* } .-3 }  */
+/* { dg-error "'x' is not a function parameter" "" { target *-*-* } .-2 }  */
+/* { dg-error "'y' is not a function parameter" "" { target *-*-* } .-3 }  */
 /* { dg-message "'append_args' with unprototyped base function" "" { target *-*-* } .-5 }  */
 
 
@@ -60,7 +60,8 @@ void variant_fn5(omp_interop_t, omp_interop_t);
                                          adjust_args(need_device_ptr: x,y)
 void bar5();
 /* { dg-message "'append_args' with unprototyped base function" "" { target *-*-* } .-3 }  */
-
+/* { dg-error "'x' is not a function parameter" "" { target *-*-* } .-3 }  */
+/* { dg-error "'y' is not a function parameter" "" { target *-*-* } .-4 }  */
 
 void variant_fn6(omp_interop_t, omp_interop_t);
 #pragma omp declare variant(variant_fn6) match(construct={dispatch}) append_args(interop(target))
