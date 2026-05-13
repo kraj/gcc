@@ -1898,8 +1898,11 @@ init_cumulative_args (CUMULATIVE_ARGS *cum,  /* Argument info to initialize */
       cum->call_abi = ix86_function_type_abi (fntype);
       preserve_none_type = fntype;
     }
+
+  /* For MS ABI functions, parameter passing scheme is unchanged.  */
   cum->preserve_none_abi
     = (preserve_none_type
+       && cum->call_abi != MS_ABI
        && (lookup_attribute ("preserve_none",
 			     TYPE_ATTRIBUTES (preserve_none_type))
 	   != nullptr));

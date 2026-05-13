@@ -8899,10 +8899,11 @@ interrupt.
 @item preserve_none
 This attribute applies to functions.
 
-It is similar to @code{no_callee_saved_registers}, except
-on x86-64, r12, r13, r14, r15, rdi and rsi registers are used for
-integer parameter passing and this calling convention is subject to
-change.
+It is similar to @code{no_callee_saved_registers}, except on x86-64
+with the SysV ABI, r12, r13, r14, r15, rdi and rsi registers are used
+for integer parameter passing and this calling convention is subject to
+change.  For the Microsoft ABI, this attribute is treated the same as
+@code{no_callee_saved_registers}.
 
 @atindex @code{no_caller_saved_registers}, x86
 @item no_caller_saved_registers
