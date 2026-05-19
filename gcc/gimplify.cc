@@ -16602,9 +16602,11 @@ end_adjust_omp_map_clause:
 	case OMP_CLAUSE_TASK_REDUCTION:
 	  decl = OMP_CLAUSE_DECL (c);
 	  /* OpenACC reductions need a present_or_copy data clause.
-	     Add one if necessary.  Emit error when the reduction is private.  */
-	  if (ctx->region_type == ORT_ACC_PARALLEL
-	      || ctx->region_type == ORT_ACC_SERIAL)
+	     Add one if necessary.  Emit error when the reduction is
+	     private.  */
+	  if (DECL_P (decl) &&
+	      (ctx->region_type == ORT_ACC_PARALLEL
+	       || ctx->region_type == ORT_ACC_SERIAL))
 	    {
 	      n = splay_tree_lookup (ctx->variables, (splay_tree_key) decl);
 	      if (n->value & (GOVD_PRIVATE | GOVD_FIRSTPRIVATE))

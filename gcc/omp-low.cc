@@ -7745,6 +7745,7 @@ lower_oacc_reductions (location_t loc, tree clauses, tree level, bool inner,
 	tree ref_to_res = NULL_TREE;
 	tree incoming, outgoing, v1, v2, v3;
 	bool is_private = false;
+	bool is_fpp = false;
 
 	enum tree_code rcode = OMP_CLAUSE_REDUCTION_CODE (c);
 	if (rcode == MINUS_EXPR)
@@ -7806,6 +7807,14 @@ lower_oacc_reductions (location_t loc, tree clauses, tree level, bool inner,
 		      is_private = true;
 		      goto do_lookup;
 		    }
+		  else if (OMP_CLAUSE_CODE (cls) == OMP_CLAUSE_MAP
+			   && (OMP_CLAUSE_MAP_KIND (cls)
+			       == GOMP_MAP_FIRSTPRIVATE_POINTER)
+			   && orig == OMP_CLAUSE_DECL (cls))
+		    {
+		      is_fpp = true;
+		      goto do_lookup;
+		    }
 	      }
 
 	  do_lookup:
@@ -7822,13 +7831,23 @@ lower_oacc_reductions (location_t loc, tree clauses, tree level, bool inner,
 		    orig_clause = cls;
 		    break;
 		  }
-	    if (orig_clause != NULL_TREE && !is_private)
+	    if ((orig_clause != NULL_TREE || is_fpp) && !is_private)
 	      {
-		ref_to_res = build_receiver_ref (orig_clause, false, outer);
-		if (omp_privatize_by_reference (orig))
-		  ref_to_res = build_simple_mem_ref (ref_to_res);
-
 		tree type = TREE_TYPE (var);
+
+		if (is_fpp)
+		  {
+		    tree x = create_tmp_var (type);
+		    gimplify_assign (x, lookup_decl (orig, outer), fork_seq);
+		    ref_to_res = x;
+		  }
+		else
+		  {
+		    ref_to_res = build_receiver_ref (orig_clause, false, outer);
+		    if (omp_privatize_by_reference (orig))
+		      ref_to_res = build_simple_mem_ref (ref_to_res);
+		  }
+
 		if (POINTER_TYPE_P (type))
 		  type = TREE_TYPE (type);
 
