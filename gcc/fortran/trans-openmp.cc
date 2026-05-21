@@ -3649,6 +3649,8 @@ gfc_trans_omp_array_section (stmtblock_t *block, gfc_exec_op op,
      contains the initial offset of ptr from base, not the size.  */
   OMP_CLAUSE_SIZE (node3) = fold_build2 (MINUS_EXPR, ptrdiff_type_node,
 					 ptr, base);
+  if (n->u.map.readonly)
+    OMP_CLAUSE_MAP_POINTS_TO_READONLY (node3) = 1;
 }
 
 static tree

@@ -4164,6 +4164,8 @@ c_omp_address_inspector::expand_array_base (tree *pc,
     }
   else if (c2)
     {
+      if (OMP_CLAUSE_MAP_READONLY (c))
+	OMP_CLAUSE_MAP_POINTS_TO_READONLY (c2) = 1;
       OMP_CLAUSE_CHAIN (c2) = OMP_CLAUSE_CHAIN (c);
       OMP_CLAUSE_CHAIN (c) = c2;
       if (implicit_p)
@@ -4353,6 +4355,8 @@ c_omp_address_inspector::expand_component_selector (tree *pc,
     }
   else if (c2)
     {
+      if (OMP_CLAUSE_MAP_READONLY (c))
+	OMP_CLAUSE_MAP_POINTS_TO_READONLY (c2) = 1;
       OMP_CLAUSE_CHAIN (c2) = OMP_CLAUSE_CHAIN (c);
       OMP_CLAUSE_CHAIN (c) = c2;
       pc = &OMP_CLAUSE_CHAIN (c);
