@@ -343,7 +343,8 @@ struct lang_hooks_for_decls
   void (*omp_deep_mapping) (gimple *ctx_stmt, tree clause,
 			    unsigned HOST_WIDE_INT tkind,
 			    tree data, tree sizes, tree kinds,
-			    tree offset_data, tree offset, gimple_seq *seq);
+			    tree offset_data, tree offset, gimple_seq *seq,
+			    vec<tree> *);
 
   /* Finish language-specific processing on mapping nodes after expanding
      user-defined mappers.  */
