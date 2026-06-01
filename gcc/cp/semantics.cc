@@ -12941,6 +12941,20 @@ finish_omp_allocate (const location_t loc, const tree var_list,
 		  "expression evaluates to %qwu", tree_to_uhwi (ret));
 	  return error_mark_node;
 	}
+      const bool cgroup_pteam_thread_allocator
+	= (alloc_value == GOMP_OMP_PREDEF_ALLOC_CGROUP
+	   || alloc_value == GOMP_OMP_PREDEF_ALLOC_PTEAM
+	   || alloc_value == GOMP_OMP_PREDEF_ALLOC_THREAD);
+      if (cgroup_pteam_thread_allocator)
+	{
+	  auto_diagnostic_group d;
+	  error_at (EXPR_LOCATION (alloc_in),
+		    "%<allocator%> clause must not be "
+		    "%<omp_cgroup_mem_alloc%>, %<omp_pteam_mem_alloc%>, "
+		    "or %<omp_thread_mem_alloc%>");
+	  emit_diag_for_static_vars ();
+	  return error_mark_node;
+	}
       return ret;
     } (); /* IILE.  */
 

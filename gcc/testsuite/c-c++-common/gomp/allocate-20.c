@@ -37,28 +37,20 @@ static int g9;
 static int g10;
 
 #pragma omp allocate(g0) allocator(omp_null_allocator)  // { dg-error "'allocator' clause requires a predefined allocator as 'g0' is static" "" { target c } }
+// { dg-error "'allocator' clause requires a constant predefined allocator" "" { target c++ } .-1 }
 #pragma omp allocate(g1) allocator(omp_default_mem_alloc)
 #pragma omp allocate(g2) allocator(omp_large_cap_mem_alloc)
 #pragma omp allocate(g3) allocator(omp_const_mem_alloc)
 #pragma omp allocate(g4) allocator(omp_high_bw_mem_alloc)
 #pragma omp allocate(g5) allocator(omp_low_lat_mem_alloc)
 #pragma omp allocate(g6) allocator(omp_cgroup_mem_alloc)  // { dg-error "'allocator' clause for static variable 'g6' must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c } }
+// { dg-error "'allocator' clause must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c++ } .-1 }
 #pragma omp allocate(g7) allocator(omp_pteam_mem_alloc)   // { dg-error "'allocator' clause for static variable 'g7' must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c } }
+// { dg-error "'allocator' clause must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c++ } .-1 }
 #pragma omp allocate(g8) allocator(omp_thread_mem_alloc)  // { dg-error "'allocator' clause for static variable 'g8' must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c } }
+// { dg-error "'allocator' clause must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c++ } .-1 }
 #pragma omp allocate(g9) allocator(ompx_gnu_pinned_mem_alloc)
 #pragma omp allocate(g10) allocator(ompx_gnu_managed_mem_alloc)
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-// { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-
 
 void local_static ()
 {
@@ -75,25 +67,18 @@ void local_static ()
   static int s10;
 
   #pragma omp allocate(s0) allocator(omp_null_allocator)  // { dg-error "'allocator' clause requires a predefined allocator as 's0' is static" "" { target c } }
+// { dg-error "'allocator' clause requires a constant predefined allocator" "" { target c++ } .-1 }
   #pragma omp allocate(s1) allocator(omp_default_mem_alloc)
   #pragma omp allocate(s2) allocator(omp_large_cap_mem_alloc)
   #pragma omp allocate(s3) allocator(omp_const_mem_alloc)
   #pragma omp allocate(s4) allocator(omp_high_bw_mem_alloc)
   #pragma omp allocate(s5) allocator(omp_low_lat_mem_alloc)
   #pragma omp allocate(s6) allocator(omp_cgroup_mem_alloc)  // { dg-error "'allocator' clause for static variable 's6' must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c } }
+// { dg-error "'allocator' clause must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c++ } .-1 }
   #pragma omp allocate(s7) allocator(omp_pteam_mem_alloc)   // { dg-error "'allocator' clause for static variable 's7' must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c } }
+// { dg-error "'allocator' clause must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c++ } .-1 }
   #pragma omp allocate(s8) allocator(omp_thread_mem_alloc)  // { dg-error "'allocator' clause for static variable 's8' must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c } }
+// { dg-error "'allocator' clause must not be 'omp_cgroup_mem_alloc', 'omp_pteam_mem_alloc', or 'omp_thread_mem_alloc'" "" { target c++ } .-1 }
   #pragma omp allocate(s9) allocator(ompx_gnu_pinned_mem_alloc)
   #pragma omp allocate(s10) allocator(ompx_gnu_managed_mem_alloc)
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
-  // { dg-message "sorry, unimplemented: '#pragma omp allocate' not yet supported" "" { target c++ } .-11 }
 }
