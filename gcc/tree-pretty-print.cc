@@ -452,11 +452,12 @@ dump_omp_iterators (pretty_printer *pp, tree iter, int spc, dump_flags_t flags)
     {
       pp_string (pp, ", loop_label=");
       dump_generic_node (pp, OMP_ITERATOR_LABEL (iter), spc, flags, false);
-      pp_string (pp, ", elems=");
-      dump_generic_node (pp, OMP_ITERATOR_ELEMS (iter), spc, flags, false);
       pp_string (pp, ", index=");
       dump_generic_node (pp, OMP_ITERATOR_INDEX (iter), spc, flags, false);
-      /* The count field is not used yet.  */
+      pp_string (pp, ", elems=");
+      dump_generic_node (pp, OMP_ITERATOR_ELEMS (iter), spc, flags, false);
+      pp_string (pp, ", elems_count=");
+      dump_generic_node (pp, OMP_ITERATOR_COUNT (iter), spc, flags, false);
     }
   pp_right_paren (pp);
 }
