@@ -2918,6 +2918,21 @@ tree_could_trap_p (tree expr)
     }
 }
 
+/* Returns true if LHS is known not to trap as a store.  */
+bool
+lhs_could_trap_p (tree lhs)
+{
+  tree lhsbase = get_base_address (lhs);
+  if (tree_could_trap_p (lhs))
+    return true;
+  /* tree_could_trap_p is a predicate for loads, so check
+     for readonly memory explicitly.  */
+  if ((DECL_P (lhsbase) && TREE_READONLY (lhsbase))
+      || TREE_CODE (lhsbase) == STRING_CST)
+    return true;
+  return false;
+}
+
 /* Return non-NULL if there is an integer operation with trapping overflow
    we can rewrite into non-trapping.  Called via walk_tree from
    rewrite_to_non_trapping_overflow.  */

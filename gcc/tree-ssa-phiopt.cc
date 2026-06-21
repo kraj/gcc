@@ -3386,6 +3386,257 @@ trailing_store_in_bb (basic_block bb, tree vdef, gphi *vphi, bool onlyonestore)
   return store;
 }
 
+/* Takes a MEM and changes the aliasing set to be zero on it.
+   This handles all variants include decls. */
+static tree
+copy_mem_with_alias_set_zero (tree mem)
+{
+  mem = unshare_expr (mem);
+  tree *basep = &mem;
+  while (handled_component_p (*basep))
+    basep = &TREE_OPERAND (*basep, 0);
+  if (TREE_CODE (*basep) == MEM_REF
+      || TREE_CODE (*basep) == TARGET_MEM_REF)
+    TREE_OPERAND (*basep, 1)
+      = fold_convert (ptr_type_node, TREE_OPERAND (*basep, 1));
+  else
+    *basep = build2 (MEM_REF, TREE_TYPE (*basep),
+		     build_fold_addr_expr (*basep),
+		     build_zero_cst (ptr_type_node));
+  return mem;
+}
+
+/* Do the main work of a limited conditional store replacement.
+   This recognized pattern like so:
+
+   COND_BB:
+     store = a_1;
+     // no loads
+     if (cond) goto MIDDLE_BB; else goto JOIN_BB (edge E1)
+   MIDDLE_BB:
+     something // no loads
+     store = a_2;
+     something // no loads
+     fallthrough (edge E0)
+   JOIN_BB:
+     some more
+
+  This is a limited form of the full cond_store_replacement
+  to be allowed from use from phiopt and can be done
+  without calculating the non-trapping cases.  */
+static bool
+cond_store_replacement_limited (basic_block middle_bb, basic_block join_bb,
+				basic_block cond_bb,
+				edge e0, edge e1,
+				bool caninsert_edge)
+{
+  tree lhs, rhs;
+  location_t locus;
+  /* Currently don't handle more than 2 incoming edges
+     into the merge bb. */
+  if (EDGE_COUNT (join_bb->preds) > 2)
+    return false;
+  /* The middle bb needs to have a single predecessor of the cond_bb.  */
+  if (!single_pred_p (middle_bb))
+    return false;
+  gphi *vphi = get_virtual_phi (join_bb);
+  if (!vphi)
+    return false;
+  tree middle_vdef = gimple_phi_arg_def_from_edge (vphi, e0);
+  /* Check if middle_bb contains of only one store.  */
+  gimple *store_middle;
+  store_middle = trailing_store_in_bb (middle_bb, middle_vdef,
+				       vphi, true);
+
+  if (!store_middle
+      || !gimple_assign_single_p (store_middle)
+      || gimple_has_volatile_ops (store_middle))
+    return false;
+
+  locus = gimple_location (store_middle);
+  lhs = gimple_assign_lhs (store_middle);
+  rhs = gimple_assign_rhs1 (store_middle);
+  if ((!REFERENCE_CLASS_P (lhs)
+       && !DECL_P (lhs))
+      || !is_gimple_reg_type (TREE_TYPE (lhs)))
+    return false;
+  if (TREE_CODE (rhs) != SSA_NAME)
+    return false;
+
+  /* Three cases that can be handled:
+     1) the lhs is stored to right before the condition.
+       Will remove the store before the condition.
+     2) Or the lhs is loaded from right before the condition.
+     3) Neither of these. (this will insert a load in the other edge)
+     For case 2 and 3, check for data races.
+     For case 2, the load can either be based on a local variable
+     or a known non-trapping decl.
+     For case 3, the store needs to known to be non-trapping.  */
+  tree vuse = gimple_vuse (store_middle);
+  gimple *beforestore = nullptr;
+  gimple *vdef_before = SSA_NAME_DEF_STMT (vuse);
+  tree other_rhs = nullptr;
+
+  /* See if there is a store before the condition case.  */
+  if (gimple_assign_single_p (vdef_before))
+    {
+      tree beforelhs = gimple_assign_lhs (vdef_before);
+      /* Only allow the store to be right before the condition.  */
+      if (gimple_bb (vdef_before) == cond_bb
+	  /* An exact match is only supported.
+	     FIXME: Allow for clique/base mismatch?  */
+	  && operand_equal_p (lhs, beforelhs))
+	{
+	  /* The vuse of the of store in the middle should be also
+	     the entry in the phi for the other edge.  */
+	  gcc_assert (vuse == gimple_phi_arg_def_from_edge (vphi, e1));
+	  tree vuse = gimple_vuse (store_middle);
+	  imm_use_iterator iter;
+	  gimple *use_stmt;
+	  /* There can't be any loads between the store and
+	     the previous store as that might depend on the store.
+	     FIXME: use alias oracle to check dependancies.  */
+	  FOR_EACH_IMM_USE_STMT (use_stmt, iter, vuse)
+	    {
+	      if (use_stmt != store_middle
+		  && use_stmt != vphi)
+		return false;
+	    }
+	  other_rhs = gimple_assign_rhs1 (vdef_before);
+	  beforestore = vdef_before;
+	}
+    }
+  /*
+    case 2:
+    a = local_var[n];
+    if (b)
+      local_var[n] = c;
+
+    case 3:
+    if (b)
+      nontrapping = c;
+
+    For case 3, nontrapping needs to satisfy tree_could_trap_p.
+    In both cases ref_can_have_store_data_races needs to be satisfy.
+  */
+
+  /* Maybe the load/local non-escaped variable case.  */
+  if (!other_rhs)
+    {
+      tree lhsbase = get_base_address (lhs);
+      /* If this store ref can't have data races, a store
+	 that was conditional can't become unconditional.  */
+      if (ref_can_have_store_data_races (lhs))
+	return false;
+      tree vuse = gimple_vuse (store_middle);
+      imm_use_iterator iter;
+      gimple *use_stmt;
+      /* Try to find the load before the store that matches
+	 if we have a local variable or a non trapping store.  */
+      if ((auto_var_p (lhsbase) && !TREE_ADDRESSABLE (lhsbase))
+	  || !lhs_could_trap_p (lhs))
+	{
+	  FOR_EACH_IMM_USE_STMT (use_stmt, iter, vuse)
+	    {
+	      if (gimple_bb (use_stmt) != cond_bb)
+		continue;
+	      /* Looking for a load only.  */
+	      if (!gimple_assign_load_p (use_stmt))
+		continue;
+	      tree rhs = gimple_assign_rhs1 (use_stmt);
+	      if (!operand_equal_p (rhs, lhs))
+		continue;
+	      other_rhs = gimple_assign_lhs (use_stmt);
+	      lhs = copy_mem_with_alias_set_zero (lhs);
+	      break;
+	    }
+	}
+      if (!other_rhs)
+	{
+	  gassign *new_stmt;
+	  /* If not allowing inserting on the edge, then don't.  */
+	  if (!caninsert_edge)
+	    return false;
+	  /* If LHS is an access to a local variable without address-taken
+	     (or when we allow data races) and known not to trap, we could
+	     always safely move down the store.  */
+	  if (lhs_could_trap_p (lhs))
+	    return false;
+	  lhs = copy_mem_with_alias_set_zero (lhs);
+	  /* Insert a load from the memory of the store to the temporary
+	     on the edge which did not contain the store.  */
+	  other_rhs = make_temp_ssa_name (TREE_TYPE (lhs), NULL, "cstore");
+	  new_stmt = gimple_build_assign (other_rhs, lhs);
+	  gimple_set_location (new_stmt, locus);
+	  /* Set the vuse for the new load.  */
+	  gimple_set_vuse (new_stmt,
+			   gimple_phi_arg_def (vphi, e1->dest_idx));
+	  lhs = unshare_expr (lhs);
+	  {
+	    /* Set the no-warning bit on the rhs of the load to avoid
+	       uninit warnings.  */
+	    tree rhs1 = gimple_assign_rhs1 (new_stmt);
+	    suppress_warning (rhs1, OPT_Wuninitialized);
+	  }
+	  gsi_insert_on_edge (e1, new_stmt);
+	}
+    }
+
+  gphi *newphi;
+  gassign *new_stmt;
+  gimple_stmt_iterator gsi;
+  /* Now we've checked the constraints, so do the transformation:
+     1) Remove the store(s).  */
+  gsi = gsi_for_stmt (store_middle);
+  unlink_stmt_vdef (store_middle);
+  gsi_remove (&gsi, true);
+  release_defs (store_middle);
+
+  if (beforestore)
+    {
+      gsi = gsi_for_stmt (beforestore);
+      unlink_stmt_vdef (beforestore);
+      gsi_remove (&gsi, true);
+      release_defs (beforestore);
+    }
+
+
+  /* 2) Create a PHI node at the join block, with one argument
+	holding the old RHS, and the other holding the temporary
+	where we stored the old memory contents.  */
+  tree phiname = make_temp_ssa_name (TREE_TYPE (lhs), NULL, "cstore");
+  newphi = create_phi_node (phiname, join_bb);
+  add_phi_arg (newphi, rhs, e0, locus);
+  add_phi_arg (newphi, other_rhs, e1, locus);
+
+  /* 3. Create the new store.  */
+  new_stmt = gimple_build_assign (lhs, phiname);
+
+  /* Update the vdef for the new store statement. */
+  tree newvphilhs = make_ssa_name (gimple_vop (cfun));
+  tree vdef = gimple_phi_result (vphi);
+  gimple_set_vuse (new_stmt, newvphilhs);
+  gimple_set_vdef (new_stmt, vdef);
+  gimple_phi_set_result (vphi, newvphilhs);
+  SSA_NAME_DEF_STMT (vdef) = new_stmt;
+  update_stmt (vphi);
+
+  gsi = gsi_after_labels (join_bb);
+  gsi_insert_before (&gsi, new_stmt, GSI_SAME_STMT);
+
+  if (dump_file && (dump_flags & TDF_DETAILS))
+    {
+      fprintf (dump_file, "\nConditional store replacement happened!");
+      if (beforestore)
+	fprintf (dump_file, "\nRemoved the store before the condition.");
+      fprintf (dump_file, "\nInserted a new PHI statement in joint block:\n");
+      print_gimple_stmt (dump_file, new_stmt, 0, TDF_VOPS|TDF_MEMSYMS);
+    }
+  statistics_counter_event (cfun, "conditional store replacement", 1);
+  return true;
+}
+
+
 /* Return the only store in MIDDLE_BB as the candidate store for cselim.  Return
    NULL if no candidate can be found.  */
 
@@ -4632,6 +4883,11 @@ pass_cselim::execute (function *)
       if (EDGE_COUNT (bb2->preds) > 2)
 	return;
 
+      if (cond_store_replacement_limited (bb1, bb2, bb, e1, e2, true))
+	{
+	  cfgchanged = true;
+	  return;
+	}
       gimple *assign = cselim_candidate (bb1, bb2, e1);
       if (cond_store_replacement (bb1, bb2, e1, e2, assign, nontrap))
 	cfgchanged = true;
