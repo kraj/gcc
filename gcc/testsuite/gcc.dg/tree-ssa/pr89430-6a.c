@@ -1,5 +1,5 @@
 /* { dg-do compile } */
-/* { dg-options "-O2 -ftree-cselim -fdump-tree-cselim-details -fno-ssa-phiopt" } */
+/* { dg-options "-O2 -ftree-cselim -fdump-tree-phiopt1-details" } */
 
 int test(int b, int k) {
     typedef struct {
@@ -16,4 +16,4 @@ int test(int b, int k) {
     return a.data[0].x + a.data[1].x;
 }
 
-/* { dg-final { scan-tree-dump "Conditional store replacement" "cselim" } } */
+/* { dg-final { scan-tree-dump "Conditional store replacement" "phiopt1" } } */

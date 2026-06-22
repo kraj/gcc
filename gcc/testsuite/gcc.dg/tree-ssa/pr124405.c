@@ -1,5 +1,5 @@
 /* { dg-do compile } */
-/* { dg-options "-O1 -fdump-tree-cselim-details" } */
+/* { dg-options "-O1 -fdump-tree-phiopt1-details" } */
 
 void
 f (int *a, int b)
@@ -9,4 +9,4 @@ f (int *a, int b)
     *a |= 1;
 }
 
-/* { dg-final { scan-tree-dump-times "Conditional store replacement happened" 1 "cselim"} } */
+/* { dg-final { scan-tree-dump-times "Conditional store replacement happened" 1 "phiopt1"} } */

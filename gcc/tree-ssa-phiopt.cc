@@ -4168,6 +4168,14 @@ factor_out_all (edge e1, edge e2, basic_block merge,
 	}
       if (!single_pred_p (bb1))
 	break;
+      if (!diamond_p && get_virtual_phi (merge)
+	  && cond_store_replacement_limited (bb1, merge, bb2,
+					     e1, e2, false))
+	{
+	  changed = true;
+	  do_over = true;
+	  continue;
+	}
       gphi_iterator gsi;
       for (gsi = gsi_start_phis (merge); !gsi_end_p (gsi); gsi_next (&gsi))
 	{
