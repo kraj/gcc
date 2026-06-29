@@ -6542,6 +6542,7 @@ gfc_free_omp_namelist (gfc_omp_namelist *name, enum gfc_omp_list_type list)
   bool free_ns = (list == OMP_LIST_AFFINITY || list == OMP_LIST_DEPEND
 		  || list == OMP_LIST_MAP
 		  || list == OMP_LIST_TO || list == OMP_LIST_FROM);
+  bool free_mapper = (list == OMP_LIST_MAP);
   bool free_align_allocator = (list == OMP_LIST_ALLOCATE);
   bool free_mem_traits_space = (list == OMP_LIST_USES_ALLOCATORS);
   bool free_init = (list == OMP_LIST_INIT);
@@ -6578,7 +6579,9 @@ gfc_free_omp_namelist (gfc_omp_namelist *name, enum gfc_omp_list_type list)
 	      free (name->u2.init_interop);
 	    }
 	}
-      else if (name->u2.udr)
+      else if (free_mapper && name->u3.udm)
+	free (name->u3.udm);
+      else if (!free_mapper && name->u2.udr)
 	{
 	  if (name->u2.udr->combiner)
 	    gfc_free_statement (name->u2.udr->combiner);

@@ -1206,6 +1206,9 @@ dump_omp_clause (pretty_printer *pp, tree clause, int spc, dump_flags_t flags)
 	case GOMP_MAP_NONCONTIG_ARRAY_FORCE_PRESENT:
 	  pp_string (pp, "force_present,noncontig_array");
 	  break;
+	case GOMP_MAP_MAPPING_GROUP:
+	  pp_string (pp, "mapping_group");
+	  break;
 	default:
 	  gcc_unreachable ();
 	}
