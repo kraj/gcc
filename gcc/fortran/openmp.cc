@@ -9836,6 +9836,7 @@ resolve_omp_clauses_aff_dep_map_cache (gfc_code *code,
 	  gfc_array_ref *ar = &lastslice->u.ar;
 	  for (i = 0; i < ar->dimen; i++)
 	    if (ar->stride[i] 
+		&& code
 		&& code->op != EXEC_OACC_UPDATE
 		&& code->op != EXEC_OMP_TARGET_UPDATE)
 	      {
@@ -10021,7 +10022,13 @@ resolve_omp_clauses (gfc_code *code, gfc_omp_clauses *omp_clauses,
   if (omp_clauses == NULL)
     return;
 
-  if (ns == NULL)
+  /* If we're invoking any declared mappers as a result of these clauses,
+     we may need to know the namespace their directive was originally
+     defined within in order to resolve clauses again after substitution.
+     Record it here.  */
+  if (ns)
+    omp_clauses->ns = ns;
+  else
     ns = gfc_current_ns;
 
   check_omp_clauses_dupl_syms (code, omp_clauses, openacc);
@@ -10280,22 +10287,23 @@ resolve_omp_clauses (gfc_code *code, gfc_omp_clauses *omp_clauses,
 	    && n->sym->result == n->sym
 	    && n->sym->attr.function)
 	  {
-	    if (ns->proc_name == n->sym
-		|| (ns->parent && ns->parent->proc_name == n->sym))
+	    if (gfc_current_ns->proc_name == n->sym
+		|| (gfc_current_ns->parent
+		    && gfc_current_ns->parent->proc_name == n->sym))
 	      continue;
-	    if (ns->proc_name->attr.entry_master)
+	    if (gfc_current_ns->proc_name->attr.entry_master)
 	      {
-		gfc_entry_list *el = ns->entries;
+		gfc_entry_list *el = gfc_current_ns->entries;
 		for (; el; el = el->next)
 		  if (el->sym == n->sym)
 		    break;
 		if (el)
 		  continue;
 	      }
-	    if (ns->parent
-		&& ns->parent->proc_name->attr.entry_master)
+	    if (gfc_current_ns->parent
+		&& gfc_current_ns->parent->proc_name->attr.entry_master)
 	      {
-		gfc_entry_list *el = ns->parent->entries;
+		gfc_entry_list *el = gfc_current_ns->parent->entries;
 		for (; el; el = el->next)
 		  if (el->sym == n->sym)
 		    break;
@@ -11173,6 +11181,48 @@ resolve_omp_clauses (gfc_code *code, gfc_omp_clauses *omp_clauses,
 
   if (omp_clauses->assume)
     gfc_resolve_omp_assumptions (omp_clauses->assume);
+}
+
+
+/* This very simplified version of the above function is for use after mapper
+   instantiation.  It avoids dealing with anything other than basic
+   verification for map/to/from clauses.  */
+
+static void
+resolve_omp_mapper_clauses (gfc_code *code, gfc_omp_clauses *omp_clauses,
+			    gfc_namespace *ns ATTRIBUTE_UNUSED)
+{
+  gfc_omp_namelist *n;
+  enum gfc_omp_list_type list;
+
+  check_omp_clauses_dupl_syms (code, omp_clauses, false);
+
+  for (list = OMP_LIST_MAP; list <= OMP_LIST_FROM;
+       list = gfc_omp_list_type (list + 1))
+    if ((n = omp_clauses->lists[list]) != NULL)
+      {
+	const char *name = NULL;
+	switch (list)
+	  {
+	  case OMP_LIST_MAP:
+	    if (name == NULL)
+	      name = "MAP";
+	    /* Fallthrough.  */
+	  case OMP_LIST_TO:
+	    if (name == NULL)
+	      name = "TO";
+	    /* Fallthrough.  */
+	  case OMP_LIST_FROM:
+	    if (name == NULL)
+	      name = "FROM";
+	    for (; n != NULL; n = n->next)
+	      resolve_omp_clauses_aff_dep_map_cache (code, n, name, list,
+						     omp_clauses, false);
+	    break;
+	  default:
+	    ;
+	  }
+      }
 }
 
 
@@ -13840,11 +13890,11 @@ gfc_resolve_omp_directive (gfc_code *code, gfc_namespace *ns)
     case EXEC_OMP_WORKSHARE:
     case EXEC_OMP_DEPOBJ:
       if (code->ext.omp_clauses)
-	resolve_omp_clauses (code, code->ext.omp_clauses, NULL);
+	resolve_omp_clauses (code, code->ext.omp_clauses, ns);
       break;
     case EXEC_OMP_TARGET_UPDATE:
       if (code->ext.omp_clauses)
-	resolve_omp_clauses (code, code->ext.omp_clauses, NULL);
+	resolve_omp_clauses (code, code->ext.omp_clauses, ns);
       if (code->ext.omp_clauses == NULL
 	  || (code->ext.omp_clauses->lists[OMP_LIST_TO] == NULL
 	      && code->ext.omp_clauses->lists[OMP_LIST_FROM] == NULL))
@@ -14511,6 +14561,7 @@ gfc_omp_instantiate_mappers (gfc_code *code ATTRIBUTE_UNUSED, gfc_omp_clauses *c
 {
   gfc_omp_namelist *clause = clauses->lists[list];
   gfc_omp_namelist **clausep = &clauses->lists[list];
+  bool invoked_mappers = false;
 
   for (; clause; clause = *clausep)
     {
@@ -14537,9 +14588,19 @@ gfc_omp_instantiate_mappers (gfc_code *code ATTRIBUTE_UNUSED, gfc_omp_clauses *c
 	  clausep = gfc_omp_instantiate_mapper (clausep, clause, outer_map_op,
 						clause->u3.udm->udm, cd, list);
 	  *clausep = clause->next;
+	  invoked_mappers = true;
 	}
       else
 	clausep = &clause->next;
+    }
+
+  if (invoked_mappers)
+    {
+      gfc_namespace *old_ns = gfc_current_ns;
+      if (clauses->ns)
+	gfc_current_ns = clauses->ns;
+      resolve_omp_mapper_clauses (code, clauses, gfc_current_ns);
+      gfc_current_ns = old_ns;
     }
 }
 
