@@ -5590,6 +5590,11 @@ load_omp_udms (void)
 	  if (peek_atom () != ATOM_RPAREN)
 	    {
 	      n->u3.udm = gfc_get_omp_namelist_udm ();
+	      mio_pool_string (&n->u3.udm->mapper_id);
+
+	      if (n->u3.udm->mapper_id == NULL)
+		n->u3.udm->mapper_id = gfc_get_string ("%s", "");
+
 	      n->u3.udm->multiple_elems_p = mio_name (0, omp_map_cardinality);
 	      mio_pointer_ref (&n->u3.udm->udm);
 	    }
@@ -6682,6 +6687,7 @@ write_omp_udm (gfc_omp_udm *udm)
 
       if (n->u3.udm)
 	{
+	  mio_pool_string (&n->u3.udm->mapper_id);
 	  mio_name (n->u3.udm->multiple_elems_p, omp_map_cardinality);
 	  mio_pointer_ref (&n->u3.udm->udm);
 	}
