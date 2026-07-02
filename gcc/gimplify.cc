@@ -13964,7 +13964,9 @@ omp_build_struct_sibling_lists (enum tree_code code,
 	  gcc_assert (TREE_CODE (base) == NOP_EXPR);
 	  base = build_fold_indirect_ref (base);
 	  tree *struct_node = struct_map_to_clause->get (base);
-	  omp_siblist_move_node_after (c, cp, &OMP_CLAUSE_CHAIN (*struct_node));
+	  if (struct_node)
+	    omp_siblist_move_node_after (c, cp,
+					 &OMP_CLAUSE_CHAIN (*struct_node));
 	}
     }
 
