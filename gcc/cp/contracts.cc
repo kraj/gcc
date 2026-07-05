@@ -3048,6 +3048,7 @@ build_contract_check (tree contract)
   finish_then_clause (do_check);
   finish_if_stmt (do_check);
 
+  TREE_SIDE_EFFECTS (cc_bind) = true;
   BIND_EXPR_BODY (cc_bind) = pop_stmt_list (BIND_EXPR_BODY (cc_bind));
   return cc_bind;
 }
