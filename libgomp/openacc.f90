@@ -868,7 +868,7 @@ module openacc
   public :: acc_attach, acc_attach_async, acc_detach, acc_detach_async
   public :: acc_detach_finalize, acc_detach_finalize_async
 
-  integer, parameter :: openacc_version = 201711
+  integer, parameter :: openacc_version = 201811
 
   interface acc_get_num_devices
     procedure :: acc_get_num_devices_h
