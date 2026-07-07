@@ -3712,10 +3712,14 @@ gfc_trans_omp_array_section (stmtblock_t *block, toc_directive cd,
 	  offset = build2 (TRUNC_DIV_EXPR, ptrdiff_type_node,
 			   offset, fold_convert (ptrdiff_type_node, elemsz));
 
-	  tree offset_tmp = create_tmp_var (ptrdiff_type_node);
-	  gfc_add_expr_to_block (block, build2 (MODIFY_EXPR, ptrdiff_type_node,
-						offset_tmp, offset));
-	  offset = offset_tmp;
+	  if (!openmp)
+	    {
+	      tree offset_tmp = create_tmp_var (ptrdiff_type_node);
+	      gfc_add_expr_to_block (block, build2 (MODIFY_EXPR,
+						    ptrdiff_type_node,
+						    offset_tmp, offset));
+	      offset = offset_tmp;
+	    }
 	  offset = build4_loc (input_location, ARRAY_REF,
 			       TREE_TYPE (TREE_TYPE (decl)),
 			       decl, offset, NULL_TREE, NULL_TREE);
@@ -3754,8 +3758,15 @@ gfc_trans_omp_array_section (stmtblock_t *block, toc_directive cd,
 
   /* The OMP_CLAUSE_SIZE field for the array data map clause node3
      contains the initial offset of ptr from base, not the size.  */
-  OMP_CLAUSE_SIZE (node3) = fold_build2 (MINUS_EXPR, ptrdiff_type_node,
-					 ptr, base);
+  tree pdiff = fold_build2 (MINUS_EXPR, ptrdiff_type_node, ptr, base);
+  if (!openmp)
+    {
+      tree ptr_tmp = create_tmp_var (ptrdiff_type_node);
+      gfc_add_expr_to_block (block, build2 (MODIFY_EXPR, ptrdiff_type_node,
+					    ptr_tmp, pdiff));
+      pdiff = ptr_tmp;
+    }
+  OMP_CLAUSE_SIZE (node3) = pdiff;
   if (n->u.map.readonly)
     OMP_CLAUSE_MAP_POINTS_TO_READONLY (node3) = 1;
 }
