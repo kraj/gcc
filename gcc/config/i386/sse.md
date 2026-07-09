@@ -9205,6 +9205,13 @@
    (set_attr "prefix" "evex")
    (set_attr "mode" "<sseinsnmode>")])
 
+;; vcvtps2qq widens V4SF/V8SF directly to V4DI/V8DI (float -> long).
+(define_expand "lrint<ssePSmode2lower><mode>2"
+  [(set (match_operand:VI8_256_512 0 "register_operand")
+	(unspec:VI8_256_512 [(match_operand:<ssePSmode2> 1 "nonimmediate_operand")]
+		     UNSPEC_FIX_NOTRUNC))]
+  "TARGET_AVX512DQ")
+
 (define_insn "<mask_codefor>avx512dq_cvtps2qq<mode><mask_name><round_name>"
   [(set (match_operand:VI8_256_512 0 "register_operand" "=v")
 	(unspec:VI8_256_512 [(match_operand:<ssePSmode2> 1 "nonimmediate_operand" "<round_constraint>")]
@@ -9214,6 +9221,24 @@
   [(set_attr "type" "ssecvt")
    (set_attr "prefix" "evex")
    (set_attr "mode" "<sseinsnmode>")])
+
+;; vcvtps2qq xmm converts the low 2 elements of V4SF to V2DI (float -> long).
+(define_expand "lrintv2sfv2di2"
+  [(match_operand:V2DI 0 "register_operand")
+   (match_operand:V2SF 1 "nonimmediate_operand")]
+  "TARGET_AVX512DQ && TARGET_AVX512VL"
+{
+  rtx op1 = gen_reg_rtx (V4SFmode);
+  emit_insn (gen_movq_v2sf_to_sse (op1, operands[1]));
+
+  rtx sel = gen_rtx_PARALLEL (VOIDmode,
+			      gen_rtvec (2, const0_rtx, const1_rtx));
+  rtx src = gen_rtx_VEC_SELECT (V2SFmode, op1, sel);
+  emit_insn (gen_rtx_SET (operands[0],
+			  gen_rtx_UNSPEC (V2DImode, gen_rtvec (1, src),
+					  UNSPEC_FIX_NOTRUNC)));
+  DONE;
+})
 
 (define_insn "<mask_codefor>avx512dq_cvtps2qqv2di<mask_name>"
   [(set (match_operand:V2DI 0 "register_operand" "=v")
@@ -10031,6 +10056,20 @@
   [(set_attr "type" "ssecvt")
    (set_attr "prefix" "maybe_vex")
    (set_attr "mode" "V2DF")])
+
+;; Mapping of a DFmode vector to the SImode vector of the same length.
+(define_mode_attr ssedfsimode
+  [(V8DF "V8SI") (V4DF "V4SI") (V2DF "V2SI")])
+(define_mode_attr ssedfsimodelower
+  [(V8DF "v8si") (V4DF "v4si") (V2DF "v2si")])
+
+;; vcvtpd2dq narrows V2DF/V4DF/V8DF to V2SI/V4SI/V8SI (double -> int).
+(define_expand "lrint<mode><ssedfsimodelower>2"
+  [(set (match_operand:<ssedfsimode> 0 "register_operand")
+	(unspec:<ssedfsimode>
+	  [(match_operand:VF2 1 "register_operand")]
+	  UNSPEC_FIX_NOTRUNC))]
+  "TARGET_SSE2")
 
 (define_insn "avx512f_cvtpd2dq512<mask_name><round_name>"
   [(set (match_operand:V8SI 0 "register_operand" "=v")
