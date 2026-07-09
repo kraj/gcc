@@ -1,0 +1,308 @@
+2026-07-09  Chung-Lin Tang  <cltang@baylibre.com>
+
+	* parser.cc (cp_parser_omp_var_list_no_open): Adjust parsing of opening
+	square bracket.
+	(cp_parser_omp_clause_reduction): Adjustments for
+	OpenACC-specific cases.
+	* semantics.cc (cp_oacc_reduction_defined_type_p): New function.
+	(cp_oacc_reduction_code_name): Likewise.
+	(finish_omp_reduction_clause): Handle OpenACC cases using new
+	functions.
+
+2026-07-09  Sandra Loosemore  <sloosemore@baylibre.com>
+	    Tobias Burnus  <tburnus@baylibre.com>
+
+	* parser.cc (cp_finish_omp_declare_variant): Adjust error messages.
+
+2026-07-09  waffl3x  <waffl3x@baylibre.com>
+	    Sandra Loosemore  <sloosemore@baylibre.com>
+
+	PR c++/119659
+	PR c++/118859
+	PR c++/119601
+	PR c++/119602
+	PR c++/119775
+	PR c++/119659
+	PR c++/118859
+	PR c++/119601
+	PR c++/119602
+	PR c++/119775
+	* cp-tree.h (finish_omp_parm_list): New declaration.
+	(finish_omp_adjust_args): New declaration.
+	* decl.cc (omp_declare_variant_finalize_one): Refactor and change
+	attribute unpacking, use finish_omp_parm_list and
+	finish_omp_adjust_args, refactor append_args diagnostics, add
+	nbase_parms to append_args attribute, remove special handling for
+	member functions.  Clean up handling of TYPE_NO_NAMED_ARGS_STDARG_P.
+	* parser.cc (cp_parser_direct_declarator): Don't pass parms.
+	(cp_parser_late_return_type_opt): Remove parms parameter.
+	(cp_parser_omp_parm_list): New function.
+	(cp_finish_omp_declare_variant): Remove parms parameter.
+	Add NULL_TREE instead of nbase_args to append_args_tree.  Refactor,
+	use cp_parser_omp_parm_list not cp_parser_omp_var_list_no_open,
+	handle "need_device_addr" and remove handling and diagnostics of
+	parm list arguments that are done too early.  Change format of
+	unnamed variant attribute.
+	(cp_parser_late_parsing_omp_declare_simd): Remove parms parameter.
+	* pt.cc (tsubst_attribute): Copy "omp declare variant base" nodes,
+	substitute parm list numeric range bounds.
+	* semantics.cc (finish_omp_parm_list): New function.
+	(finish_omp_adjust_args): New function.
+
+2026-07-09  Sandra Loosemore  <sloosemore@baylibre.com>
+
+	PR c/122892
+	* semantics.cc (finish_omp_allocate): Diagnose invalid allocators.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* parser.cc (cp_parser_omp_allocate): Change var_is_in_scope.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* parser.cc (cp_maybe_parse_omp_decl): Sorry for allocate directive.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* semantics.cc (finish_omp_allocate): Add sorry.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* parser.cc (cp_parser_omp_allocate): Add diagnostics.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* parser.cc (cp_parser_omp_allocate): Add allocator clause expr
+	diagnostics.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* typeck.cc (can_do_nrvo_p): Return false for vars in an allocate
+	directive.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* parser.cc (cp_parser_omp_allocate): Force a location wrapper.
+	* pt.cc (tsubst_stmt): Rewrap location wrappers after tsubst_expr.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* parser.cc (cp_parser_omp_allocate): Add diagnostics, wrap a
+	location into allocator and alignment clause exprs.
+	* semantics.cc: Include gcc-rich-location.h.
+	(finish_omp_allocate): Improve and add diagnostics.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* constexpr.cc (cxx_eval_constant_expression)
+	<case OMP_ALLOCATE>: New.
+	(potential_constant_expression_1) <case OMP_ALLOCATE>: New.
+	* cp-tree.def (OMP_ALLOCATE): New tree code.
+	* cp-tree.h (OMP_ALLOCATE_VARS): Define.
+	(OMP_ALLOCATE_ALLOCATOR): Define.
+	(OMP_ALLOCATE_ALIGN): Define.
+	(finish_omp_allocate): New declaration.
+	* parser.cc (cp_parser_omp_allocate): Rework, remove sorry, call
+	finish_omp_allocate.
+	* pt.cc (tsubst_stmt) <case OMP_ALLOCATE>: New.
+	* semantics.cc (finish_omp_allocate): New definition.
+
+2026-07-09  Waffl3x  <waffl3x@baylibre.com>
+
+	* parser.cc (cp_parser_omp_construct)
+	<case PRAGMA_OMP_ALLOCATE>: Remove.
+	(cp_parser_pragma): Add comments.
+
+2026-07-09  Kwok Cheung Yeung  <kcyeung@baylibre.com>
+
+	* semantics.cc (handle_omp_array_sections): Add extra argument.  Set
+	argument to true if array section has a stride that is not one.
+	(finish_omp_clauses): Disable strided updates when iterators are
+	used in the clause.  Emit sorry if strided.
+
+2026-07-09  Julian Brown  <julian@codesourcery.com>
+
+	* cp-objcp-common.cc (cp_common_init_ts): Add array-shape cast
+	support.
+	* cp-tree.def (OMP_ARRAYSHAPE_CAST_EXPR): Add tree code.
+	* cp-tree.h (DECLTYPE_FOR_OMP_ARRAYSHAPE_CAST): Add flag.
+	(cp_omp_create_arrayshape_type, cp_build_omp_arrayshape_cast): Add
+	prototypes.
+	(grok_omp_array_section, build_omp_array_section): Add stride
+	parameters.
+	* decl.cc (create_anon_array_type): New function.
+	(cp_omp_create_arrayshape_type): New function.
+	* decl2.cc (grok_omp_array_section): Add stride parameter.
+	(min_vis_expr_r): Add OMP_ARRAYSHAPE_CAST_EXPR support.
+	* error.cc (dump_expr): Add stride support for OMP_ARRAY_SECTION.
+	* mangle.cc (write_expression): Add OMP_ARRAYSHAPE_CAST_EXPR support.
+	* operators.def (OMP_ARRAYSHAPE_CAST_EXPR): Add.
+	* parser.cc (cp_parser_new): Initialise omp_array_shaping_op_p and
+	omp_has_array_shape_p fields.
+	(cp_parser_statement_expr): Don't allow array shaping op in statement
+	exprs.
+	(cp_parser_postfix_open_square_expression): Add stride parsing for
+	array sections.  Use array section code to represent array refs if we
+	have an array-shaping operator.
+	(cp_parser_parenthesized_expression_list): Don't allow array-shaping
+	op here.
+	(cp_parser_cast_expression): Add array-shaping operator parsing.
+	(cp_parser_lambda_expression): Don't allow array-shaping op in lambda
+	body.
+	(cp_parser_braced_list): Don't allow array-shaping op in braced list.
+	(struct omp_dim): Add stride field.
+	(cp_parser_var_list_no_open): Add stride/array shape support.
+	(cp_parser_omp_target_update): Handle noncontiguous updates.
+	* parser.h (cp_parser): Add omp_array_shaping_op_p and
+	omp_has_array_shape_p fields.
+	* pt.cc (tsubst): Add array-shape cast support.
+	(tsubst_copy, tsubst_copy_and_build): Likewise. Add stride support for
+	OMP_ARRAY_SECTION.
+	(tsubst_omp_clause_decl): Add stride support for OMP_ARRAY_SECTION.
+	* semantics.cc (handle_omp_array_sections_1): Add DISCONTIGUOUS
+	parameter and stride support.
+	(omp_array_section_low_bound): New function.
+	(handle_omp_array_sections): Add DISCONTIGUOUS parameter and stride
+	support.
+	(finish_omp_clauses): Update calls to handle_omp_array_sections, and
+	add noncontiguous array update support.
+	(cp_build_omp_arrayshape_cast): New function.
+	* typeck.cc (structural_comptypes): Add array-shape cast support.
+	(build_omp_array_section): Add stride parameter.
+	(check_for_casting_away_constness): Add OMP_ARRAYSHAPE_CAST_EXPR
+	support.
+
+2026-07-09  Julian Brown  <julian@codesourcery.com>
+
+	* semantics.cc (handle_omp_array_sections): Pass pointer to clause
+	instead of clause.  Add PNEXT return parameter for next clause in list
+	to process.
+	(finish_omp_clauses): Update calls to handle_omp_array_sections.
+	Handle cases where initial clause might be replaced.
+
+2026-07-09  Julian Brown  <julian@codesourcery.com>
+	    Cesar Philippidis  <cesar@codesourcery.com>
+	    Nathan Sidwell  <nathan@acm.org>
+	    Kwok Cheung Yeung   <kcy@codesourcery.com>
+
+	* parser.cc (cp_parser_omp_var_list_no_open):  New c_omp_region_type
+	argument.  Use it to specialize handling of OMP_CLAUSE_REDUCTION for
+	OpenACC.
+	(cp_parser_omp_var_list): Add c_omp_region_type argument. Update call
+	to cp_parser_omp_var_list_no_open.
+	(cp_parser_oacc_data_clause): Update call to
+	cp_parser_omp_var_list_no_open.
+	(cp_parser_omp_clause_reduction): Change is_omp boolean parameter to
+	c_omp_region_type.  Update call to cp_parser_omp_var_list_no_open.
+	(cp_parser_omp_clause_from_to): Update call to
+	cp_parser_omp_clause_var_list_no_open.
+	(cp_parser_omp_clause_map): Likewise.
+	(cp_parser_omp_clause_init): Likewise.
+	(cp_parser_oacc_all_clauses): Update call to
+	cp_parser_omp_clause_reduction.
+	(cp_parser_omp_all_clauses): Likewise.
+	* semantics.cc (finish_omp_reduction_clause): Add c_omp_region_type
+	argument.  Suppress user-defined reduction error for OpenACC.
+	(finish_omp_clauses): Update call to finish_omp_reduction_clause.
+
+2026-07-09  Chung-Lin Tang  <cltang@codesourcery.com>
+	    Kwok Cheung Yeung  <kcy@codesourcery.com>
+	    Thomas Schwinge  <thomas@codesourcery.com>
+	    Paul-Antoine Arras  <parras@baylibre.com>
+	    Sandra Loosemore  <sloosemore@baylibre.com>
+
+	PR other/76739
+	* semantics.cc (handle_omp_array_sections_1): Add 'bool &non_contiguous'
+	parameter, adjust recursive call site, add cases for allowing
+	pointer based multi-dimensional arrays for OpenACC.  Reject
+	non-DECL base-pointer cases as unsupported.
+	(handle_omp_array_sections): Adjust handle_omp_array_sections_1 call,
+	handle non-contiguous case to create dynamic array map.
+
+2026-07-09  Kwok Cheung Yeung  <kcyeung@baylibre.com>
+	    Andrew Stubbs  <ams@baylibre.com>
+
+	* parser.cc (cp_parser_omp_clause_map): Apply iterator to push and
+	pop mapper clauses.
+
+2026-07-09  Julian Brown  <julian@codesourcery.com>
+
+	Backported from master:
+	2026-05-22  Julian Brown  <julian@codesourcery.com>
+		    Tobias Burnus  <tburnus@baylibre.com>
+
+	* parser.cc (cp_parser_omp_clause_from_to): Add parsing for
+	mapper modifier.
+	(cp_parser_omp_target_update): Instantiate mappers.
+
+2026-07-09  Paul-Antoine Arras  <parras@baylibre.com>
+
+	Backported from master:
+	2026-06-24  Paul-Antoine Arras  <parras@baylibre.com>
+
+	* semantics.cc (finish_omp_barrier): Push GOMP_BARRIER_EXPLICIT
+	onto the argument vector.
+
+2026-07-09  Kwok Cheung Yeung  <kcyeung@baylibre.com>
+
+	Backported from master:
+	2026-06-23  Kwok Cheung Yeung  <kcyeung@baylibre.com>
+		    Sandra Loosemore  <sloosemore@baylibre.com>
+
+	* parser.cc (cp_parser_omp_iterators): Use iterator constructors
+	and macros for accessing iterator elements.
+	(cp_parser_omp_clause_affinity): Likewise.
+	(cp_parser_omp_clause_depend): Likewise.
+	(cp_parser_omp_clause_from_to): Likewise.
+	(cp_parser_omp_clause_map): Likewise.
+	* pt.cc (tsubst_omp_clause_decl): Likewise.
+	* semantics.cc (cp_omp_finish_iterators): Likewise.
+
+2026-07-09  Sandra Loosemore  <sloosemore@baylibre.com>
+
+	Backported from master:
+	2026-06-05  Sandra Loosemore  <sloosemore@baylibre.com>
+
+	* semantics.cc (cxx_omp_map_array_section): Allow ARRAY_TYPE
+	expressions, not just pointers.
+
+2026-07-09  Paul-Antoine Arras  <parras@baylibre.com>
+
+	Backported from master:
+	2026-05-19  Paul-Antoine Arras  <parras@baylibre.com>
+		    Chung-Lin Tang  <cltang@baylibre.com>
+		    Sandra Loosemore  <sloosemore@baylibre.com>
+
+	* semantics.cc (finish_omp_clauses): Likewise.
+
+2026-07-09  Tobias Burnus  <tburnus@baylibre.com>
+
+	Backported from master:
+	2026-05-14  Tobias Burnus  <tburnus@baylibre.com>
+
+	* semantics.cc (cp_check_omp_declare_mapper): Change what
+	argument is expected; check that the struct var is used by at
+	least one map war. Print sorry when compiling with -std=c++98.
+	* pt.cc (tsubst_stmt, tsubst_expr): Call it.
+	* parser.cc (cp_parser_omp_declare_mapper): Update call.
+
+2026-07-09  Julian Brown  <julian@codesourcery.com>
+
+	Backported from master:
+	2026-04-29  Julian Brown  <julian@codesourcery.com>
+
+	* parser.cc (cp_parser_omp_target_data): Instantiate mappers for 'omp
+	target data'.
+	(cp_parser_omp_target_enter_data): Instantiate mappers for 'omp target
+	enter data'.
+	(cp_parser_omp_target_exit_data): Instantiate mappers for 'omp target
+	exit data'.
+	(cp_parser_omp_target): Add c_omp_region_type argument to
+	c_omp_instantiate_mappers call.
+	* pt.cc (tsubst_omp_clauses): Instantiate mappers for OMP regions other
+	than just C_ORT_OMP_TARGET.
+	(tsubst_expr): Update call to tsubst_omp_clauses for OMP_TARGET_UPDATE,
+	OMP_TARGET_ENTER_DATA, OMP_TARGET_EXIT_DATA stanza.
+	* semantics.cc (cxx_omp_map_array_section): Avoid calling
+	build_array_ref for non-array/non-pointer bases (error reported
+	already).

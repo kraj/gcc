@@ -1,0 +1,80 @@
+2026-07-09  Julian Brown  <julian@codesourcery.com>
+
+	* gomp-constants.h (gomp_map_kind): Add GOMP_MAP_TO_GRID,
+	GOMP_MAP_FROM_GRID, GOMP_MAP_GRID_DIM, GOMP_MAP_GRID_STRIDE map kinds.
+
+2026-07-09  Julian Brown  <julian@codesourcery.com>
+	    Thomas Schwinge  <tschwinge@baylibre.com>
+	    Sandra Loosemore  <sloosemore@baylibre.com>
+
+	* gomp-constants.h (GOMP_MAP_NONCONTIG_ARRAY_P): Tweak condition.
+
+2026-07-09  Cesar Philippidis  <cesar@codesourcery.com>
+	    Julian Brown   <julian@codesourcery.com>
+	    Kwok Cheung Yeung   <kcy@codesourcery.com>
+	    Tobias Burnus  <tobias@codesourcery.com>
+	    Thomas Schwinge  <thomas@codesourcery.com>
+	    Paul-Antoine Arras  <parras@baylibre.com>
+
+	* gomp-constants.h (enum gomp_map_kind): Define
+	GOMP_MAP_DECLARE_{ALLOCATE,DEALLOCATE} and GOMP_MAP_FLAG_SPECIAL_4.
+
+2026-07-09  Chung-Lin Tang  <cltang@codesourcery.com>
+	    Kwok Cheung Yeung  <kcy@codesourcery.com>
+	    Thomas Schwinge  <thomas@codesourcery.com>
+	    Paul-Antoine Arras  <parras@baylibre.com>
+	    Sandra Loosemore  <sloosemore@baylibre.com>
+
+	PR other/76739
+	* gomp-constants.h (GOMP_MAP_FLAG_SPECIAL_3): Define.
+	(enum gomp_map_kind): Add GOMP_MAP_NONCONTIG_ARRAY,
+	GOMP_MAP_NONCONTIG_ARRAY_TO, GOMP_MAP_NONCONTIG_ARRAY_FROM,
+	GOMP_MAP_NONCONTIG_ARRAY_TOFROM, GOMP_MAP_NONCONTIG_ARRAY_FORCE_TO,
+	GOMP_MAP_NONCONTIG_ARRAY_FORCE_FROM,
+	GOMP_MAP_NONCONTIG_ARRAY_FORCE_TOFROM,
+	GOMP_MAP_NONCONTIG_ARRAY_ALLOC, GOMP_MAP_NONCONTIG_ARRAY_FORCE_ALLOC,
+	GOMP_MAP_NONCONTIG_ARRAY_FORCE_PRESENT.
+	(GOMP_MAP_NONCONTIG_ARRAY_P): Define.
+
+2026-07-09  Chung-Lin Tang  <cltang@baylibre.com>
+
+	Backported from master:
+	2026-06-30  Chung-Lin Tang  <cltang@baylibre.com>
+
+	* gomp-constants.h (enum gomp_map_kind): Add GOMP_MAP_USES_ALLOCATORS.
+
+2026-07-09  Paul-Antoine Arras  <parras@baylibre.com>
+
+	Backported from master:
+	2026-06-24  Paul-Antoine Arras  <parras@baylibre.com>
+
+	* gomp-constants.h (GOMP_BARRIER_IMPLICIT_PARALLEL): New macro.
+	(GOMP_BARRIER_IMPLICIT_WORKSHARE): New macro.
+	(GOMP_BARRIER_EXPLICIT): New macro.
+
+2026-07-09  Tobias Burnus  <tburnus@baylibre.com>
+
+	Backported from master:
+	2026-06-19  Tobias Burnus  <tburnus@baylibre.com>
+
+	PR libgomp/125877
+	* cuda/cuda.h (cuDeviceGetPCIBusId): Declare.
+
+2026-07-09  Arsen Arsenović  <aarsenovic@baylibre.com>
+
+	Backported from master:
+	2026-06-01  Arsen Arsenović  <aarsenovic@baylibre.com>
+
+	* gomp-constants.h (GOMP_VERSION): Bump.  Signature of
+	GOMP_OFFLOAD_run et al changed.
+
+2026-07-09  Tobias Burnus  <tburnus@baylibre.com>
+
+	Backported from master:
+	2026-05-29  Tobias Burnus  <tburnus@baylibre.com>
+
+	PR c/122892
+	* gomp-constants.h (GOMP_OMP_PREDEF_ALLOC_THREADS): Rename to ...
+	(GOMP_OMP_PREDEF_ALLOC_THREAD): ... this.
+	(GOMP_OMP_PREDEF_ALLOC_CGROUP, GOMP_OMP_PREDEF_ALLOC_PTEAM): Define
+	with the value of omp_{cgroup,pteam}_mem_alloc
