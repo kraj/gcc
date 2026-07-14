@@ -986,6 +986,33 @@ frange::fits_p (const vrange &) const
   return true;
 }
 
+// Compare two range endpoints.
+//
+// In IEEE -0.0 and +0.0 equal for comparison purposes, but as endpoints they
+// are distinct.  Order -0.0 strictly below +0.0 and use this rather than
+// real_less/real_compare, and the signed zeros stop needing a special case.
+
+static int
+frange_cmp (const REAL_VALUE_TYPE &a, const REAL_VALUE_TYPE &b)
+{
+  gcc_checking_assert (!real_isnan (&a) && !real_isnan (&b));
+
+  if (real_less (&a, &b))
+    return -1;
+  if (real_less (&b, &a))
+    return 1;
+  if (real_iszero (&a) && real_iszero (&b))
+    {
+      bool nega = real_isneg (&a);
+      bool negb = real_isneg (&b);
+      if (nega && !negb)
+	return -1;
+      if (!nega && negb)
+	return 1;
+    }
+  return 0;
+}
+
 // Flush denormal endpoints to the appropriate 0.0.
 
 void
@@ -1161,44 +1188,6 @@ frange::normalize_kind ()
   return false;
 }
 
-// Union or intersect the zero endpoints of two ranges.  For example:
-//   [-0,  x] U [+0,  x] => [-0,  x]
-//   [ x, -0] U [ x, +0] => [ x, +0]
-//   [-0,  x] ^ [+0,  x] => [+0,  x]
-//   [ x, -0] ^ [ x, +0] => [ x, -0]
-//
-// UNION_P is true when performing a union, or false when intersecting.
-
-bool
-frange::combine_zeros (const frange &r, bool union_p)
-{
-  gcc_checking_assert (!undefined_p () && !known_isnan ());
-
-  bool changed = false;
-  if (real_iszero (&m_min) && real_iszero (&r.m_min)
-      && real_isneg (&m_min) != real_isneg (&r.m_min))
-    {
-      m_min.sign = union_p;
-      changed = true;
-    }
-  if (real_iszero (&m_max) && real_iszero (&r.m_max)
-      && real_isneg (&m_max) != real_isneg (&r.m_max))
-    {
-      m_max.sign = !union_p;
-      changed = true;
-    }
-  // If the signs are swapped, the resulting range is empty.
-  if (m_min.sign == 0 && m_max.sign == 1)
-    {
-      if (maybe_isnan ())
-	m_kind = VR_NAN;
-      else
-	set_undefined ();
-      changed = true;
-    }
-  return changed;
-}
-
 // Union two ranges when one is known to be a NAN.
 
 bool
@@ -1253,19 +1242,16 @@ frange::union_ (const vrange &v)
     }
 
   // Combine endpoints.
-  if (real_less (&r.m_min, &m_min))
+  if (frange_cmp (r.m_min, m_min) < 0)
     {
       m_min = r.m_min;
       changed = true;
     }
-  if (real_less (&m_max, &r.m_max))
+  if (frange_cmp (m_max, r.m_max) < 0)
     {
       m_max = r.m_max;
       changed = true;
     }
-
-  if (HONOR_SIGNED_ZEROS (m_type))
-    changed |= combine_zeros (r, true);
 
   changed |= normalize_kind ();
   return changed;
@@ -1319,18 +1305,20 @@ frange::intersect (const vrange &v)
     }
 
   // Combine endpoints.
-  if (real_less (&m_min, &r.m_min))
+  if (frange_cmp (m_min, r.m_min) < 0)
     {
       m_min = r.m_min;
       changed = true;
     }
-  if (real_less (&r.m_max, &m_max))
+  if (frange_cmp (r.m_max, m_max) < 0)
     {
       m_max = r.m_max;
       changed = true;
     }
-  // If the endpoints are swapped, the resulting range is empty.
-  if (real_less (&m_max, &m_min))
+
+  // If the endpoints are swapped, the resulting range is empty.  This also
+  // catches [+0.0, -0.0], which is also empty.
+  if (frange_cmp (m_max, m_min) < 0)
     {
       if (maybe_isnan ())
 	m_kind = VR_NAN;
@@ -1340,9 +1328,6 @@ frange::intersect (const vrange &v)
 	verify_range ();
       return true;
     }
-
-  if (HONOR_SIGNED_ZEROS (m_type))
-    changed |= combine_zeros (r, false);
 
   changed |= normalize_kind ();
   return changed;
@@ -1419,14 +1404,7 @@ frange::contains_p (const REAL_VALUE_TYPE &r) const
   if (known_isnan ())
     return false;
 
-  if (real_compare (GE_EXPR, &r, &m_min) && real_compare (LE_EXPR, &r, &m_max))
-    {
-      // Make sure the signs are equal for signed zeros.
-      if (HONOR_SIGNED_ZEROS (m_type) && real_iszero (&r))
-	return r.sign == m_min.sign || r.sign == m_max.sign;
-      return true;
-    }
-  return false;
+  return frange_cmp (r, m_min) >= 0 && frange_cmp (r, m_max) <= 0;
 }
 
 // If range is a singleton, place it in RESULT and return TRUE.  If
@@ -1522,11 +1500,8 @@ frange::verify_range () const
   // NANs cannot appear in the endpoints of a range.
   gcc_checking_assert (!real_isnan (&m_min) && !real_isnan (&m_max));
 
-  // Make sure we don't have swapped ranges.
-  gcc_checking_assert (!real_less (&m_max, &m_min));
-
-  // [ +0.0, -0.0 ] is nonsensical.
-  gcc_checking_assert (!(real_iszero (&m_min, 0) && real_iszero (&m_max, 1)));
+  // Make sure we don't have swapped ranges.  This also catches [ +0.0, -0.0].
+  gcc_checking_assert (frange_cmp (m_min, m_max) <= 0);
 
   // A zero endpoint must carry its canonical sign.  Every producer runs
   // canonicalize_zeros, so a zero bound can only descend from a canonical one.

@@ -666,7 +666,6 @@ private:
   bool normalize_kind ();
   bool union_nans (const frange &);
   bool intersect_nans (const frange &);
-  bool combine_zeros (const frange &, bool union_p);
   void canonicalize_zeros (REAL_VALUE_TYPE &, REAL_VALUE_TYPE &);
 
   tree m_type;
