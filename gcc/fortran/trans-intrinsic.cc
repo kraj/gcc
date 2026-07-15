@@ -13599,9 +13599,7 @@ conv_intrinsic_move_alloc (gfc_code *code)
   gfc_add_modify_loc (input_location, &block, to_se.expr, from_se.expr);
 
   /* Set "from" to NULL.  */
-  tmp = gfc_conv_descriptor_data_get (from_se.expr);
-  gfc_add_modify_loc (input_location, &block, tmp,
-		      fold_convert (TREE_TYPE (tmp), null_pointer_node));
+  gfc_conv_descriptor_data_set (&block, from_se.expr, null_pointer_node);
 
   if (coarray && flag_coarray == GFC_FCOARRAY_LIB)
     {

@@ -1556,10 +1556,8 @@ gfc_conv_class_to_class (gfc_se *parmse, gfc_expr *e, gfc_typespec class_ts,
       else
 	{
 	  gfc_init_block (&block);
-
-	  tmp2 = gfc_conv_descriptor_data_get (gfc_class_data_get (var));
-	  gfc_add_modify (&block, tmp2, fold_convert (TREE_TYPE (tmp2),
-						      null_pointer_node));
+	  gfc_conv_descriptor_data_set (&block, gfc_class_data_get (var),
+					null_pointer_node);
 	  tmp2 = gfc_finish_block (&block);
 	}
 
