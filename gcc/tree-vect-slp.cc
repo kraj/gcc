@@ -9209,11 +9209,19 @@ vectorizable_bb_reduc_epilogue (slp_instance instance,
   internal_fn reduc_fn;
   tree vectype = SLP_TREE_VECTYPE (SLP_INSTANCE_TREE (instance));
   if (!vectype
-      || !reduction_fn_for_scalar_code (reduc_code, &reduc_fn)
-      || reduc_fn == IFN_LAST
-      || !direct_internal_fn_supported_p (reduc_fn, vectype, OPTIMIZE_FOR_BOTH)
       || !useless_type_conversion_p (TREE_TYPE (gimple_assign_lhs (stmt)),
-				     TREE_TYPE (vectype)))
+				     TREE_TYPE (vectype))
+      || (maybe_ne (TYPE_VECTOR_SUBPARTS (vectype), 2u)
+	  && (!reduction_fn_for_scalar_code (reduc_code, &reduc_fn)
+	      || reduc_fn == IFN_LAST
+	      || !direct_internal_fn_supported_p (reduc_fn, vectype,
+						  OPTIMIZE_FOR_BOTH)))
+      /* Two-element reductions do not need special-handling for fold-left,
+	 other cases are not yet implemented.  remain_defs also have to
+	 be included here.  */
+      || (needs_fold_left_reduction_p (TREE_TYPE (vectype), reduc_code)
+	  && (!instance->remain_defs.is_empty ()
+	      || maybe_ne (TYPE_VECTOR_SUBPARTS (vectype), 2u))))
     {
       if (dump_enabled_p ())
 	dump_printf_loc (MSG_MISSED_OPTIMIZATION, vect_location,
@@ -9996,10 +10004,6 @@ vect_slp_check_for_roots (bb_vec_info bb_vinfo)
 	}
       else if (!VECTOR_TYPE_P (TREE_TYPE (rhs))
 	       && (associative_tree_code (code) || code == MINUS_EXPR)
-	       /* ???  This pessimizes a two-element reduction.  PR54400.
-		  ???  In-order reduction could be handled if we only
-		  traverse one operand chain in vect_slp_linearize_chain.  */
-	       && !needs_fold_left_reduction_p (TREE_TYPE (rhs), code)
 	       /* Ops with constants at the tail can be stripped here.  */
 	       && TREE_CODE (rhs) == SSA_NAME
 	       && TREE_CODE (gimple_assign_rhs2 (assign)) == SSA_NAME
@@ -12209,13 +12213,30 @@ vectorize_slp_instance_root_stmt (vec_info *vinfo, slp_tree node, slp_instance i
 				  vec_def, def);
 	}
       vec_defs.release ();
-      /* ???  Support other schemes than direct internal fn.  */
+      /* ???  Support other schemes than direct internal fn or two
+	 element vectors.  */
+      tree scalar_def;
       internal_fn reduc_fn;
       if (!reduction_fn_for_scalar_code (reduc_code, &reduc_fn)
-	  || reduc_fn == IFN_LAST)
-	gcc_unreachable ();
-      tree scalar_def = gimple_build (&epilogue, as_combined_fn (reduc_fn),
-				      TREE_TYPE (compute_vectype), vec_def);
+	  || reduc_fn == IFN_LAST
+	  || !direct_internal_fn_supported_p (reduc_fn, compute_vectype,
+					      OPTIMIZE_FOR_BOTH))
+	{
+	  gcc_assert (known_eq (TYPE_VECTOR_SUBPARTS (compute_vectype), 2u));
+	  tree tem0 = gimple_build (&epilogue, BIT_FIELD_REF,
+				    TREE_TYPE (compute_vectype), vec_def,
+				    TYPE_SIZE (TREE_TYPE (compute_vectype)),
+				    bitsize_zero_node);
+	  tree tem1 = gimple_build (&epilogue, BIT_FIELD_REF,
+				    TREE_TYPE (compute_vectype), vec_def,
+				    TYPE_SIZE (TREE_TYPE (compute_vectype)),
+				    TYPE_SIZE (TREE_TYPE (compute_vectype)));
+	  scalar_def = gimple_build (&epilogue, reduc_code,
+				     TREE_TYPE (compute_vectype), tem0, tem1);
+	}
+      else
+	scalar_def = gimple_build (&epilogue, as_combined_fn (reduc_fn),
+				   TREE_TYPE (compute_vectype), vec_def);
       if (!SLP_INSTANCE_REMAIN_DEFS (instance).is_empty ())
 	{
 	  tree rem_def = NULL_TREE;
