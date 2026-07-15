@@ -995,17 +995,51 @@ frange::flush_denormals_to_zero ()
     return;
 
   machine_mode mode = TYPE_MODE (type ());
-  // Flush [x, -DENORMAL] to [x, -0.0].
+
+  // Flush a denormal endpoint to a zero of the same sign: a +denormal lower
+  // bound to +0.0, and a -denormal upper bound to -0.0.  Then call
+  // canonicalize_zeros to rewrite the sign to whatever the flags make
+  // canonical.  For example, under !HONOR_SIGNED_ZEROS (-fno-signed-zeros) a
+  // range reaching zero must hold both signs of it, so:
+  //
+  //     [ +DENORMAL, 5.0 ]  flushes to  [ -0.0, 5.0 ]
+  //
+  // keeping contains_p (-0.0) true; under HONOR_SIGNED_ZEROS the sign stands and
+  // it stays [ +0.0, 5.0 ].
   if (real_isdenormal (&m_max, mode) && real_isneg (&m_max))
-    {
-      if (HONOR_SIGNED_ZEROS (m_type))
-	m_max = dconstm0;
-      else
-	m_max = dconst0;
-    }
-  // Flush [+DENORMAL, x] to [+0.0, x].
+    m_max = dconstm0;
   if (real_isdenormal (&m_min, mode) && !real_isneg (&m_min))
     m_min = dconst0;
+  canonicalize_zeros (m_min, m_max);
+}
+
+// Canonicalize the signed zeros of the endpoints MIN and MAX according with what
+// the target and flags want:
+//
+//   !MODE_HAS_SIGNED_ZEROS: the mode has no signed zero, so any zero is +0.0.
+//
+//   !HONOR_SIGNED_ZEROS: the two zeros are one value, so widen the range to
+//   include both signs of it.
+//
+//   Otherwise the sign is a real distinction, and we keep it.
+
+void
+frange::canonicalize_zeros (REAL_VALUE_TYPE &min, REAL_VALUE_TYPE &max)
+{
+  if (!MODE_HAS_SIGNED_ZEROS (TYPE_MODE (m_type)))
+    {
+      if (real_iszero (&min, 1))
+	min.sign = 0;
+      if (real_iszero (&max, 1))
+	max.sign = 0;
+    }
+  else if (!HONOR_SIGNED_ZEROS (m_type))
+    {
+      if (real_iszero (&max, 1))
+	max.sign = 0;
+      if (real_iszero (&min, 0))
+	min.sign = 1;
+    }
 }
 
 // Setter for franges.
@@ -1047,20 +1081,7 @@ frange::set (tree type,
       m_neg_nan = false;
     }
 
-  if (!MODE_HAS_SIGNED_ZEROS (TYPE_MODE (m_type)))
-    {
-      if (real_iszero (&m_min, 1))
-	m_min.sign = 0;
-      if (real_iszero (&m_max, 1))
-	m_max.sign = 0;
-    }
-  else if (!HONOR_SIGNED_ZEROS (m_type))
-    {
-      if (real_iszero (&m_max, 1))
-	m_max.sign = 0;
-      if (real_iszero (&m_min, 0))
-	m_min.sign = 1;
-    }
+  canonicalize_zeros (m_min, m_max);
 
   // For -ffinite-math-only we can drop ranges outside the
   // representable numbers to min/max for the type.
@@ -1506,6 +1527,13 @@ frange::verify_range () const
 
   // [ +0.0, -0.0 ] is nonsensical.
   gcc_checking_assert (!(real_iszero (&m_min, 0) && real_iszero (&m_max, 1)));
+
+  // A zero endpoint must carry its canonical sign.  Every producer runs
+  // canonicalize_zeros, so a zero bound can only descend from a canonical one.
+  if (!MODE_HAS_SIGNED_ZEROS (TYPE_MODE (m_type)))
+    gcc_checking_assert (!real_iszero (&m_min, 1) && !real_iszero (&m_max, 1));
+  else if (!HONOR_SIGNED_ZEROS (m_type))
+    gcc_checking_assert (!real_iszero (&m_min, 0) && !real_iszero (&m_max, 1));
 
   // If all the properties are clear, we better not span the entire
   // domain, because that would make us varying.
@@ -3747,6 +3775,32 @@ range_tests_signbit ()
 }
 
 static void
+range_tests_flush_denormals ()
+{
+  // We need -0.0 to exist for any of this to mean anything.
+  if (!MODE_HAS_SIGNED_ZEROS (TYPE_MODE (float_type_node)))
+    return;
+
+  int save_flag = flag_signed_zeros;
+  flag_signed_zeros = 0;
+
+  // Flushing a positive denormal lower bound to zero must canonicalize that
+  // zero to -0.0 to agree with set().
+  frange flushed = frange_float ("1e-40", "5");
+  flushed.clear_nan ();
+  flushed.flush_denormals_to_zero ();
+
+  frange built = frange_float ("0", "5");
+  built.clear_nan ();
+
+  ASSERT_TRUE (flushed == built);
+  ASSERT_TRUE (flushed.contains_p (dconstm0));
+  ASSERT_TRUE (flushed.contains_p (dconst0));
+
+  flag_signed_zeros = save_flag;
+}
+
+static void
 range_tests_floats ()
 {
   frange r0, r1;
@@ -3754,6 +3808,7 @@ range_tests_floats ()
   if (HONOR_NANS (float_type_node))
     range_tests_nan ();
   range_tests_signbit ();
+  range_tests_flush_denormals ();
 
   if (HONOR_SIGNED_ZEROS (float_type_node))
     range_tests_signed_zeros ();
