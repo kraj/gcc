@@ -2340,71 +2340,77 @@ xtensa_legitimize_address (rtx x,
 			   rtx oldx ATTRIBUTE_UNUSED,
 			   machine_mode mode)
 {
-  rtx plus0, plus1, temp0, temp1;
-  HOST_WIDE_INT offset, mem_disp, delta, offset2;
-  int mode_size;
+  rtx reg, imm, temp0, temp1;
+  HOST_WIDE_INT offset;
+  int mode_size, ofs_mask, ofs_lo, ofs_hi, v0, v1, delta;
 
+  /* Redirect if TLS addresses.  */
   if (xtensa_tls_symbol_p (x))
     return xtensa_legitimize_tls_address (x);
 
+  /* Reject addresses that do not match '(PLUS (REG, IMM))'.  */
   if (GET_CODE (x) != PLUS)
     return x;
-
-  plus0 = XEXP (x, 0), plus1 = XEXP (x, 1);
-  if (! REG_P (plus0) && REG_P (plus1))
-    std::swap (plus0, plus1);
-
-  /* Try to split up the offset to use up to two ADDMI instructions;
-     The two ADDMIs are slightly more efficient than "L32R w/litpool + ADD"
-     or "CONST16 pair + ADD", if applicable.  */
-  if (! REG_P (plus0) || ! CONST_INT_P (plus1)
-      || xtensa_mem_offset (offset = INTVAL (plus1), mode)
-      || xtensa_simm8 (offset)
-      || ! xtensa_mem_offset (mem_disp = offset & 0xff, mode))
+  reg = XEXP (x, 0), imm = XEXP (x, 1);
+  if (! REG_P (reg) && REG_P (imm))
+    std::swap (reg, imm);
+  if (! REG_P (reg) || ! CONST_INT_P (imm))
     return x;
 
-  /* The above assumes that the displacement within the load/store instruc-
-     tion is unsigned 8 bits, regardless of the load/store width.  However,
-     in actual 2- or 4-byte width load/store instructions, a displacement
-     shifted by 1 or 2 bits, respectively, is added to the base register.
-     Here, determine the amount of displacement delta that these instructions
-     can cover extra range.  */
-  delta = (mode_size = GET_MODE_SIZE (mode)) >= 4 ? 768 :
-	  mode_size == 2 ? 256 : 0;
+  /* Exclude if the offset amount can be encoded within the instruction
+     or fits into a signed 8-bits to defer to the default handling.  */
+  if (xtensa_mem_offset (offset = INTVAL (imm), mode)
+      || xtensa_simm8 (offset))
+    return x;
 
-  /* The upper limit of the ADDMI instruction's addition is allowed to be
-     widened by the delta amount calculated above, and the excess is later
-     renormalized to the displacement of the load/store instruction.  */
-  offset2 = offset & ~0xff, offset = 0;
-  if (! IN_RANGE (offset2, -32768, 32512 + delta))
-    {
-      if (offset2 > 32512)
-	offset = 32512, offset2 -= 32512;
-      else if (offset2 < -32768)
-	offset = -32768, offset2 += 32768;
+  /* Divide the offset value into a part that can possibly be encoded
+     within the instruction and one that never can, and then exclude cases
+     where the former cannot be encoded (eg., due to offset misalignment
+     or the corner case involving double-word load/store).  */
+  mode_size = GET_MODE_SIZE (mode);
+  ofs_mask = 256 * MIN (mode_size, 4) - 1;
+  ofs_lo = offset & ofs_mask, ofs_hi = offset & ~ofs_mask;
+  if (! xtensa_mem_offset (ofs_lo, mode))
+    return x;
 
-      /* If two ADDMIs are not enough, the process will be canceled.  */
-      if (! IN_RANGE (offset2, -32768, 32512 + delta))
-	return x;
-    }
-  if (offset2 > 32512)
-    mem_disp += offset2 - 32512, offset2 = 32512;
+  /* Attempt to compensate for the offset amount that exceeded the
+     encoding limit within the instruction, using one or two ADDMI
+     instructions.  */
+  if (xtensa_simm8x256 (v0 = ofs_hi))
+    v1 = 0;
+  else if (ofs_hi < -32768 && xtensa_simm8x256 (v0 = ofs_hi + 32768))
+    v1 = -32768;
+  else if (ofs_hi > 32512 && xtensa_simm8x256 (v0 = ofs_hi - 32512))
+    v1 = 32512;
+  else
+    return x;
+
+  /* If TARGET_DENSITY is configured, apply adjustments to make it easier
+     for the short-form of 4-byte load/store instructions (L32I.N/S32I.N)
+     to be adopted.  */
+  if (TARGET_DENSITY && ofs_mask == 1023
+      && xtensa_simm8x256 ((delta = ofs_lo & ~255) + v0))
+    v0 += delta, ofs_lo &= 255;
+
+  /* A trapdoor that catches calculation mistakes.  */
+  gcc_assert (offset == ofs_lo + v0 + v1);
 
   /* Emit one or two ADDMI instructions, and then return an address RTX
-     with the remaining offset.
-     By adding the offset with the largest absolute value first via
-     temporary pseudos, the likelihood of those pseudos being consolidated
-     by the CSE increases.  */
+     with the remaining offset that could be encoded within the instruc-
+     tion.  */
   temp0 = gen_reg_rtx (Pmode);
-  if (offset)
+  if (v1)
     {
+      /* By adding the offset with the largest absolute value first via
+	 a temporary pseudo, the likelihood of that pseudo being consoli-
+	 dated by the CSE increases.  */
       emit_insn (gen_addsi3 (temp1 = gen_reg_rtx (Pmode),
-			     plus0, GEN_INT (offset)));
-      emit_insn (gen_addsi3 (temp0, temp1, GEN_INT (offset2)));
+			     reg, GEN_INT (v1)));
+      emit_insn (gen_addsi3 (temp0, temp1, GEN_INT (v0)));
     }
   else
-    emit_insn (gen_addsi3 (temp0, plus0, GEN_INT (offset2)));
-  return gen_rtx_PLUS (Pmode, temp0, GEN_INT (mem_disp));
+    emit_insn (gen_addsi3 (temp0, reg, GEN_INT (v0)));
+  return gen_rtx_PLUS (Pmode, temp0, GEN_INT (ofs_lo));
 }
 
 /* Worker function for TARGET_MODE_DEPENDENT_ADDRESS_P.
