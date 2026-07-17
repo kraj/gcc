@@ -70,9 +70,9 @@ static const sve_vec_cost neoversev2_sve_vector_cost =
   {
     2, /* int_stmt_cost  */
     2, /* fp_stmt_cost  */
-    2, /* ld2_st2_permute_cost  */
-    3, /* ld3_st3_permute_cost  */
-    3, /* ld4_st4_permute_cost  */
+    3, /* ld2_st2_permute_cost  */
+    4, /* ld3_st3_permute_cost  */
+    4, /* ld4_st4_permute_cost  */
     2, /* permute_cost  */
     /* Theoretically, a reduction involving 15 scalar ADDs could
        complete in ~5 cycles and would have a cost of 15.  [SU]ADDV
