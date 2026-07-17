@@ -344,6 +344,9 @@ along with GCC; see the file COPYING3.  If not see
      ((unsigned) ((IN) - GP_REG_FIRST) < WINDOW_SIZE)) ?		\
     (IN) + WINDOW_SIZE : (IN)) : (IN))
 
+#define LOCAL_REGNO(REGNO)						\
+  (TARGET_WINDOWED_ABI && GP_REG_P (REGNO)				\
+   && ((unsigned) ((REGNO) - GP_REG_FIRST) < WINDOW_SIZE))
 
 /* Define the classes of registers for register constraints in the
    machine description.  */
