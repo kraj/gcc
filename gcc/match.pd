@@ -7188,7 +7188,21 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
   /* For CONDs, don't handle signed values here. */
   (if (cnd == VEC_COND_EXPR
        || TYPE_UNSIGNED (TREE_TYPE (@0)))
-   (cnd @0 @2 @1))))
+   (cnd @0 @2 @1)))
+
+ /* A == CST ? A : CST -> CST.  */
+ (simplify
+  (cnd (eq @0 CONSTANT_CLASS_P@1) (nop_convert? @0) CONSTANT_CLASS_P@2)
+  (if (ANY_INTEGRAL_TYPE_P (type)
+       && operand_equal_p (@1, @2))
+   (convert @1)))
+
+ /* A != CST ? CST : A -> CST.  */
+ (simplify
+  (cnd (ne @0 CONSTANT_CLASS_P@1) CONSTANT_CLASS_P@2 (nop_convert? @0))
+  (if (ANY_INTEGRAL_TYPE_P (type)
+       && operand_equal_p (@1, @2))
+   (convert @1))))
 
 /* abs/negative simplifications moved from fold_cond_expr_with_comparison.
 
