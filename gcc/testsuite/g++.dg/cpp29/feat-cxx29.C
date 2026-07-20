@@ -658,3 +658,15 @@
 #elif __cpp_trivial_union != 202502
 #  error "__cpp_trivial_union != 202502"
 #endif
+
+// C++26 attributes:
+
+#ifdef __has_cpp_attribute
+#  if ! __has_cpp_attribute(indeterminate)
+#    error "__has_cpp_attribute(indeterminate)"
+#  elif __has_cpp_attribute(indeterminate) != 202403
+#    error "__has_cpp_attribute(indeterminate) != 202403"
+#  endif
+#else
+#  error "__has_cpp_attribute"
+#endif
