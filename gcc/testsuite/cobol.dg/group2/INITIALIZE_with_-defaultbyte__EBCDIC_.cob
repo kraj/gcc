@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-options "-fdefaultbyte 124" }
        *> { dg-output-file "group2/INITIALIZE_with_-defaultbyte__EBCDIC_.out" }
 

@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/Non-numeric_data_in_packed_decimal.out" }
         identification   division.
         program-id.      prog2.

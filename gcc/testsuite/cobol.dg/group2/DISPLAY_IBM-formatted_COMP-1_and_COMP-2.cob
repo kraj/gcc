@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-options "-dialect ibm" }
        *> { dg-output-file "group2/DISPLAY_IBM-formatted_COMP-1_and_COMP-2.out" }
       * gcobol bug reproducer: DISPLAY of a COMP-1 / COMP-2 (internal floating-point)

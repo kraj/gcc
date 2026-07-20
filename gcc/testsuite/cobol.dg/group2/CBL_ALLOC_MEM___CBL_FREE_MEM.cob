@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-options "-dialect mf" }
        *> { dg-output-file "group2/CBL_ALLOC_MEM___CBL_FREE_MEM.out" }
 

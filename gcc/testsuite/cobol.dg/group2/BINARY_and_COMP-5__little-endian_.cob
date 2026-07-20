@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/BINARY_and_COMP-5__little-endian_.out" }
         identification          division.
         program-id.             prog.

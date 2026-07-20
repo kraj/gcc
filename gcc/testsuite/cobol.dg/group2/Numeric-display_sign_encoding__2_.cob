@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/Numeric-display_sign_encoding__2_.out" }
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.

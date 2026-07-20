@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/Multi-target_MOVE_with_subscript_re-evaluation.out" }
 
         IDENTIFICATION DIVISION.

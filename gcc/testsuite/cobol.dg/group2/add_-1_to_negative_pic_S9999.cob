@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/add_-1_to_negative_pic_S9999.out" }
         *> We have special code for adding single digits to
         *> numeric-display variables.  This routine checks adding a negative

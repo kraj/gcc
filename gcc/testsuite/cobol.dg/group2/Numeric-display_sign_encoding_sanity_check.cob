@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/Numeric-display_sign_encoding_sanity_check.out" }
        IDENTIFICATION   DIVISION.
        PROGRAM-ID.      prog.

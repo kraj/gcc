@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/comprensive_compare_comp-1_comp-5.out" }
         identification          division.
         program-id.             prog.

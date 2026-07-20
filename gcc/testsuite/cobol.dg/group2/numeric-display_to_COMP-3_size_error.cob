@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/numeric-display_to_COMP-3_size_error.out" }
         identification division.
         program-id. onsize.

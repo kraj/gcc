@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-options "-fexec-charset=cp1140" }
        *> { dg-output-file "group2/CHAR_and_ORD_with_COLLATING_sequence_-_EBCDIC.out" }
         IDENTIFICATION      DIVISION.

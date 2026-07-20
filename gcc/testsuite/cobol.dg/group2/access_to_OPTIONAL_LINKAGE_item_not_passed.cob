@@ -1,4 +1,5 @@
-       *> { dg-do run }
+      *> Do not edit this generated file.  See README.txt
+      *> { dg-do run }
        *> { dg-output-file "group2/access_to_OPTIONAL_LINKAGE_item_not_passed.out" }
 
         identification   division.
