@@ -2680,25 +2680,18 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
       && (TYPE_UNSIGNED (type) || TYPE_PRECISION (type) > 1))
   (mult (convert @1) (convert @2))))
 
-/* (X << C) != 0 can be simplified to X, when C is zero_one_valued_p.
+/* (X << C) != 0 can be simplified to X, when X is zero_one_valued_p.
+   (X << C) == 0 can be simplified to X == 0, when X is zero_one_valued_p.
    Check that the shift is well-defined (C is less than TYPE_PRECISION)
    as some targets (such as x86's SSE) may return zero for larger C.  */
-(simplify
-  (ne (lshift zero_one_valued_p@0 INTEGER_CST@1) integer_zerop@2)
-  (if (tree_fits_shwi_p (@1)
-       && tree_to_shwi (@1) > 0
-       && tree_to_shwi (@1) < TYPE_PRECISION (TREE_TYPE (@0)))
-    (convert @0)))
-
-/* (X << C) == 0 can be simplified to X == 0, when C is zero_one_valued_p.
-   Check that the shift is well-defined (C is less than TYPE_PRECISION)
-   as some targets (such as x86's SSE) may return zero for larger C.  */
-(simplify
-  (eq (lshift zero_one_valued_p@0 INTEGER_CST@1) integer_zerop@2)
-  (if (tree_fits_shwi_p (@1)
-       && tree_to_shwi (@1) > 0
-       && tree_to_shwi (@1) < TYPE_PRECISION (TREE_TYPE (@0)))
-    (eq @0 @2)))
+(for neeq (ne eq)
+  (simplify
+    (neeq (lshift zero_one_valued_p@0 INTEGER_CST@1) integer_zerop@2)
+    (if (tree_fits_uhwi_p (@1)
+         && tree_to_uhwi (@1) < TYPE_PRECISION (TREE_TYPE (@0)))
+      (if (neeq == NE_EXPR)
+        (convert @0)
+          (eq @0 @2)))))
 
 /* PR110010: (A >> C) != (B >> C) -> (A ^ B) >= (1 << C)
    and likewise (A >> C) == (B >> C) -> (A ^ B) < (1 << C).
