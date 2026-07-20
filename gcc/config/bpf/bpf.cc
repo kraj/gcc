@@ -625,6 +625,11 @@ bpf_rtx_costs (rtx x,
       *total = COSTS_N_INSNS (1);
       return false;
 
+    case CONST_INT:
+      /* Signed 32-bit imm is free, wider needs an extra LD_IMM64.  */
+      *total = BPF_IMM32_P (x) ? 0 : COSTS_N_INSNS (1);
+      return true;
+
     default:
       return false;
     }
