@@ -5210,6 +5210,20 @@ simplify_ashift:
 				    tmp_op, gen_rtx_PARALLEL (VOIDmode, vec));
 	      return tmp;
 	    }
+	  /* If we select one half of a vec_concat, return that.  */
+	  else if (GET_CODE (trueop0) == VEC_CONCAT)
+	    {
+	      rtx subop0 = XEXP (trueop0, 0);
+	      rtx subop1 = XEXP (trueop0, 1);
+	      machine_mode mode0 = GET_MODE (subop0);
+	      machine_mode mode1 = GET_MODE (subop1);
+	      int i0 = INTVAL (XVECEXP (trueop1, 0, 0));
+	      if (i0 == 0 && mode == mode0 && !side_effects_p (subop1))
+		return subop0;
+	      if (known_eq (i0, GET_MODE_NUNITS (mode0))
+		  && mode == mode1 && !side_effects_p (subop0))
+		return subop1;
+	    }
 	}
       else
 	{
