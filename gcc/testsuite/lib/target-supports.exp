@@ -15042,7 +15042,7 @@ proc check_effective_target_can_deref_null { } {
 	int
 	main ()
 	{
-	  read_mem (0);
+	  read_mem ((char *)0);
 	  return 0;
 	}
       } "-O0 -fno-delete-null-pointer-checks -Wno-null-dereference"]
