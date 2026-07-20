@@ -602,14 +602,32 @@ bpf_legitimate_address_p (machine_mode mode,
    `rtx_cost' should recurse.  */
 
 static bool
-bpf_rtx_costs (rtx x ATTRIBUTE_UNUSED,
+bpf_rtx_costs (rtx x,
 	       enum machine_mode mode ATTRIBUTE_UNUSED,
 	       int outer_code ATTRIBUTE_UNUSED,
 	       int opno ATTRIBUTE_UNUSED,
-               int *total ATTRIBUTE_UNUSED,
+	       int *total,
 	       bool speed ATTRIBUTE_UNUSED)
 {
-  /* To be written.  */
+  switch (GET_CODE (x))
+    {
+    case MULT:
+    case DIV:
+    case UDIV:
+    case MOD:
+    case UMOD:
+      /* BPF implements these as a single instruction, so keep the native
+	 operation cheaper than synthesized sequence.
+	 Only influences choice between actually available alternatives;
+	 if the operation has no insn (e.g. a 64-bit signed divide before
+	 -mcpu=v4) expand_divmod () still falls back to a libcall.
+	 Return false so caller rtx_cost keeps recursing for operands.  */
+      *total = COSTS_N_INSNS (1);
+      return false;
+
+    default:
+      return false;
+    }
   return false;
 }
 
