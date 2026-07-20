@@ -334,7 +334,6 @@ private:
   unsigned stream_discr = 0;
   size_t stream_map_idx = 0;
   location_t stream_loc_offset = 0;
-  unsigned stream_linemap_order = -1U;
 
   /* These keep track of most recently accepted values.  */
   cached_location current_cloc = {};
