@@ -648,7 +648,7 @@ bpf_insn_cost (rtx_insn *insn, bool speed ATTRIBUTE_UNUSED)
      && XINT (XEXP (pat, 1), 1) == UNSPEC_CORE_RELOC)
     return COSTS_N_INSNS (100);
 
-  return COSTS_N_INSNS (1);
+  return pattern_cost (pat, speed);
 }
 
 #undef TARGET_INSN_COST
