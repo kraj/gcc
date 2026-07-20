@@ -55,7 +55,7 @@ tree
 a68_char_max (void)
 {
   /* 0x10FFFF is the maximum valid code point in Unicode.  */
-  return build_int_cst (a68_char_type, 0x10FFFF);
+  return build_int_cst (a68_int_type, 0x10FFFF);
 }
 
 /* Given an integral value, if it denotes a char code build the corresponding
