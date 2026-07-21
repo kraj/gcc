@@ -37,7 +37,7 @@ except:
 label_pattern = '[a-zA-Z][-+a-zA-Z0-9]*(/[a-zA-Z][-+a-zA-Z0-9]*)+'
 
 maintainer_schema = {
-    '$schema': 'https://json-schema.org/draft/2020-12/schema',
+    '$schema': 'https://json-schema.org/draft-04/schema',
     'type': 'object',
     'properties': {
         'users': {
@@ -207,7 +207,7 @@ def _format_path(path, data):
 
 def _check_schema(data):
     try:
-        schema = jsonschema.validators.Draft202012Validator(maintainer_schema)
+        schema = jsonschema.validators.Draft4Validator(maintainer_schema)
         errors = sorted(schema.iter_errors(data), key=lambda e: e.path)
         for err in errors:
             _error(f"{_format_path(err.path, data)}: {err.message}")
