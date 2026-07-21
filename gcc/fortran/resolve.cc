@@ -9961,6 +9961,14 @@ done_errmsg:
     {
       bool arr_alloc_wo_spec = false;
 
+      /* Resolve and mark as used the length of the type spec.  */
+      if (code->ext.alloc.ts.type == BT_CHARACTER)
+	{
+	  gfc_expr *length = code->ext.alloc.ts.u.cl->length;
+	  gfc_resolve_expr (length);
+	  gfc_value_used_expr (length, VALUE_USED);
+	}
+
       /* Resolving the expr3 in the loop over all objects to allocate would
 	 execute loop invariant code for each loop item.  Therefore do it just
 	 once here.  */
@@ -10274,6 +10282,7 @@ resolve_select (gfc_code *code, bool select_type)
 	 GOTOs as normal SELECTs from here on.  */
       code->expr1 = code->expr2;
       code->expr2 = NULL;
+      gfc_value_used_expr (code->expr1, VALUE_USED);
       return;
     }
 
@@ -10542,6 +10551,9 @@ resolve_select (gfc_code *code, bool select_type)
     gfc_warning (OPT_Wsurprising,
 		 "Logical SELECT CASE block at %L has more that two cases",
 		 &code->loc);
+
+  /* Finally, mark the expression as used.  */
+  gfc_value_used_expr (case_expr, VALUE_USED);
 }
 
 
@@ -20838,6 +20850,9 @@ find_unused_vs_set (gfc_symbol *sym)
       || attr->oacc_declare_device_resident || attr->oacc_declare_link
       || attr->result || attr->warning_emitted || attr->use_assoc
       || attr->volatile_ || attr->asynchronous || !attr->referenced)
+    return;
+
+  if (attr->host_assoc && attr->access != ACCESS_PRIVATE)
     return;
 
   /* There is no allocation in sight, but the variable is used anyway.  This
