@@ -4293,10 +4293,10 @@ vect_build_slp_instance (vec_info *vinfo,
 	  vinfo->slp_instances.safe_push (new_instance);
 
 	  /* ???  We've replaced the old SLP_INSTANCE_GROUP_SIZE with
-	     the number of scalar stmts in the root in a few places.
+	     the number of SLP lanes of the root in a few places.
 	     Verify that assumption holds.  */
-	  gcc_assert (SLP_TREE_SCALAR_STMTS (SLP_INSTANCE_TREE (new_instance))
-			.length () == group_size);
+	  gcc_assert (SLP_TREE_LANES (SLP_INSTANCE_TREE (new_instance))
+		       == group_size);
 
 	  if (dump_enabled_p ())
 	    {
@@ -4785,10 +4785,10 @@ vect_analyze_slp_reduc_chain (loop_vec_info vinfo,
       vinfo->slp_instances.safe_push (new_instance);
 
       /* ???  We've replaced the old SLP_INSTANCE_GROUP_SIZE with
-	 the number of scalar stmts in the root in a few places.
+	 the number of SLP lanes of the root in a few places.
 	 Verify that assumption holds.  */
-      gcc_assert (SLP_TREE_SCALAR_STMTS (SLP_INSTANCE_TREE (new_instance))
-		  .length () == group_size);
+      gcc_assert (SLP_TREE_LANES (SLP_INSTANCE_TREE (new_instance))
+		  == group_size);
 
       if (dump_enabled_p ())
 	{
@@ -4874,10 +4874,10 @@ vect_analyze_slp_reduction (loop_vec_info vinfo,
       vinfo->slp_instances.safe_push (new_instance);
 
       /* ???  We've replaced the old SLP_INSTANCE_GROUP_SIZE with
-	 the number of scalar stmts in the root in a few places.
+	 the number of SLP lanes of the root in a few places.
 	 Verify that assumption holds.  */
-      gcc_assert (SLP_TREE_SCALAR_STMTS (SLP_INSTANCE_TREE (new_instance))
-		  .length () == group_size);
+      gcc_assert (SLP_TREE_LANES (SLP_INSTANCE_TREE (new_instance))
+		  == group_size);
 
       if (dump_enabled_p ())
 	{
@@ -4946,10 +4946,10 @@ vect_analyze_slp_reduction_group (loop_vec_info loop_vinfo,
   loop_vinfo->slp_instances.safe_push (new_instance);
 
   /* ???  We've replaced the old SLP_INSTANCE_GROUP_SIZE with
-     the number of scalar stmts in the root in a few places.
+     the number of SLP lanes of the root in a few places.
      Verify that assumption holds.  */
-  gcc_assert (SLP_TREE_SCALAR_STMTS (SLP_INSTANCE_TREE (new_instance))
-	      .length () == group_size);
+  gcc_assert (SLP_TREE_LANES (SLP_INSTANCE_TREE (new_instance))
+	      == group_size);
 
   if (dump_enabled_p ())
     {
@@ -5202,10 +5202,10 @@ vect_analyze_slp_instance (vec_info *vinfo,
 	  vinfo->slp_instances.safe_push (new_instance);
 
 	  /* ???  We've replaced the old SLP_INSTANCE_GROUP_SIZE with
-	     the number of scalar stmts in the root in a few places.
+	     the number of SLP lanes of the root in a few places.
 	     Verify that assumption holds.  */
-	  gcc_assert (SLP_TREE_SCALAR_STMTS (SLP_INSTANCE_TREE (new_instance))
-			.length () == group_size);
+	  gcc_assert (SLP_TREE_LANES (SLP_INSTANCE_TREE (new_instance))
+		      == group_size);
 
 	  if (dump_enabled_p ())
 	    {
@@ -5449,10 +5449,10 @@ vect_analyze_slp_instance (vec_info *vinfo,
 	  vinfo->slp_instances.safe_push (new_instance);
 
 	  /* ???  We've replaced the old SLP_INSTANCE_GROUP_SIZE with
-	     the number of scalar stmts in the root in a few places.
+	     the number of SLP lanes of the root in a few places.
 	     Verify that assumption holds.  */
-	  gcc_assert (SLP_TREE_SCALAR_STMTS (SLP_INSTANCE_TREE (new_instance))
-			.length () == group_size);
+	  gcc_assert (SLP_TREE_LANES (SLP_INSTANCE_TREE (new_instance))
+		      == group_size);
 
 	  if (dump_enabled_p ())
 	    {
@@ -7971,7 +7971,7 @@ vect_optimize_slp_pass::get_result_with_layout (slp_tree node,
 
       unsigned int num_lanes = SLP_TREE_LANES (node);
       result = vect_create_new_slp_node (num_inputs, VEC_PERM_EXPR);
-      if (SLP_TREE_SCALAR_STMTS (node).length ())
+      if (SLP_TREE_SCALAR_STMTS (node).exists ())
 	{
 	  auto &stmts = SLP_TREE_SCALAR_STMTS (result);
 	  stmts.safe_splice (SLP_TREE_SCALAR_STMTS (node));
@@ -8884,7 +8884,7 @@ vect_prologue_cost_for_slp (vec_info *vinfo, slp_tree node,
      constants can be implemented as load from the constant pool.
      When all elements are the same we can use a splat.  */
   tree vectype = SLP_TREE_VECTYPE (node);
-  unsigned group_size = SLP_TREE_SCALAR_OPS (node).length ();
+  unsigned group_size = SLP_TREE_LANES (node);
   unsigned HOST_WIDE_INT const_nunits;
   unsigned nelt_limit;
   unsigned nvectors = vect_get_num_copies (vinfo, node);
@@ -11047,7 +11047,7 @@ vect_transform_slp_perm_load_1 (vec_info *vinfo, slp_tree node,
   stmt_vec_info stmt_info = SLP_TREE_SCALAR_STMTS (node)[0];
   int vec_index = 0;
   tree vectype = SLP_TREE_VECTYPE (node);
-  unsigned int group_size = SLP_TREE_SCALAR_STMTS (node).length ();
+  unsigned int group_size = SLP_TREE_LANES (node);
   unsigned int mask_element;
   unsigned dr_group_size;
   machine_mode mode;

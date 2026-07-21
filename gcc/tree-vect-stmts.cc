@@ -6388,15 +6388,18 @@ vectorizable_shift (vec_info *vinfo,
       /* Now adjust the constant shift amount in place.  */
       if (incompatible_op1_vectype_p
 	  && dt[1] == vect_constant_def)
-	for (unsigned i = 0;
-	     i < SLP_TREE_SCALAR_OPS (slp_op1).length (); ++i)
-	  {
-	    SLP_TREE_SCALAR_OPS (slp_op1)[i]
-	      = fold_convert (TREE_TYPE (vectype),
-			      SLP_TREE_SCALAR_OPS (slp_op1)[i]);
-	    gcc_assert ((TREE_CODE (SLP_TREE_SCALAR_OPS (slp_op1)[i])
-			 == INTEGER_CST));
-	  }
+	{
+	  unsigned group_size = SLP_TREE_LANES (slp_op1);
+	  gcc_assert (SLP_TREE_SCALAR_OPS (slp_op1).length () == group_size);
+	  for (unsigned i = 0; i < group_size; ++i)
+	    {
+	      SLP_TREE_SCALAR_OPS (slp_op1)[i]
+		= fold_convert (TREE_TYPE (vectype),
+				SLP_TREE_SCALAR_OPS (slp_op1)[i]);
+	      gcc_assert ((TREE_CODE (SLP_TREE_SCALAR_OPS (slp_op1)[i])
+			   == INTEGER_CST));
+	    }
+	}
       SLP_TREE_TYPE (slp_node) = shift_vec_info_type;
       DUMP_VECT_SCOPE ("vectorizable_shift");
       vect_model_simple_cost (vinfo, 1, slp_node, cost_vec);

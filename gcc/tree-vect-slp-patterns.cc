@@ -762,7 +762,10 @@ compatible_complex_nodes_p (slp_compat_nodes_map_t *compat_cache,
      are externals.  */
   if (SLP_TREE_DEF_TYPE (a) != vect_internal_def)
     {
-      for (unsigned i = 0; i < SLP_TREE_SCALAR_OPS (a).length (); i++)
+      unsigned group_size = SLP_TREE_LANES (a);
+      gcc_assert (SLP_TREE_SCALAR_OPS (a).length () == group_size
+		  && SLP_TREE_SCALAR_OPS (b).length () == group_size);
+      for (unsigned i = 0; i < group_size; i++)
 	{
 	  tree op1 = SLP_TREE_SCALAR_OPS (a)[pa[i % 2]];
 	  tree op2 = SLP_TREE_SCALAR_OPS (b)[pb[i % 2]];
