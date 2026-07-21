@@ -1,3 +1,11 @@
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-13  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR driver/124058
+	* decl.cc (maybe_prepare_return_this): Use OPT_Wuse_after_free_.
+
 2026-07-14  Jakub Jelinek  <jakub@redhat.com>
 
 	Backported from master:
