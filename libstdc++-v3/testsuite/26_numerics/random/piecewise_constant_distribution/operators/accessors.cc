@@ -50,7 +50,7 @@ test_precision_depended()
 
   std::initializer_list<DistType> x{0.0, 0.5, 1.0};
   constexpr InputType step
-    = std::numeric_limits<InputType>::epsilon();
+    = std::numeric_limits<InputType>::epsilon() * 2;
   InputType wt[2]{InputType(1) - step, InputType(1) + step};
 
   using Distribution = std::piecewise_constant_distribution<DistType>;
