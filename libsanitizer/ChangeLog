@@ -1,3 +1,9 @@
+2026-07-20  Jakub Jelinek  <jakub@redhat.com>
+
+	PR sanitizer/126307
+	* tsan/tsan_trace.h: Cherry-pick llvm-project revision
+	cdfdb06c9155080ec97d6e4f4dd90b6e7cefb0ca.
+
 2026-06-29  Pietro Monteiro  <pietro@sociotechnical.xyz>
 
 	PR bootstrap/103459

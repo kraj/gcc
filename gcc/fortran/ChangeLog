@@ -1,3 +1,237 @@
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	* trans-expr.cc (gfc_conv_class_to_class): Use the data setter
+	instead of generating a MODIFY_EXPR of the result of the data
+	getter.
+	* trans-intrinsic.cc (conv_intrinsic_move_alloc): Likewise.
+
+2026-07-20  Sandra Loosemore  <sloosemore@baylibre.com>
+
+	* trans-openmp.cc (handle_iterator):  Add comments.  Rename
+	iter_block parameter to outer_block, since that's what's actually
+	being passed; the start/end/step expressions are outside the scope
+	of the iterator variables.
+	(start_iterator_group, finish_iterator_group): New functions,
+	broken out from...
+	(gfc_trans_omp_clauses): ...here.
+
+2026-07-20  Paul-Antoine Arras  <parras@baylibre.com>
+
+	* types.def (BT_FN_VOID_ULONGLONG_ULONGLONG): New.
+	(BT_FN_VOID_ULONGLONG_ULONGLONG_ULONGLONG_ULONGLONG_ULONGLONG):
+	Remove.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (conv_descriptor_data): New function.
+	(gfc_conv_descriptor_data_get, gfc_conv_descriptor_data_set): Use
+	it.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_span): Rename ...
+	(conv_descriptor_span): ... to this.
+	(gfc_conv_descriptor_span_get, gfc_conv_descriptor_span_set): Update
+	callers.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_stride): Rename ...
+	(conv_descriptor_stride): ... to this.
+	(gfc_conv_descriptor_stride_get, gfc_conv_descriptor_stride_set):
+	Update caller.
+	(gfc_conv_descriptor_lbound): Rename ...
+	(conv_descriptor_lbound): ... to this.
+	(gfc_conv_descriptor_lbound_get, gfc_conv_descriptor_lbound_set):
+	Update caller.
+	(gfc_conv_descriptor_ubound): Rename ...
+	(conv_descriptor_ubound): ... to this.
+	(gfc_conv_descriptor_ubound_get, gfc_conv_descriptor_ubound_set):
+	Update caller.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_token_set): New function.
+	* trans-descriptor.h (gfc_conv_descriptor_token_set): New
+	declaration.
+	* trans-array.cc (gfc_conv_expr_descriptor,
+	gfc_conv_array_parameter, gfc_trans_deferred_array): Use
+	gfc_conv_descriptor_token_set to set the value of the token.
+	* trans-expr.cc (gfc_conv_derived_to_class,
+	gfc_trans_subcomponent_assign, gfc_trans_scalar_assign): Likewise.
+	* trans-intrinsic.cc (conv_intrinsic_move_alloc): Likewise.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_dimension): Make static
+	and rename ...
+	(conv_descriptor_dimension): ... to this.
+	(gfc_conv_descriptor_subfield): Update caller.
+	* trans-descriptor.h (gfc_conv_descriptor_dimension): Remove
+	declaration.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_attribute): Remove
+	function.
+	* trans-descriptor.h (gfc_conv_descriptor_attribute): Remove
+	declaration.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_dtype): Make static and
+	rename ...
+	(conv_descriptor_dtype): ... to this.
+	(conv_descriptor_rank conv_descriptor_version,
+	conv_descriptor_elem_len, gfc_conv_descriptor_attribute,
+	conv_descriptor_type): Update callers.
+	(gfc_conv_descriptor_dtype_get, gfc_conv_descriptor_dtype_set):
+	New functions.
+	* trans-descriptor.h (gfc_conv_descriptor_dtype): Remove
+	declaration.
+	(gfc_conv_descriptor_dtype_get, gfc_conv_descriptor_dtype_set):
+	New declarations.
+	* trans-array.cc (gfc_trans_create_temp_array, gfc_array_init_size,
+	gfc_conv_expr_descriptor, gfc_resize_assumed_rank_dim_field,
+	gfc_conv_array_parameter, structure_alloc_comps,
+	gfc_alloc_allocatable_for_assignment, gfc_trans_class_array,
+	gfc_trans_deferred_array): Use gfc_conv_descriptor_dtype_get to get
+	the value of the dtype field and gfc_conv_descriptor_dtype_set to
+	update it.
+	* trans-decl.cc (gfc_conv_cfi_to_gfc): Likewise.
+	* trans-expr.cc (gfc_conv_scalar_to_descriptor,
+	gfc_class_array_data_assign, gfc_conv_derived_to_class,
+	gfc_conv_class_to_class, set_dtype_for_unallocated,
+	gfc_trans_pointer_assignment, fcncall_realloc_result): Likewise.
+	* trans-intrinsic.cc (conv_isocbinding_subroutine): Likewise.
+	* trans-stmt.cc (trans_associate_var): Likewise.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (get_type_field): New function.
+	(gfc_get_descriptor_field): Use it.
+	(gfc_conv_descriptor_type): Make static and rename ...
+	(conv_descriptor_type): ... to this.
+	(gfc_conv_descriptor_type_get, gfc_conv_descriptor_type_set): New
+	functions.
+	* trans-descriptor.h (gfc_conv_descriptor_type): Remove declaration.
+	(gfc_conv_descriptor_type_get, gfc_conv_descriptor_type_set): New
+	declarations.
+	* trans-expr.cc (gfc_conv_gfc_desc_to_cfi_desc): Use
+	gfc_conv_descriptor_type_get to get the value of the type field.
+	* trans-decl.cc (gfc_conv_cfi_to_gfc): Use
+	gfc_conv_descriptor_type_set to set the value of the type field.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_rank): Make static and
+	rename ...
+	(conv_descriptor_rank): ... to this.
+	(gfc_conv_descriptor_rank_get, gfc_conv_descriptor_rank_set): New
+	functions.
+	* trans-descriptor.h (gfc_conv_descriptor_rank): Remove declaration.
+	(gfc_conv_descriptor_rank_get, gfc_conv_descriptor_rank_set): New
+	declarations.
+	* trans-array.cc (gfc_trans_create_temp_array,
+	gfc_conv_ss_startstride, gfc_tree_array_size,
+	gfc_resize_assumed_rank_dim_field, gfc_conv_array_parameter,
+	gfc_full_array_size, duplicate_allocatable_coarray): Use
+	gfc_conv_descriptor_rank_get to get the value of the rank field,
+	and gfc_conv_descriptor_rank_set to set it.
+	* trans-decl.cc (gfc_conv_cfi_to_gfc): Likewise.
+	* trans-expr.cc (gfc_conv_derived_to_class, gfc_conv_variable,
+	gfc_conv_gfc_desc_to_cfi_desc, conv_null_actual,
+	gfc_trans_structure_assign): Likewise.
+	* trans-intrinsic.cc (gfc_conv_intrinsic_rank,
+	gfc_conv_intrinsic_bound, gfc_conv_intrinsic_sizeof,
+	gfc_conv_associated): Likewise.
+	* trans-openmp.cc (gfc_omp_get_array_size): Likewise.
+	* trans-stmt.cc (gfc_trans_select_rank_cases): Likewise.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_version): Make static and
+	rename ...
+	(conv_descriptor_version): ... to this.
+	(gfc_conv_descriptor_version_get, gfc_conv_descriptor_version_set):
+	New functions.
+	* trans-descriptor.h (gfc_conv_descriptor_version): Remove
+	declaration.
+	(gfc_conv_descriptor_version_get, gfc_conv_descriptor_version_set):
+	New declarations.
+	* trans.cc (gfc_deallocate_with_status): Use
+	gfc_conv_descriptor_version_get to get the value of the version
+	field, and gfc_conv_descriptor_version_set to set it.
+	* trans-array.cc (gfc_array_allocate, structure_alloc_comps,
+	gfc_alloc_allocatable_for_assignment): Likewise.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_elem_len): Make static
+	and rename ...
+	(conv_descriptor_elem_len): ... to this.
+	(gfc_conv_descriptor_elem_len_get,
+	gfc_conv_descriptor_elem_len_set): New functions.
+	* trans-descriptor.h (gfc_conv_descriptor_elem_len): Remove
+	declaration.
+	(gfc_conv_descriptor_elem_len_get,
+	gfc_conv_descriptor_elem_len_set): New declarations.
+	* trans-decl.cc (gfc_conv_cfi_to_gfc): Use
+	gfc_conv_descriptor_elem_len_get to get the value of the elem_len
+	field and gfc_conv_descriptor_elem_len_set to set it.
+	* trans-array.cc (gfc_array_init_size,
+	gfc_alloc_allocatable_for_assignment): Likewise.
+	* trans-expr.cc (gfc_conv_scalar_to_descriptor,
+	gfc_conv_gfc_desc_to_cfi_desc, gfc_trans_pointer_assignment):
+	Likewise.
+	* trans-intrinsic.cc (gfc_conv_is_contiguous_expr,
+	gfc_conv_intrinsic_sizeof): Likewise.
+	* trans-openmp.cc (gfc_omp_array_size, gfc_omp_deep_mapping_item):
+	Likewise.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/122521
+	* trans-descriptor.cc (gfc_conv_descriptor_offset): Make static and
+	rename ...
+	(conv_descriptor_offset): ... to this.
+	(gfc_conv_descriptor_offset_get,
+	gfc_conv_descriptor_offset_set): Update callers.
+	* trans-descriptor.h (gfc_conv_descriptor_offset): Remove
+	declaration.
+	* trans-array.cc (gfc_alloc_allocatable_for_assignment): Use the
+	setter function to generate a modification of the array descriptor
+	offset.
+
+2026-07-20  Tobias Burnus  <tburnus@baylibre.com>
+
+	* dump-parse-tree.cc (show_omp_clauses): Handle spatial dimension
+	in num_teams and it and strict/relaxed in thread_limits and
+	num_threads.
+	* trans-openmp.cc (gfc_trans_omp_clauses, gfc_split_omp_clauses,
+	gfc_trans_omp_target): Likewise.
+	* openmp.cc (gfc_free_omp_clauses, gfc_match_omp_clauses,
+	resolve_omp_clauses): Likewise.
+	(match_omp_oacc_expr_list): Return current locus for a parse
+	fail instead of resetting the locus.
+	* gfortran.h (gfc_omp_clauses): Changed gfc_expr num_threads,
+	num_teams_lower, num_teams_upper, and thread_limit to
+	gfc_expr_list num_threads_list, num_teams_list, and thread_limit_list.
+	Add thread_limit_strict, num_threads_strict, num_teams_dims,
+	thread_limit_dims, and num_threads_dims.
+	* frontend-passes.cc (gfc_code_walker): Update for this change.
+
 2026-07-19  Thomas Koenig  <tkoenig@gcc.gnu.org>
 
 	* dump-parse-tree.cc (show_code_node): Show typespec for

@@ -1,3 +1,620 @@
+2026-07-20  Jose E. Marchesi  <jemarch@gnu.org>
+
+	* algol68/execute/max-abs-char-1.a68: New test.
+
+2026-07-20  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/126309
+	* g++.dg/cpp26/feat-cxx26.C: Test __has_cpp_attribute (indeterminate).
+	* g++.dg/cpp29/feat-cxx29.C: Likewise.
+
+2026-07-20  chris hermansen  <clhermansen@gmail.com>
+
+	* algol68/execute/whole-1.a68: New test.
+
+2026-07-20  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	* gcc.target/bpf/const-cost-model.c: New test prefers const.
+	* gcc.target/bpf/const-cost-model-2.c: New test prefers const.
+
+2026-07-20  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	* gcc.target/bpf/divmod-libcall-2.c: Change args/ret to signed.
+	* gcc.target/bpf/mult-large.c: New test.
+	* gcc.target/bpf/mult-small.c: New test.
+
+2026-07-20  Robert Dubner  <rdubner@symas.com>
+
+	* cobol.dg/group2/37-digit_Initialization_of_fundamental_types.cob:
+	Start the test with a "Do not edit" comment.
+	* cobol.dg/group2/88_level_with_FALSE_IS_clause.cob: Likewise.
+	* cobol.dg/group2/88_level_with_FILLER.cob: Likewise.
+	* cobol.dg/group2/88_level_with_THRU.cob: Likewise.
+	* cobol.dg/group2/ACCEPT_DATE___DAY_and_intrinsic_functions__1_.cob: Likewise.
+	* cobol.dg/group2/ACCEPT_DATE___DAY_and_intrinsic_functions__2_.cob: Likewise.
+	* cobol.dg/group2/ACCEPT_FROM_ENVIRONMENT-NAME.cob: Likewise.
+	* cobol.dg/group2/ACCEPT_FROM_TIME___DATE___DAY___DAY-OF-WEEK__1_.cob: Likewise.
+	* cobol.dg/group2/ACCEPT_FROM_TIME___DATE___DAY___DAY-OF-WEEK__2_.cob: Likewise.
+	* cobol.dg/group2/ACCEPT_foo_FROM_COMMAND-LINE_1_.cob: Likewise.
+	* cobol.dg/group2/ADD_1_2_TO_3_GIVING_B.cob: Likewise.
+	* cobol.dg/group2/ADD_CORRESPONDING.cob: Likewise.
+	* cobol.dg/group2/ADD_SUBTRACT_CORR_mixed_fix___float.cob: Likewise.
+	* cobol.dg/group2/ALLOCATE_Rules_6_-_9._Without_OPTION_INITIALIZE_Without_-fdefaultbyte___ASCII_.cob:
+	Likewise.
+	* cobol.dg/group2/ALLOCATE_Rules_6_-_9._Without_OPTION_INITIALIZE_Without_-fdefaultbyte___EBCDIC_.cob:
+	Likewise.
+	* cobol.dg/group2/ALLOCATE_Rules_6_-_9_Without_OPTION_INITIALIZE_With_-fdefaultbyte___UTF16_.cob:
+	Likewise.
+	* cobol.dg/group2/ALLOCATE___FREE_basic_default_versions.cob: Likewise.
+	* cobol.dg/group2/ALLOCATE___FREE_with_BASED_item__1_.cob: Likewise.
+	* cobol.dg/group2/ALLOCATE___FREE_with_BASED_item__2_.cob: Likewise.
+	* cobol.dg/group2/ALPHABETIC-LOWER_test.cob: Likewise.
+	* cobol.dg/group2/ALPHABETIC-UPPER_test.cob: Likewise.
+	* cobol.dg/group2/ALPHABETIC_test.cob: Likewise.
+	* cobol.dg/group2/ANY_LENGTH__1_.cob: Likewise.
+	* cobol.dg/group2/ANY_LENGTH__2_.cob: Likewise.
+	* cobol.dg/group2/ANY_LENGTH__3_.cob: Likewise.
+	* cobol.dg/group2/ANY_LENGTH__4_.cob: Likewise.
+	* cobol.dg/group2/ANY_LENGTH__5_.cob: Likewise.
+	* cobol.dg/group2/ANY_LENGTH__7_.cob: Likewise.
+	* cobol.dg/group2/Alphanumeric_MOVE_with_truncation.cob: Likewise.
+	* cobol.dg/group2/Alphanumeric_and_binary_numeric.cob: Likewise.
+	* cobol.dg/group2/Assorted_SPECIAL-NAMES_CLASS.cob: Likewise.
+	* cobol.dg/group2/BINARY_and_COMP-5__little-endian_.cob: Likewise.
+	* cobol.dg/group2/BLANK_WHEN_ZERO.cob: Likewise.
+	* cobol.dg/group2/CALL_with_OCCURS_DEPENDING_ON.cob: Likewise.
+	* cobol.dg/group2/CALL_with_OMITTED_parameter.cob: Likewise.
+	* cobol.dg/group2/CBL_ALLOC_MEM___CBL_FREE_MEM.cob: Likewise.
+	* cobol.dg/group2/CBL_CHECK_FILE_EXIST.cob: Likewise.
+	* cobol.dg/group2/CBL_CREATE_FILE___CBL_WRITE_FILE___CBL_CLOSE_FILE.cob: Likewise.
+	* cobol.dg/group2/CBL_DELETE_FILE.cob: Likewise.
+	* cobol.dg/group2/CBL_OPEN_FILE___CBL_CLOSE_FILE.cob: Likewise.
+	* cobol.dg/group2/CBL_OPEN_FILE___CBL_READ_FILE___CBL_CLOSE_FILE.cob: Likewise.
+	* cobol.dg/group2/CBL_READ_FILE__check_file_size_with_flags___128.cob: Likewise.
+	* cobol.dg/group2/CDF2_-_DEFINE_FOO_AS_literal-1.cob: Likewise.
+	* cobol.dg/group2/CDF2_Trouble_with___IF__1_.cob: Likewise.
+	* cobol.dg/group2/CDF2_Trouble_with___IF__2_.cob: Likewise.
+	* cobol.dg/group2/CDF4_.cob: Likewise.
+	* cobol.dg/group2/CDF_Feature_.cob: Likewise.
+	* cobol.dg/group2/CDF_IS_NOT_DEFINED.cob: Likewise.
+	* cobol.dg/group2/CDF__1__IF____text_.cob: Likewise.
+	* cobol.dg/group2/CDF__2__IF____number_.cob: Likewise.
+	* cobol.dg/group2/CDF__3__ALL_NUMERIC_COMPARISONS.cob: Likewise.
+	* cobol.dg/group2/CHAR_and_ORD_with_COLLATING_sequence_-_ASCII.cob: Likewise.
+	* cobol.dg/group2/CHAR_and_ORD_with_COLLATING_sequence_-_EBCDIC.cob: Likewise.
+	* cobol.dg/group2/COMP-3_to_COMP-3__IN-PHASE__MOVES.cob: Likewise.
+	* cobol.dg/group2/COMP-3_to_COMP-3__OUT-OF-PHASE__MOVES.cob: Likewise.
+	* cobol.dg/group2/COMP-3_to_COMP-3_size_error.cob: Likewise.
+	* cobol.dg/group2/COMP-3_to_numeric-display_size_error.cob: Likewise.
+	* cobol.dg/group2/COMP-5_Sanity_Check_.cob: Likewise.
+	* cobol.dg/group2/COMP-6_arithmetic.cob: Likewise.
+	* cobol.dg/group2/COMP-6_numeric_test.cob: Likewise.
+	* cobol.dg/group2/COMP-6_used_with_DISPLAY.cob: Likewise.
+	* cobol.dg/group2/COMP-6_used_with_MOVE.cob: Likewise.
+	* cobol.dg/group2/COMPUTE_multiplication_to_FIX4.cob: Likewise.
+	* cobol.dg/group2/CONTINUE_AFTER_1_SECONDS.cob: Likewise.
+	* cobol.dg/group2/CURRENCY_SIGN.cob: Likewise.
+	* cobol.dg/group2/CURRENCY_SIGN_WITH_PICTURE_SYMBOL.cob: Likewise.
+	* cobol.dg/group2/Check_for_equality_of_COMP-1___COMP-2.cob: Likewise.
+	* cobol.dg/group2/Checking_IS_NUMERIC.cob: Likewise.
+	* cobol.dg/group2/Class_check_with_reference_modification.cob: Likewise.
+	* cobol.dg/group2/Clear_negative_zero_after_truncated_MOVE.cob: Likewise.
+	* cobol.dg/group2/Compare_COMP-2_with_floating-point_literal.cob: Likewise.
+	* cobol.dg/group2/Complex_EVALUATE__1_.cob: Likewise.
+	* cobol.dg/group2/Complex_EVALUATE__2_.cob: Likewise.
+	* cobol.dg/group2/Complex_HEX__VALUE_and_MOVE_-_ASCII_EBCDIC.cob: Likewise.
+	* cobol.dg/group2/Complex_IF.cob: Likewise.
+	* cobol.dg/group2/Complex_INITIALIZE_with_nested_tables__1_.cob: Likewise.
+	* cobol.dg/group2/Complex_INITIALIZE_with_nested_tables__2_.cob: Likewise.
+	* cobol.dg/group2/Concatenation_operator.cob: Likewise.
+	* cobol.dg/group2/Contained_program_visibility__3_.cob: Likewise.
+	* cobol.dg/group2/Contained_program_visibility__4_.cob: Likewise.
+	* cobol.dg/group2/Context_sensitive_words__1_.cob: Likewise.
+	* cobol.dg/group2/Context_sensitive_words__2_.cob: Likewise.
+	* cobol.dg/group2/Context_sensitive_words__3_.cob: Likewise.
+	* cobol.dg/group2/Context_sensitive_words__4_.cob: Likewise.
+	* cobol.dg/group2/Context_sensitive_words__5_.cob: Likewise.
+	* cobol.dg/group2/Context_sensitive_words__6_.cob: Likewise.
+	* cobol.dg/group2/Context_sensitive_words__7_.cob: Likewise.
+	* cobol.dg/group2/Context_sensitive_words__8_.cob: Likewise.
+	* cobol.dg/group2/DEBUG-ITEM_using_mh_identical.cob: Likewise.
+	* cobol.dg/group2/DEBUG_Line.cob: Likewise.
+	* cobol.dg/group2/DECIMAL-POINT_is_COMMA__1_.cob: Likewise.
+	* cobol.dg/group2/DECIMAL-POINT_is_COMMA__2_.cob: Likewise.
+	* cobol.dg/group2/DECIMAL-POINT_is_COMMA__3_.cob: Likewise.
+	* cobol.dg/group2/DECIMAL-POINT_is_COMMA__4_.cob: Likewise.
+	* cobol.dg/group2/DECIMAL-POINT_is_COMMA__5_.cob: Likewise.
+	* cobol.dg/group2/DISPLAY_IBM-formatted_COMP-1_and_COMP-2.cob: Likewise.
+	* cobol.dg/group2/DISPLAY__Sign_ASCII__2_.cob: Likewise.
+	* cobol.dg/group2/DISPLAY_and_assignment_NumericDisplay.cob: Likewise.
+	* cobol.dg/group2/DISPLAY_data_items_with_MOVE_statement.cob: Likewise.
+	* cobol.dg/group2/DISPLAY_data_items_with_VALUE_clause.cob: Likewise.
+	* cobol.dg/group2/DISPLAY_literals__DECIMAL-POINT_is_COMMA.cob: Likewise.
+	* cobol.dg/group2/DIVIDE_binary-long_giving_remainder.cob: Likewise.
+	* cobol.dg/group2/DIVIDE_numeric-display_giving_remainder.cob: Likewise.
+	* cobol.dg/group2/Default_Arithmetic__1_.cob: Likewise.
+	* cobol.dg/group2/Dynamic_reference_modification.cob: Likewise.
+	* cobol.dg/group2/EC-BOUND-REF-MOD_checking_process_termination.cob: Likewise.
+	* cobol.dg/group2/EC-SIZE-TRUNCATION_EC-SIZE-OVERFLOW.cob: Likewise.
+	* cobol.dg/group2/EC-SIZE-ZERO-DIVIDE__fixed_and_float.cob: Likewise.
+	* cobol.dg/group2/ENTRY_statement.cob: Likewise.
+	* cobol.dg/group2/EVALUATE_WHEN_NEGATIVE.cob: Likewise.
+	* cobol.dg/group2/EVALUATE__A__OR__a_.cob: Likewise.
+	* cobol.dg/group2/EVALUATE_condition__1_.cob: Likewise.
+	* cobol.dg/group2/EVALUATE_condition__2_.cob: Likewise.
+	* cobol.dg/group2/EVALUATE_doubled_WHEN.cob: Likewise.
+	* cobol.dg/group2/EVALUATE_with_WHEN_using_condition-1.cob: Likewise.
+	* cobol.dg/group2/EXIT_PARAGRAPH.cob: Likewise.
+	* cobol.dg/group2/EXIT_PERFORM.cob: Likewise.
+	* cobol.dg/group2/EXIT_PERFORM_CYCLE.cob: Likewise.
+	* cobol.dg/group2/EXIT_SECTION.cob: Likewise.
+	* cobol.dg/group2/FIND-STRING__forward_.cob: Likewise.
+	* cobol.dg/group2/FIND-STRING__reverse_.cob: Likewise.
+	* cobol.dg/group2/FIXED_FORMAT_data_in_cols_73_and_beyond.cob: Likewise.
+	* cobol.dg/group2/FIXED_FORMAT_data_misplaced_asterisk.cob: Likewise.
+	* cobol.dg/group2/FLOAT-LONG_with_SIZE_ERROR.cob: Likewise.
+	* cobol.dg/group2/FLOAT-SHORT___FLOAT-LONG_w_o_SIZE_ERROR.cob: Likewise.
+	* cobol.dg/group2/FLOAT-SHORT_with_SIZE_ERROR.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ABS.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ACOS.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ALL_INTRINSIC_simple_test.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ANNUITY.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ASIN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ATAN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_BIGGER-POINTER.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_BIGGER-POINTER__2_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_BYTE-LENGTH.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_CHAR.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_COMBINED-DATETIME.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_CONCAT___CONCATENATE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_CONCAT_with_reference_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_CONVERT.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_COS.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_CURRENT-DATE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_DATE-OF-INTEGER.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_DATE-TO-YYYYMMDD.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_DATE___TIME_OMNIBUS.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_DAY-OF-INTEGER.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_DAY-TO-YYYYDDD.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_E.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_EXCEPTION-FILE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_EXCEPTION-STATEMENT.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_EXCEPTION-STATUS.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_EXP.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_EXP10.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FACTORIAL.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FORMATTED-DATE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FORMATTED-DATETIME.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FORMATTED-DATETIME_with_ref_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FORMATTED-DATE_TIME_DATETIME.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FORMATTED-DATE_with_ref_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FORMATTED-TIME_DP.COMMA.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FORMATTED-TIME_with_ref_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_FRACTION-PART.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_HEX-OF.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_HIGHEST-ALGEBRAIC.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_INTEGER-OF-DATE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_INTEGER-OF-DAY.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_INTEGER-OF-FORMATTED-DATE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_INTEGER-PART.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_INTEGER.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LENGTH__1_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LENGTH__2_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOCALE-COMPARE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOCALE-DATE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOCALE-TIME-FROM-SECONDS.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOCALE-TIME.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOG.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOG10.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOWER-CASE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOWER-CASE_with_reference_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_LOWEST-ALGEBRAIC.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_MAX.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_MEAN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_MEDIAN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_MIDRANGE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_MIN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_MODULE-NAME.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_MOD__invalid_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_MOD__valid_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_NUMVAL-C.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_NUMVAL-C_DP.COMMA.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_NUMVAL-F.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_NUMVAL.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ORD-MAX.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ORD-MIN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_ORD.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_PI.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_PRESENT-VALUE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_RANDOM.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_RANGE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_REM__invalid_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_REM__valid_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_REVERSE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_REVERSE_with_reference_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SECONDS-FROM-FORMATTED-TIME.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SECONDS-PAST-MIDNIGHT.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SIGN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SIN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SQRT.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SQRT__2_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_STANDARD-DEVIATION.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SUBSTITUTE-CASE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SUBSTITUTE-CASE_with_reference_mod.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SUBSTITUTE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SUBSTITUTE_with_reference_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_SUM.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TAN.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-DATE-YYYYMMDD.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-DAY-YYYYDDD__1_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-DAY-YYYYDDD__2_.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-FORMATTED-DATETIME_DP.COMMA.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-FORMATTED-DATETIME_additional.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-FORMATTED-DATETIME_with_dates.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-FORMATTED-DATETIME_with_datetimes.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-FORMATTED-DATETIME_with_times.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-NUMVAL-C.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-NUMVAL-F.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TEST-NUMVAL.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TRIM.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TRIM_with_NATIONAL_characters.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TRIM_with_extra_characters.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TRIM_with_reference_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_TRIM_zero_length.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_UPPER-CASE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_UPPER-CASE_with_reference_modding.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_VARIANCE.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_WHEN-COMPILED.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_YEAR-TO-YYYY.cob: Likewise.
+	* cobol.dg/group2/FUNCTION_as_CALL_parameter_BY_CONTENT.cob: Likewise.
+	* cobol.dg/group2/Fixed_continuation_indicator.cob: Likewise.
+	* cobol.dg/group2/Floating_continuation_indicator__1_.cob: Likewise.
+	* cobol.dg/group2/Fundamental_INSPECT_BACKWARD_REPLACING.cob: Likewise.
+	* cobol.dg/group2/Fundamental_INSPECT_BACKWARD_TALLYING.cob: Likewise.
+	* cobol.dg/group2/Fundamental_INSPECT_REPLACING.cob: Likewise.
+	* cobol.dg/group2/Fundamental_INSPECT_TALLYING.cob: Likewise.
+	* cobol.dg/group2/GCC_125616_RT3601_-_IBM_incorrect_DISPLAY_of_COMP-1_COMP-2_float.cob:
+	Likewise.
+	* cobol.dg/group2/GLOBAL_FD__1_.cob: Likewise.
+	* cobol.dg/group2/GLOBAL_FD__2_.cob: Likewise.
+	* cobol.dg/group2/GLOBAL_FD__3_.cob: Likewise.
+	* cobol.dg/group2/GLOBAL_FD__4_.cob: Likewise.
+	* cobol.dg/group2/GLOBAL_at_lower_level.cob: Likewise.
+	* cobol.dg/group2/GLOBAL_at_same_level.cob: Likewise.
+	* cobol.dg/group2/Hexadecimal_literal.cob: Likewise.
+	* cobol.dg/group2/IBM_dialect_COMP_redefined_by_POINTER_as_64-bit.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_OCCURS_with_SIGN_LEADING___TRAILING.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_OCCURS_with_numeric_edited.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_complex_group__1_.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_complex_group__2_.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_group_entry_with_OCCURS.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_of_EXTERNAL_data_items.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_with_-defaultbyte__ASCII_.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_with_-defaultbyte__EBCDIC_.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_with_FILLER.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_with_REDEFINES.cob: Likewise.
+	* cobol.dg/group2/INITIALIZE_with_reference_modification.cob: Likewise.
+	* cobol.dg/group2/INSPECT_BACKWARD_REPLACING_LEADING.cob: Likewise.
+	* cobol.dg/group2/INSPECT_BACKWARD_REPLACING_TRAILING.cob: Likewise.
+	* cobol.dg/group2/INSPECT_BACKWARD_simple_CONVERTING.cob: Likewise.
+	* cobol.dg/group2/INSPECT_BACKWARD_simple_REPLACING.cob: Likewise.
+	* cobol.dg/group2/INSPECT_BACKWARD_simple_TALLYING.cob: Likewise.
+	* cobol.dg/group2/INSPECT_CONVERTING_NULL.cob: Likewise.
+	* cobol.dg/group2/INSPECT_CONVERTING_TO_figurative_constant.cob: Likewise.
+	* cobol.dg/group2/INSPECT_CONVERTING_TO_figurative_constants.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_1.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_2.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_3.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_4.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_5-f.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_5-r.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_5.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_6.cob: Likewise.
+	* cobol.dg/group2/INSPECT_ISO_Example_7.cob: Likewise.
+	* cobol.dg/group2/INSPECT_No_repeat_conversion_check.cob: Likewise.
+	* cobol.dg/group2/INSPECT_REPLACING_LEADING_ZEROS_BY_SPACES.cob: Likewise.
+	* cobol.dg/group2/INSPECT_REPLACING_figurative_constant.cob: Likewise.
+	* cobol.dg/group2/INSPECT_TALLYING_AFTER.cob: Likewise.
+	* cobol.dg/group2/INSPECT_TALLYING_BEFORE.cob: Likewise.
+	* cobol.dg/group2/INSPECT_TALLYING_REPLACING_ISO_Example.cob: Likewise.
+	* cobol.dg/group2/INSPECT_TRAILING.cob: Likewise.
+	* cobol.dg/group2/Index_and_parenthesized_expression.cob: Likewise.
+	* cobol.dg/group2/Indicators_______________-____D__.cob: Likewise.
+	* cobol.dg/group2/Intrinsic_Function_ABS.cob: Likewise.
+	* cobol.dg/group2/Intrinsic_Function_ACOS.cob: Likewise.
+	* cobol.dg/group2/Intrinsic_Function_ANNUITY.cob: Likewise.
+	* cobol.dg/group2/Intrinsic_Function_DATE-YYYYMMDD.cob: Likewise.
+	* cobol.dg/group2/Intrinsic_Function_NUMVAL.cob: Likewise.
+	* cobol.dg/group2/Intrinsics_without_FUNCTION_keyword__3_.cob: Likewise.
+	* cobol.dg/group2/LENGTH_OF_omnibus.cob: Likewise.
+	* cobol.dg/group2/LOCAL-STORAGE__3__with_recursive_PROGRAM-ID.cob: Likewise.
+	* cobol.dg/group2/LOCAL-STORAGE__4__with_recursive_PROGRAM-ID_..._USING.cob: Likewise.
+	* cobol.dg/group2/Large_PIC_10000000_.cob: Likewise.
+	* cobol.dg/group2/Length_overflow__1_.cob: Likewise.
+	* cobol.dg/group2/Length_overflow__2_.cob: Likewise.
+	* cobol.dg/group2/Length_overflow_with_offset__1_.cob: Likewise.
+	* cobol.dg/group2/Length_overflow_with_offset__2_.cob: Likewise.
+	* cobol.dg/group2/Length_overflow_with_offset__3_.cob: Likewise.
+	* cobol.dg/group2/Long_Division.cob: Likewise.
+	* cobol.dg/group2/MOVE_LEVEL_78.cob: Likewise.
+	* cobol.dg/group2/MOVE_NumericDisplay_to_COMP-3.cob: Likewise.
+	* cobol.dg/group2/MOVE_X_000203_.cob: Likewise.
+	* cobol.dg/group2/MOVE_Z_literal_.cob: Likewise.
+	* cobol.dg/group2/MOVE_indexes.cob: Likewise.
+	* cobol.dg/group2/MOVE_integer_literal_to_alphanumeric.cob: Likewise.
+	* cobol.dg/group2/MOVE_to_JUSTIFIED_items.cob: Likewise.
+	* cobol.dg/group2/MOVE_to_edited_item__1_.cob: Likewise.
+	* cobol.dg/group2/MOVE_to_edited_item__2_.cob: Likewise.
+	* cobol.dg/group2/MOVE_to_item_with_simple_and_floating_insertion.cob: Likewise.
+	* cobol.dg/group2/MOVE_to_itself.cob: Likewise.
+	* cobol.dg/group2/MOVE_with_group_refmod.cob: Likewise.
+	* cobol.dg/group2/MOVE_with_refmod.cob: Likewise.
+	* cobol.dg/group2/MOVE_with_refmod__variable_.cob: Likewise.
+	* cobol.dg/group2/MULTIPLY_BY_literal_in_INITIAL_program.cob: Likewise.
+	* cobol.dg/group2/MULTIPLY_to_FIX4.cob: Likewise.
+	* cobol.dg/group2/Multi-target_MOVE_with_subscript_re-evaluation.cob: Likewise.
+	* cobol.dg/group2/Multiple_INDEXED_BY_variables_with_the_same_name.cob: Likewise.
+	* cobol.dg/group2/N-Queens_algorithm.cob: Likewise.
+	* cobol.dg/group2/Named_conditionals_-_fixed__float__and_alphabetic.cob: Likewise.
+	* cobol.dg/group2/Nested_PERFORM.cob: Likewise.
+	* cobol.dg/group2/Non-numeric_data_in_numeric-display__1_.cob: Likewise.
+	* cobol.dg/group2/Non-numeric_data_in_packed_decimal.cob: Likewise.
+	* cobol.dg/group2/Non-overflow_after_overflow.cob: Likewise.
+	* cobol.dg/group2/Numeric-display_sign_encoding__2_.cob: Likewise.
+	* cobol.dg/group2/Numeric-display_sign_encoding_sanity_check.cob: Likewise.
+	* cobol.dg/group2/Numeric_operations__1_.cob: Likewise.
+	* cobol.dg/group2/Numeric_operations__2_.cob: Likewise.
+	* cobol.dg/group2/Numeric_operations__3_.cob: Likewise.
+	* cobol.dg/group2/Numeric_operations__4_.cob: Likewise.
+	* cobol.dg/group2/Numeric_operations__5_.cob: Likewise.
+	* cobol.dg/group2/Numeric_operations__6_.cob: Likewise.
+	* cobol.dg/group2/Numeric_operations__7_.cob: Likewise.
+	* cobol.dg/group2/Numeric_operations__8_.cob: Likewise.
+	* cobol.dg/group2/OCCURS_clause_with_1_entry.cob: Likewise.
+	* cobol.dg/group2/OSVS_Arithmetic_Test__2_.cob: Likewise.
+	* cobol.dg/group2/Occurs_DEPENDING_ON__source_and_dest.cob: Likewise.
+	* cobol.dg/group2/Offset_overflow.cob: Likewise.
+	* cobol.dg/group2/Offset_underflow.cob: Likewise.
+	* cobol.dg/group2/Overlapping_MOVE.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_arithmetic.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_basic_comp-3_comp-6__1_.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_basic_comp-3_comp-6__2_.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_dump.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_numeric_test__1_.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_numeric_test__2_.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_used_with_DISPLAY.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_used_with_INITIALIZE.cob: Likewise.
+	* cobol.dg/group2/PACKED-DECIMAL_used_with_MOVE.cob: Likewise.
+	* cobol.dg/group2/PERFORM_..._CONTINUE.cob: Likewise.
+	* cobol.dg/group2/PERFORM_TIMES_subscripted.cob: Likewise.
+	* cobol.dg/group2/PERFORM_VARYING_BY_-0.2.cob: Likewise.
+	* cobol.dg/group2/PERFORM_inline__1_.cob: Likewise.
+	* cobol.dg/group2/PERFORM_inline__2_.cob: Likewise.
+	* cobol.dg/group2/PERFORM_type_OSVS.cob: Likewise.
+	* cobol.dg/group2/PIC_ZZZ-__ZZZ_.cob: Likewise.
+	* cobol.dg/group2/POINTER__display.cob: Likewise.
+	* cobol.dg/group2/PR39_RT3573_-_Parser_issue_w_concat._source_lines.cob: Likewise.
+	* cobol.dg/group2/Preserve_collation_past_a_CALL.cob: Likewise.
+	* cobol.dg/group2/Program-to-program_parameters_and_retvals.cob: Likewise.
+	* cobol.dg/group2/Quick_check_of_PIC_XX_COMP-5.cob: Likewise.
+	* cobol.dg/group2/Quote_marks_in_comment_paragraphs.cob: Likewise.
+	* cobol.dg/group2/REDEFINES__chained.cob: Likewise.
+	* cobol.dg/group2/REDEFINES_values_on_FILLER_and_INITIALIZE.cob: Likewise.
+	* cobol.dg/group2/RETURN-CODE_moving.cob: Likewise.
+	* cobol.dg/group2/RETURN-CODE_nested.cob: Likewise.
+	* cobol.dg/group2/RETURN-CODE_with_INITIAL_and_RECURSIVE.cob: Likewise.
+	* cobol.dg/group2/ROUNDED_AWAY-FROM-ZERO.cob: Likewise.
+	* cobol.dg/group2/ROUNDED_NEAREST-AWAY-FROM-ZERO.cob: Likewise.
+	* cobol.dg/group2/ROUNDED_NEAREST-EVEN.cob: Likewise.
+	* cobol.dg/group2/ROUNDED_NEAREST-TOWARD-ZERO.cob: Likewise.
+	* cobol.dg/group2/ROUNDED_TOWARD-GREATER.cob: Likewise.
+	* cobol.dg/group2/ROUNDED_TOWARD-LESSER.cob: Likewise.
+	* cobol.dg/group2/ROUNDED_TRUNCATION.cob: Likewise.
+	* cobol.dg/group2/ROUNDING_omnibus_Floating-Point_from_COMPUTE.cob: Likewise.
+	* cobol.dg/group2/ROUNDING_omnibus_NumericDisplay_from_COMPUTE.cob: Likewise.
+	* cobol.dg/group2/Recursive_FUNCTION_with_local-storage.cob: Likewise.
+	* cobol.dg/group2/Recursive_PERFORM_paragraph.cob: Likewise.
+	* cobol.dg/group2/Recursive_subscripts.cob: Likewise.
+	* cobol.dg/group2/Refmod__comparisons_inside_numeric-display.cob: Likewise.
+	* cobol.dg/group2/Refmod_sources_are_figurative_constants.cob: Likewise.
+	* cobol.dg/group2/Repository_functions_clause.cob: Likewise.
+	* cobol.dg/group2/Rounding_from_BINARY_signable_and_negative.cob: Likewise.
+	* cobol.dg/group2/Rounding_from_BINARY_signable_and_positive.cob: Likewise.
+	* cobol.dg/group2/Rounding_from_BINARY_unsignable.cob: Likewise.
+	* cobol.dg/group2/SEARCH_ALL_with_OCCURS_DEPENDING_ON.cob: Likewise.
+	* cobol.dg/group2/SORT__EBCDIC_table_sort__1_.cob: Likewise.
+	* cobol.dg/group2/SORT__EBCDIC_table_sort__2_.cob: Likewise.
+	* cobol.dg/group2/SORT__table_sort.cob: Likewise.
+	* cobol.dg/group2/SORT__table_sort__2___ASCII_.cob: Likewise.
+	* cobol.dg/group2/SORT__table_sort__2___EBCDIC_.cob: Likewise.
+	* cobol.dg/group2/SORT__table_sort__3A_.cob: Likewise.
+	* cobol.dg/group2/SORT__table_sort__3B_.cob: Likewise.
+	* cobol.dg/group2/SOURCE_FIXED_FREE_directives.cob: Likewise.
+	* cobol.dg/group2/STOP_RUN_WITH_ERROR_STATUS.cob: Likewise.
+	* cobol.dg/group2/STOP_RUN_WITH_NORMAL_STATUS.cob: Likewise.
+	* cobol.dg/group2/STRING___UNSTRING__NOT__ON_OVERFLOW.cob: Likewise.
+	* cobol.dg/group2/STRING_with_subscript_reference.cob: Likewise.
+	* cobol.dg/group2/Sanity_check_for_ENTRY.cob: Likewise.
+	* cobol.dg/group2/Separate_sign_positions__1_.cob: Likewise.
+	* cobol.dg/group2/Separate_sign_positions__2_.cob: Likewise.
+	* cobol.dg/group2/Simple_COMP-X.cob: Likewise.
+	* cobol.dg/group2/Simple_DEBUG-ITEM.cob: Likewise.
+	* cobol.dg/group2/Simple_ENVIRONMENT-NAME_with_exception.cob: Likewise.
+	* cobol.dg/group2/Simple_TYPEDEF.cob: Likewise.
+	* cobol.dg/group2/Simple_floating-point_MOVE.cob: Likewise.
+	* cobol.dg/group2/Simple_floating-point_VALUE_and_MOVE.cob: Likewise.
+	* cobol.dg/group2/Simple_p-scaling.cob: Likewise.
+	* cobol.dg/group2/Static_CALL_with_ON_EXCEPTION__with_-fno-static-call_.cob: Likewise.
+	* cobol.dg/group2/Static_reference_modification.cob: Likewise.
+	* cobol.dg/group2/Subscript_by_arithmetic_expression.cob: Likewise.
+	* cobol.dg/group2/Subscript_out_of_bounds__1_.cob: Likewise.
+	* cobol.dg/group2/Subscript_out_of_bounds__2_.cob: Likewise.
+	* cobol.dg/group2/Subscripted_refmods.cob: Likewise.
+	* cobol.dg/group2/UDF_RETURNING_group_and_PIC_9_5_.cob: Likewise.
+	* cobol.dg/group2/UDF_fibonacci_recursion.cob: Likewise.
+	* cobol.dg/group2/UDF_in_COMPUTE.cob: Likewise.
+	* cobol.dg/group2/UDF_with_recursion.cob: Likewise.
+	* cobol.dg/group2/UNSTRING_DELIMITED_ALL_LOW-VALUE.cob: Likewise.
+	* cobol.dg/group2/UNSTRING_DELIMITED_ALL_SPACE-2.cob: Likewise.
+	* cobol.dg/group2/UNSTRING_DELIMITED_POINTER.cob: Likewise.
+	* cobol.dg/group2/UNSTRING_DELIMITER_IN.cob: Likewise.
+	* cobol.dg/group2/UNSTRING_with_FUNCTION___literal.cob: Likewise.
+	* cobol.dg/group2/UNSTRING_with_refmods.cob: Likewise.
+	* cobol.dg/group2/USING_COMP-3_BY_REFERENCE.cob: Likewise.
+	* cobol.dg/group2/USING_COMP-3_BY_VALUE.cob: Likewise.
+	* cobol.dg/group2/USING_FLOAT-SLX_BY_REFERENCE.cob: Likewise.
+	* cobol.dg/group2/USING_FLOAT-SLX_BY_VALUE.cob: Likewise.
+	* cobol.dg/group2/USING_NumericDisplay_BY_REFERENCE.cob: Likewise.
+	* cobol.dg/group2/USING_NumericDisplay_BY_VALUE.cob: Likewise.
+	* cobol.dg/group2/USING_Signed_-_COMP-3_BY_REFERENCE.cob: Likewise.
+	* cobol.dg/group2/USING_Signed_-_COMP-3_BY_VALUE.cob: Likewise.
+	* cobol.dg/group2/USING_Signed_-_NumericDisplay_BY_REFERENCE.cob: Likewise.
+	* cobol.dg/group2/USING_Signed_-_NumericDisplay_BY_VALUE.cob: Likewise.
+	* cobol.dg/group2/USING_Signed___COMP-3_BY_REFERENCE.cob: Likewise.
+	* cobol.dg/group2/USING_Signed___COMP-3_BY_VALUE.cob: Likewise.
+	* cobol.dg/group2/USING_Signed___NumericDisplay_BY_REFERENCE.cob: Likewise.
+	* cobol.dg/group2/USING_Signed___NumericDisplay_BY_VALUE.cob: Likewise.
+	* cobol.dg/group2/access_to_OPTIONAL_LINKAGE_item_not_passed.cob: Likewise.
+	* cobol.dg/group2/add_-1_to_negative_pic_S9999.cob: Likewise.
+	* cobol.dg/group2/add_-1_to_pic_9999.cob: Likewise.
+	* cobol.dg/group2/add_-1_to_positive_pic_S9999.cob: Likewise.
+	* cobol.dg/group2/add_1_to_pic_9999.cob: Likewise.
+	* cobol.dg/group2/add_1_to_positive_pic_S9999.cob: Likewise.
+	* cobol.dg/group2/add__1_to_negative_pic_S9999.cob: Likewise.
+	* cobol.dg/group2/ambiguous_PERFORM.cob: Likewise.
+	* cobol.dg/group2/call_subprogram_using_pointer__passing_pointer.cob: Likewise.
+	* cobol.dg/group2/command-line.cob: Likewise.
+	* cobol.dg/group2/compare_alpha_to_all__literal_.cob: Likewise.
+	* cobol.dg/group2/compare_float_to_other_types.cob: Likewise.
+	* cobol.dg/group2/compare_national_to_display.cob: Likewise.
+	* cobol.dg/group2/comprensive_compare_comp-1_comp-5.cob: Likewise.
+	* cobol.dg/group2/debugging_lines__WITH_DEBUGGING_MODE_.cob: Likewise.
+	* cobol.dg/group2/debugging_lines__not_active_.cob: Likewise.
+	* cobol.dg/group2/floating-point_ADD_FORMAT_1.cob: Likewise.
+	* cobol.dg/group2/floating-point_ADD_FORMAT_2.cob: Likewise.
+	* cobol.dg/group2/floating-point_DIVIDE_FORMAT_1.cob: Likewise.
+	* cobol.dg/group2/floating-point_DIVIDE_FORMAT_2.cob: Likewise.
+	* cobol.dg/group2/floating-point_FORMAT_1.cob: Likewise.
+	* cobol.dg/group2/floating-point_FORMAT_2.cob: Likewise.
+	* cobol.dg/group2/floating-point_MULTIPLY_FORMAT_1.cob: Likewise.
+	* cobol.dg/group2/floating-point_MULTIPLY_FORMAT_2.cob: Likewise.
+	* cobol.dg/group2/floating-point_SUBTRACT_FORMAT_1.cob: Likewise.
+	* cobol.dg/group2/floating-point_SUBTRACT_FORMAT_2.cob: Likewise.
+	* cobol.dg/group2/floating-point_literals.cob: Likewise.
+	* cobol.dg/group2/integer_arithmetic_on_floating-point_var.cob: Likewise.
+	* cobol.dg/group2/length_of_ODO_Rules_7__8A__and_8B.cob: Likewise.
+	* cobol.dg/group2/length_of_ODO_w_-_reference_modification.cob: Likewise.
+	* cobol.dg/group2/move_numeric_to_alphanumeric.cob: Likewise.
+	* cobol.dg/group2/numeric-display_to_COMP-3_size_error.cob: Likewise.
+	* cobol.dg/group2/procedure_division_using_by.cob: Likewise.
+	* cobol.dg/group2/refmod_with_nested_parentheses.cob: Likewise.
+	* cobol.dg/group2/repository.cob: Likewise.
+	* cobol.dg/group2/signed_unsigned_compare.cob: Likewise.
+	* cobol.dg/group2/skipping_at_the_top.cob: Likewise.
+	* cobol.dg/group2/source-computer_object-computer_repository__2_.cob: Likewise.
+	* cobol.dg/group2/README.txt: New file.
+
+2026-07-20  Ville Voutilainen  <ville.voutilainen@gmail.com>
+
+	PR c++/125904
+	* g++.dg/contracts/cpp26/pr125904.C: New test.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/126261
+	* lib/target-supports.exp (check_effective_target_can_deref_null):
+	Cast argument to char*.
+
+2026-07-20  Alex Coplan  <alex.coplan@arm.com>
+
+	* gcc.target/aarch64/deprecate-tme.c: New test.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR target/124364
+	* gcc.dg/Wstringop-overflow-47.c: Remove xfail.
+
+2026-07-20  Paul-Antoine Arras  <parras@baylibre.com>
+
+	* c-c++-common/gomp/for-static-3.c: Update scan-dump pattern.
+
+2026-07-20  Paul-Antoine Arras  <parras@baylibre.com>
+
+	* c-c++-common/gomp/scope-7.c: New test.
+	* c-c++-common/gomp/scope-8.c: New test.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/126261
+	* g++.dg/torture/pr101373.C: Use effective-target can_deref_null.
+	* lib/target-supports.exp (check_effective_target_can_deref_null):
+	New proc.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/118407
+	* gcc.dg/tree-ssa/predcom-8.c: Xfail test for arm*-*-* in hard
+	float ABI without MVE.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124043
+	* gcc.target/arm/crypto-vsha1cq_u32.c: Xfail test for -mthumb
+	-mfloat-abi=hard.
+	* gcc.target/arm/crypto-vsha1h_u32.c: Likewise.
+	* gcc.target/arm/crypto-vsha1mq_u32.c: Likewise.
+	* gcc.target/arm/crypto-vsha1pq_u32.c: Likewise.
+
+2026-07-20  Shreya Munnangi  <smunnang@qti.qualcomm.com>
+	    Jeff Law  <jeffrey.law@oss.qualcomm.com>
+
+	PR target/124741
+	* gcc.target/riscv/load-zalasr.c: Testcases for atomic load compiled
+	with rv64 and zalasr ext.
+	* gcc.target/riscv/load.c: Testcases for atomic load compiled with
+	rv64.
+	* gcc.target/riscv/load32-zalasr.c: Testcases for atomic load
+	compiled with rv32 and zalasr ext.
+	* gcc.target/riscv/load32.c: Testcases for atomic load compiled with
+	rv32.
+	* gcc.target/riscv/store-zalasr.c: Testcases for atomic store
+	compiled with rv64 and zalasr ext.
+	* gcc.target/riscv/store.c: Testcases for atomic store compiled
+	with rv64.
+	* gcc.target/riscv/store32-zalasr.c: Testcases for atomic store
+	compiled with rv32 and zalasr ext.
+	* gcc.target/riscv/store32.c: Testcases for atomic store compiled
+	with rv32.
+
+2026-07-20  Tobias Burnus  <tburnus@baylibre.com>
+
+	* gfortran.dg/gomp/spatial-dimensions-1.f90: New test.
+	* gfortran.dg/gomp/spatial-dimensions-2.f90: New test.
+	* gfortran.dg/gomp/spatial-dimensions-3.f90: New test.
+
+2026-07-20  Pan Li  <pan2.li@intel.com>
+
+	* gcc.target/riscv/rvv/base/pr112431-7.c: Remove xfail.
+	* gcc.target/riscv/rvv/base/pr112431-8.c: Ditto.
+	* gcc.target/riscv/rvv/base/pr112431-9.c: Ditto.
+
+2026-07-20  Pan Li  <pan2.li@intel.com>
+
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f16-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f16-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f16-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f16-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f16-mf4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f32-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f32-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f32-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f-f32-mf2.c: New test.
+
+2026-07-20  Philipp Tomsich  <philipp.tomsich@vrull.eu>
+
+	PR tree-optimization/126291
+	* gcc.target/aarch64/pr126291-2.c: New test.
+
 2026-07-19  Philipp Tomsich  <philipp.tomsich@vrull.eu>
 
 	PR tree-optimization/126291

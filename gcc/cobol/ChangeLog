@@ -1,3 +1,10 @@
+2026-07-20  Robert Dubner  <rdubner@symas.com>
+
+	* copybook.h (_COPYBOOK_H): Remove #include <sys/types.h>.
+	* gcobol.1: Documentation.
+	* parse.y: Use int_size_in_bytes.
+	* util.cc (cobol_filename): Change dbgmsg formatting.
+
 2026-07-17  James K. Lowden  <jklowden@cobolworx.com>
 
 	PR cobol/122466

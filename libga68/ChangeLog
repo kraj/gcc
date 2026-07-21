@@ -1,3 +1,14 @@
+2026-07-20  chris hermansen  <clhermansen@gmail.com>
+
+	* standard.a68.in (Integer): New mode.
+	(whole_max_entry): New variable.
+	(whole_p10): Likewise.
+	(whole_stop_after): Likewise.
+	(whole_powers_of_10): Likewise.
+	(WHOLEDIGITS): New operator.
+	(whole): Rewrite.
+	(subwhole): Likewise.
+
 2026-05-30  Dhruv Chawla  <dhruvc@nvidia.com>
 
 	* ga68-error.c: Fix typos.

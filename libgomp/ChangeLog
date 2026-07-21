@@ -1,3 +1,25 @@
+2026-07-20  Paul-Antoine Arras  <parras@baylibre.com>
+
+	* config/gcn/teams.c (GOMP_distribute_static_worksharing_dispatch):
+	Update signature and comment.
+	* config/nvptx/teams.c (GOMP_distribute_static_worksharing_dispatch):
+	Likewise.
+	* libgomp_g.h (GOMP_loop_static_worksharing_dispatch,
+	GOMP_distribute_static_worksharing_dispatch): Update prototypes.
+	* loop.c (GOMP_loop_static_worksharing_dispatch): Update signature
+	and comment.
+	* teams.c (GOMP_distribute_static_worksharing_dispatch): Likewise.
+	* testsuite/libgomp.c-c++-common/for-static-3.c: Update scan-dump
+	pattern.
+
+2026-07-20  Paul-Antoine Arras  <parras@baylibre.com>
+
+	* libgomp.map: Add GOMP_scope_start_with_end and GOMP_scope_end.
+	* libgomp_g.h (GOMP_scope_start_with_end): Declare.
+	(GOMP_scope_end): Likewise.
+	* scope.c (GOMP_scope_start_with_end): New function.
+	(GOMP_scope_end): New stub.
+
 2026-07-17  Tobias Burnus  <tburnus@baylibre.com>
 
 	* libgomp.texi (OpenMP 5.1 Impl Status): Mark device_type on vars

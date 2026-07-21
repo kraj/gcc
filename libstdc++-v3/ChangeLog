@@ -1,3 +1,40 @@
+2026-07-20  Tomasz Kamiński  <tkaminsk@redhat.com>
+	    Álvaro Begué  <alvaro.begue@gmail.com>
+
+	PR libstdc++/124854
+	* src/c++20/tzdb.cc (ZoneInfo::save): Define.
+	(time_zone::_M_get_sys_info): Fold initial transition if they
+	occurs in duplicated local time window (merge_window) due move
+	from DST to STD zone.
+	* testsuite/std/time/time_zone/wall_cascade.cc (test_next_year):
+	Test that 1945 Pacific/Auckland transition is properly handled.
+	(test_negative): Adjust test to avoid zone merge.
+	* testsuite/std/time/time_zone/zone_merge.cc: New test.
+
+2026-07-20  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	* testsuite/26_numerics/random/piecewise_constant_distribution/operators/serialize2.cc:
+	Include <cfloat> and use FLT_EVAL_METHOD instead of
+	__FLT_EVAL_METHOD__.
+	* testsuite/26_numerics/random/piecewise_linear_distribution/operators/serialize2.cc:
+	Likewise.
+
+2026-07-20  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	PR libstdc++/116110
+	* src/c++20/tzdb.cc (time_zone::_M_get_sys_info): Correct
+	condition for stopping zone expansion before STD zone.
+	* testsuite/std/time/time_zone/116110.cc (test_dawson):
+	Add test for America/Dawson August 1945 transition.
+
+2026-07-20  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	PR libstdc++/116110
+	* src/c++20/tzdb.cc (find_active_rule::to_local): Do not
+	modify min/max values for rules.
+	* testsuite/std/time/time_zone/wall_cascade.cc: Add test
+	for last_transition.
+
 2026-07-17  Tomasz Kamiński  <tkaminsk@redhat.com>
 
 	* testsuite/26_numerics/random/piecewise_constant_distribution/operators/serialize2.cc:

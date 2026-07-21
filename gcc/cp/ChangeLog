@@ -1,3 +1,8 @@
+2026-07-20  Ville Voutilainen  <ville.voutilainen@gmail.com>
+
+	PR c++/125904
+	* contracts.cc (build_contract_check): Set TREE_SIDE_EFFECTS.
+
 2026-07-17  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/125833

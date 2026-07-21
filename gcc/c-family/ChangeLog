@@ -1,3 +1,10 @@
+2026-07-20  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/126309
+	* c-lex.cc: Implement CWG3020 - Missing specification for
+	__has_cpp_attribute(indeterminate).
+	(c_common_has_attribute): Handle __has_cpp_attribute (indeterminate).
+
 2026-07-15  Jakub Jelinek  <jakub@redhat.com>
 
 	PR c++/120635
