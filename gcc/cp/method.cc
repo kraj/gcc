@@ -1957,6 +1957,19 @@ build_trait_object (tree type, tsubst_flags_t complain)
   return build_stub_object (type);
 }
 
+/* Build up an object for [meta.unary.prop]/5.2:
+   Otherwise [not a reference or function type], VAL<T> is a prvalue that
+   initially has type T.  */
+
+static tree
+build_prvalue_trait_object (tree t)
+{
+  if (CLASS_TYPE_P (t))
+    return force_target_expr (t, void_node, tf_none);
+  else
+    return build1 (CONVERT_EXPR, t, integer_one_node);
+}
+
 /* [func.require] Build an expression of INVOKE(FN_TYPE, ARG_TYPES...).  If the
    given is not invocable, returns error_mark_node, unless COMPLAIN includes
    tf_error.  */
@@ -2516,12 +2529,17 @@ is_xible (enum tree_code code, tree to, tree from, bool explain/*=false*/)
   return !!expr;
 }
 
-/* Return true iff conjunction_v<is_reference<T>, is_constructible<T, U>> is
-   true, and the initialization
+/* Return true iff T is a reference type, and the initialization
      T t(VAL<U>); // DIRECT_INIT_P
    or
      T t = VAL<U>; // !DIRECT_INIT_P
-   binds t to a temporary object whose lifetime is extended.
+   is well-formed and binds t to a temporary object whose lifetime is
+   extended.
+   The full-expression of the variable initialization is treated as an
+   unevaluated operand.  Access checking is performed as if in a context
+   unrelated to T and U.  Only the validity of the immediate context of
+   the variable initialization is considered.
+
    VAL<T> is defined in [meta.unary.prop]:
    -- If T is a reference or function type, VAL<T> is an expression with the
    same type and value category as declval<T>().
@@ -2533,13 +2551,16 @@ ref_xes_from_temporary (tree to, tree from, bool direct_init_p)
   /* Check is_reference<T>.  */
   if (!TYPE_REF_P (to))
     return false;
-  /* We don't check is_constructible<T, U>: if T isn't constructible
-     from U, we won't be able to create a conversion.  */
-  tree val = build_trait_object (from, tf_none);
+  deferring_access_check_sentinel acs (dk_no_deferred);
+  cp_unevaluated u;
+
+  tree val;
+  if (TYPE_REF_P (from) || TREE_CODE (from) == FUNCTION_TYPE)
+    val = build_trait_object (from, tf_none);
+  else
+    val = build_prvalue_trait_object (from);
   if (val == error_mark_node)
     return false;
-  if (!TYPE_REF_P (from) && TREE_CODE (from) != FUNCTION_TYPE)
-    val = CLASS_TYPE_P (from) ? force_rvalue (val, tf_none) : rvalue (val);
   return ref_conv_binds_to_temporary (to, val, direct_init_p).is_true ();
 }
 

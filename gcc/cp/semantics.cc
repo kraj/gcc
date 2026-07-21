@@ -14531,8 +14531,6 @@ finish_trait_expr (location_t loc, cp_trait_kind kind, tree type1, tree type2,
     case CPTK_IS_NOTHROW_CONVERTIBLE:
     case CPTK_IS_NOTHROW_INVOCABLE:
     case CPTK_IS_TRIVIALLY_CONSTRUCTIBLE:
-    case CPTK_REF_CONSTRUCTS_FROM_TEMPORARY:
-    case CPTK_REF_CONVERTS_FROM_TEMPORARY:
       /* Don't check completeness for direct reference binding.  */;
       if (same_type_ref_bind_p (kind, type1, type2))
 	break;
@@ -14541,6 +14539,8 @@ finish_trait_expr (location_t loc, cp_trait_kind kind, tree type1, tree type2,
     case CPTK_IS_ASSIGNABLE:
     case CPTK_IS_NOTHROW_ASSIGNABLE:
     case CPTK_IS_TRIVIALLY_ASSIGNABLE:
+    case CPTK_REF_CONSTRUCTS_FROM_TEMPORARY:
+    case CPTK_REF_CONVERTS_FROM_TEMPORARY:
       if (!check_trait_type (type1, /*kind=*/1, complain)
 	  || !check_trait_type (type2, /*kind=*/1, complain))
 	return error_mark_node;
