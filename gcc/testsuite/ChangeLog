@@ -1,3 +1,12 @@
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	Backported from master:
+	2026-07-03  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/97592
+	PR fortran/125998
+	* gfortran.dg/contiguous_17.f90: New test.
+
 2026-07-09  Christopher Albert  <albert@tugraz.at>
 
 	Backported from master:
