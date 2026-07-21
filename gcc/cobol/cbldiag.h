@@ -107,8 +107,8 @@ struct cbl_loc_base_t {
 };
 struct cbl_loc_t : public cbl_loc_base_t {
 
-  cbl_loc_t() : cbl_loc_base_t{}
-  {}
+  cbl_loc_t() = default; 
+
   cbl_loc_t(   int first_line, int first_column,
                int last_line,  int last_column ) 
     : cbl_loc_base_t {
@@ -142,6 +142,11 @@ struct cbl_loc_t : public cbl_loc_base_t {
     return loc;
   }
 };
+
+#include <type_traits>
+/* allow relocate stack */
+static_assert(std::is_trivially_copyable<cbl_loc_t>::value,
+             "cbl_loc_t must be trivially copyable for parser stack growth");
 
 const cbl_loc_t& cobol_location();
 

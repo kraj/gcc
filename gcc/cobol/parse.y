@@ -355,6 +355,8 @@ class locale_tgt_t {
 #include "../../libgcobol/common-defs.h"
 #include "util.h"
 #include "cbldiag.h"
+/* allow relocate stack - verifying assert in cbldiag.h */
+#define YYLTYPE_IS_TRIVIAL 1
 #include "symbols.h"
 #include "inspect.h"
 #include "../../libgcobol/io.h"
