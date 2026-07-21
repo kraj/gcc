@@ -3772,6 +3772,7 @@
    (set_attr "c86_attr" "hplus")
    (set_attr "addr" "gpr16")
    (set_attr "prefix" "vex")
+   (set_attr "cost_special" "haddsub")
    (set_attr "mode" "V4DF")])
 
 (define_expand "sse3_haddv2df3"
@@ -3817,6 +3818,7 @@
    (set_attr "type" "sseadd")
    (set_attr "c86_attr" "hplus")
    (set_attr "prefix" "orig,vex")
+   (set_attr "cost_special" "haddsub")
    (set_attr "mode" "V2DF")])
 
 (define_insn "sse3_hsubv2df3"
@@ -3841,6 +3843,7 @@
    (set_attr "c86_attr" "hplus")
    (set_attr "addr" "*,gpr16")
    (set_attr "prefix" "orig,vex")
+   (set_attr "cost_special" "haddsub")
    (set_attr "mode" "V2DF")])
 
 (define_insn "*sse3_haddv2df3_low"
@@ -3861,6 +3864,7 @@
    (set_attr "type" "sseadd1")
    (set_attr "c86_attr" "hplus")
    (set_attr "prefix" "orig,vex")
+   (set_attr "cost_special" "haddsub")
    (set_attr "mode" "V2DF")])
 
 (define_insn "*sse3_hsubv2df3_low"
@@ -3880,6 +3884,7 @@
    (set_attr "type" "sseadd1")
    (set_attr "c86_attr" "hplus")
    (set_attr "prefix" "orig,vex")
+   (set_attr "cost_special" "haddsub")
    (set_attr "mode" "V2DF")])
 
 (define_insn "avx_h<insn>v8sf3"
@@ -3925,6 +3930,7 @@
    (set_attr "c86_attr" "hplus")
    (set_attr "addr" "gpr16")
    (set_attr "prefix" "vex")
+   (set_attr "cost_special" "haddsub")
    (set_attr "mode" "V8SF")])
 
 (define_insn "sse3_h<insn>v4sf3"
@@ -3959,6 +3965,7 @@
    (set_attr "atom_unit" "complex")
    (set_attr "prefix" "orig,vex")
    (set_attr "prefix_rep" "1,*")
+   (set_attr "cost_special" "haddsub")
    (set_attr "mode" "V4SF")])
 
 (define_mode_iterator REDUC_SSE_PLUS_MODE

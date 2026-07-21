@@ -22714,6 +22714,13 @@ ix86_insn_cost (rtx_insn *insn, bool speed)
 					       : COSTS_N_INSNS (3) + 1;
 	}
     }
+  /* Cost *h{add,sub}<mode>[_low] directly as pattern cost for the
+     variants with outer vec_concat are artificially low.  */
+  if (INSN_CODE (insn) >= 0
+      && get_attr_cost_special (insn) == COST_SPECIAL_HADDSUB)
+    return insn_cost + ix86_vec_cost (GET_MODE (pat),
+				      (speed ? ix86_tune_cost
+				       : &ix86_size_cost)->addss);
 
   return insn_cost + pattern_cost (pat, speed);
 }
