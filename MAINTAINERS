@@ -42,7 +42,7 @@ Michael Meissner                                <gnu@the-meissners.org>
 Jason Merrill                                   <jason@redhat.com>
 David S. Miller                                 <davem@redhat.com>
 Joseph Myers                                    <josmyers@redhat.com>
-Andrew Pinski                                   <andrew.pinski@oss.qualcomm.com>
+Andrea Pinski                                   <andrew.pinski@oss.qualcomm.com>
 Richard Sandiford                               <rdsandiford@googlemail.com>
 Bernd Schmidt                                   <bernds_cb1@t-online.de>
 Ian Lance Taylor                                <ian@airs.com>
@@ -238,7 +238,7 @@ libgrust                Philip Herron           <herron.philip@googlemail.com>
 libiberty               Ian Lance Taylor        <ian@airs.com>
 libitm                  Torvald Riegel          <triegel@redhat.com>
 libobjc                 Nicola Pero             <nicola.pero@meta-innovation.com>
-libobjc                 Andrew Pinski           <pinskia@gmail.com>
+libobjc                 Andrea Pinski           <pinskia@gmail.com>
 libphobos               Iain Buclaw             <ibuclaw@gdcproject.org>
 libquadmath             Tobias Burnus           <tburnus@baylibre.com>
 libquadmath             Jakub Jelinek           <jakub@redhat.com>
@@ -287,7 +287,7 @@ check in changes outside of the parts of the compiler they maintain.
 aarch64 port            Alice Carlotti          <alice.carlotti@arm.com>
 aarch64 port            Alex Coplan             <alex.coplan@arm.com>
 aarch64 port            Wilco Dijkstra          <wilco.dijkstra@arm.com>
-aarch64 port            Andrew Pinski           <andrew.pinski@oss.qualcomm.com>
+aarch64 port            Andrea Pinski           <andrew.pinski@oss.qualcomm.com>
 arm port (MVE)          Christophe Lyon         <christophe.lyon@arm.com>
 C front end             Marek Polacek           <polacek@redhat.com>
 c++                     Patrick Palka           <ppalka@gcc.gnu.org>
@@ -764,7 +764,7 @@ Mikael Pettersson               mikpe           <mikpelinux@gmail.com>
 Johannes Pfau                   jpfau           <johannespfau@gmail.com>
 Gerald Pfeifer                  gerald          <gerald@pfeifer.com>
 Kaushik Phatak                  kaushikp        <kaushik.phatak@kpitcummins.com>
-Andrew Pinski                   pinskia         <andrew.pinski@qualcomm.com>
+Andrea Pinski                   pinskia         <andrew.pinski@qualcomm.com>
 Nicolas Pitre                   nico            <nico@cam.org>
 Michael Ploujnikov              plouj           <michael.ploujnikov@oracle.com>
 Paul Pluzhnikov                 ppluzhnikov     <ppluzhnikov@google.com>
@@ -1015,8 +1015,8 @@ Shreya Munnangi                                 <smunnangi1@ventanamicro.com>
 Szabolcs Nagy                                   <nsz@gcc.gnu.org>
 Pierre-Emmanuel Patry                           <pierre-emmanuel.patry@embecosm.com>
 Mikael Pettersson                               <mikpelinux@gmail.com>
-Andrew Pinski                                   <andrew.pinski@oss.qualcomm.com>
-Andrew Pinski                                   <quic_apinski@quicinc.com>
+Andrea Pinski                                   <andrew.pinski@oss.qualcomm.com>
+Andrea Pinski                                   <quic_apinski@quicinc.com>
 Siddhesh Poyarekar                              <siddhesh@gotplt.org>
 Ramana Radhakrishnan                            <ramanara@nvidia.com>
 Navid Rahimi                                    <navidr@gcc.gnu.org>
