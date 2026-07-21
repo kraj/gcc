@@ -865,6 +865,11 @@ noce_emit_store_flag (struct noce_if_info *if_info, rtx x, bool reversep,
   else
     code = GET_CODE (cond);
 
+  /* reversed_comparison_code returns UNKNOWN for an unordered code, or a
+     CC-mode compare it cannot trace; neither path below can use that.  */
+  if (code == UNKNOWN)
+    return NULL_RTX;
+
   if ((if_info->cond_earliest == if_info->jump || cond_complex)
       && (normalize == 0 || STORE_FLAG_VALUE == normalize))
     {
