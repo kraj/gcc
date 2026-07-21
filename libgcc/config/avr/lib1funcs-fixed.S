@@ -1189,6 +1189,7 @@ DEFUN __mulQ64_work
     pop     B5
 #endif
 
+    set    ; for signed
     XICALL ; __muluxx3.2
 
     ;; C = T = LSB (bit -1) from the unsigned mult.
