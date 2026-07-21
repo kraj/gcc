@@ -4462,15 +4462,91 @@ aarch64_fold_sve_ptrue_vl (tree vectype, unsigned int vl,
   return builder.build ();
 }
 
+/* Fold a WHILE_ULT whose bounds are known enough to be expressed as a PTRUE.
+   Generic folding cannot do this because it cannot assume an architectural
+   maximum for a scalable vector.  */
+
+static bool
+aarch64_fold_while_ult_to_ptrue (function *fun, gcall *call,
+				 gimple_stmt_iterator *gsi)
+{
+  if (!gimple_call_internal_p (call, IFN_WHILE_ULT))
+    return false;
+
+  tree lhs = gimple_call_lhs (call);
+  if (!lhs)
+    return false;
+
+  tree lhs_type = TREE_TYPE (lhs);
+  if (!VECTOR_BOOLEAN_TYPE_P (lhs_type)
+      || !aarch64_sve_pred_mode_p (TYPE_MODE (lhs_type))
+      /* VLS shouldn't get here as we shouldn't have WHILE_ULT for it.  */
+      || TYPE_VECTOR_SUBPARTS (lhs_type).is_constant ())
+    return false;
+
+  int_range_max min, max;
+  range_query *query = get_range_query (fun);
+  if (!query->range_of_expr (min, gimple_call_arg (call, 0), call)
+      || !query->range_of_expr (max, gimple_call_arg (call, 1), call)
+      || min.undefined_p ()
+      || max.undefined_p ()
+      || !min.nonnegative_p ()
+      || !max.nonnegative_p ())
+    return false;
+
+  widest_int min_upper = widest_int::from (min.upper_bound (), UNSIGNED);
+  widest_int min_lower = widest_int::from (min.lower_bound (), UNSIGNED);
+  widest_int max_lower = widest_int::from (max.lower_bound (), UNSIGNED);
+  widest_int max_upper = widest_int::from (max.upper_bound (), UNSIGNED);
+  if (wi::leu_p (max_lower, min_upper))
+    return false;
+
+  unsigned int min_nelts
+    = constant_lower_bound (TYPE_VECTOR_SUBPARTS (lhs_type));
+  widest_int max_sve_nelts = min_nelts * 16;
+  widest_int min_gap = max_lower - min_upper;
+  widest_int max_gap = max_upper - min_lower;
+
+  tree pred_cst = NULL_TREE;
+  unsigned HOST_WIDE_INT gap = 0;
+  if (min_gap >= max_sve_nelts)
+    pred_cst = build_all_ones_cst (lhs_type);
+  else if (min_gap == max_gap
+	   && wi::fits_uhwi_p (min_gap))
+    {
+      gap = min_gap.to_uhwi ();
+      machine_mode pred_mode = TYPE_MODE (lhs_type);
+      if (gap <= UINT_MAX
+	  && (aarch64_svpattern_for_vl (pred_mode, (int) gap)
+	      != AARCH64_NUM_SVPATTERNS))
+	pred_cst = aarch64_fold_sve_ptrue_vl (lhs_type,
+					      (unsigned int) gap, 1);
+    }
+
+  if (!pred_cst)
+    {
+      if (wi::ltu_p (min_gap, max_sve_nelts))
+	return false;
+      pred_cst = build_all_ones_cst (lhs_type);
+    }
+
+  gassign *assign = gimple_build_assign (lhs, pred_cst);
+  gsi_replace (gsi, assign, false);
+  return true;
+}
+
 /* Implement TARGET_INSTRUCTION_SELECTION.  The target hook is used to
    change generic sequences to a form AArch64 has an easier time expanding
    instructions for.  It's not supposed to be used for generic rewriting that
    all targets would benefit from.  */
 
 static bool
-aarch64_instruction_selection (function * /* fun */, gimple_stmt_iterator *gsi)
+aarch64_instruction_selection (function *fun, gimple_stmt_iterator *gsi)
 {
   auto stmt = gsi_stmt (*gsi);
+  if (gcall *call = dyn_cast<gcall *> (stmt))
+    return aarch64_fold_while_ult_to_ptrue (fun, call, gsi);
+
   gassign *assign = dyn_cast<gassign *> (stmt);
 
   if (!assign)

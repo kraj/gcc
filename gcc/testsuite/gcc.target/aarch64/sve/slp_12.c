@@ -47,9 +47,9 @@ TEST_ALL (VEC_PERM)
 
 /* We should use WHILEs for all accesses.  */
 /* { dg-final { scan-assembler-times {\twhilelo\tp[0-7]\.b} 20 } } */
-/* { dg-final { scan-assembler-times {\twhilelo\tp[0-7]\.h} 20 } } */
-/* { dg-final { scan-assembler-times {\twhilelo\tp[0-7]\.s} 30 } } */
-/* { dg-final { scan-assembler-times {\twhilelo\tp[0-7]\.d} 30 } } */
+/* { dg-final { scan-assembler-times {\twhilelo\tp[0-7]\.h} 18 } } */
+/* { dg-final { scan-assembler-times {\twhilelo\tp[0-7]\.s} 27 } } */
+/* { dg-final { scan-assembler-times {\twhilelo\tp[0-7]\.d} 24 } } */
 
 /* 6 for the 8-bit types and 2 for the 16-bit types.  */
 /* { dg-final { scan-assembler-times {\tuqdecb\t} 8 } } */
