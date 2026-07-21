@@ -8892,7 +8892,20 @@ gfc_conv_array_parameter (gfc_se *se, gfc_expr *expr, bool g77,
 
   if (expr->expr_type == EXPR_ARRAY && expr->ts.type == BT_CHARACTER)
     {
-      get_array_ctor_strlen (&se->pre, expr->value.constructor, &tmp);
+      if (expr->ts.u.cl->length_from_typespec && expr->ts.u.cl->length)
+	{
+	  /* The constructor has an explicit character type-spec length
+	     so convert it directly.  */
+	  gfc_se cse;
+	  gfc_init_se (&cse, NULL);
+	  gfc_conv_expr_type (&cse, expr->ts.u.cl->length,
+			      gfc_charlen_type_node);
+	  gfc_add_block_to_block (&se->pre, &cse.pre);
+	  tmp = cse.expr;
+	}
+      else
+	get_array_ctor_strlen (&se->pre, expr->value.constructor, &tmp);
+
       expr->ts.u.cl->backend_decl = tmp;
       se->string_length = tmp;
     }

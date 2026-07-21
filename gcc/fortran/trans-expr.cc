@@ -6996,6 +6996,7 @@ gfc_conv_procedure_call (gfc_se * se, gfc_symbol * sym,
   int arglen;
   unsigned int argc;
   tree arg1_cntnr = NULL_TREE;
+  bool call_needed_for_length = true;
   arglist = NULL;
   retargs = NULL;
   stringargs = NULL;
@@ -8695,6 +8696,10 @@ gfc_conv_procedure_call (gfc_se * se, gfc_symbol * sym,
 				 fold_convert (gfc_charlen_type_node, tmp),
 				 build_zero_cst (gfc_charlen_type_node));
 	  cl.backend_decl = tmp;
+
+	  /* The length was fully computed above from the specification
+	     expression, without needing the callee to actually run.  */
+	  call_needed_for_length = false;
 	}
 
       /* Set up a charlen structure for it.  */
@@ -9004,7 +9009,9 @@ gfc_conv_procedure_call (gfc_se * se, gfc_symbol * sym,
   if (byref)
     {
       /* Add the function call to the pre chain.  There is no expression.  */
-      gfc_add_expr_to_block (&se->pre, se->expr);
+      if (!se->no_function_call || call_needed_for_length)
+	gfc_add_expr_to_block (&se->pre, se->expr);
+
       se->expr = NULL_TREE;
 
       if (!se->direct_byref)
