@@ -906,6 +906,390 @@ ENDF  __ssmulsa3
 #undef C7
 #undef SS
 
+/*******************************************************
+    Fixed 64 x 64 saturated Multiplication
+*******************************************************/
+
+.pushsection .text.libgcc.mul64, "ax", @progbits
+
+#define A0  18
+#define A1  A0+1
+#define A2  A0+2
+#define A3  A0+3
+#define A4  A0+4
+#define A5  A0+5
+#define A6  A0+6
+#define A7  A0+7
+
+#define B0  10
+#define B1  B0+1
+#define B2  B0+2
+#define B3  B0+3
+#define B4  B0+4
+#define B5  B0+5
+#define B6  B0+6
+#define B7  B0+7
+
+#define C0  10
+#define C1  C0+1
+#define C2  C0+2
+#define C3  C0+3
+#define C4  C0+4
+#define C5  C0+5
+#define C6  C0+6
+#define C7  C0+7
+#define C8  2
+#define C9  C8+1
+#define Ca  C8+2
+#define Cb  C8+3
+#define Cc  C8+4
+#define Cd  C8+5
+#define Ce  C8+6
+#define Cf  C8+7
+
+#define M0  18
+#define M1  M0+1
+#define M2  M0+2
+#define M3  M0+3
+#define M4  M0+4
+#define M5  M0+5
+#define M6  M0+6
+#define M7  M0+7
+
+#if defined (L_umulditi3_raw)
+
+.macro .Mul a, b
+    wmov    r24, Y
+    adiw    r24, \a
+    wmov    r30, Y
+    adiw    r30, \b
+    rcall   __umulsidi3_pBE
+.endm
+
+;;; uint128_t R10[16] = (uint128_t) R10[8] * R18[8]
+;;; No regs are restored except Y.
+DEFUN __umulditi3_raw
+    push    A0
+    push    A1
+    push    A2
+    push    A3
+    push    A4
+    push    A5
+    push    A6
+    push    A7
+    do_prologue_saves 10
+    ;; Now we have the following stack layout:
+    ;; Y+1..Y+2    saved Y
+    ;; Y+3..Y+10   B[8] as big endian bytes
+    ;; Y+11..Y+18  A[8] as big endian bytes
+    A.hi = 11
+    A.lo = A.hi + 4
+    B.hi = 3
+    B.lo = B.hi + 4
+
+    ;; In terms of uint32_t we have to perform 4 multiplications:
+
+    .Mul    A.lo, B.lo
+    mov8    C0, M0
+
+    .Mul    A.hi, B.hi
+    mov8    C8, M0
+
+    .Mul    A.hi, B.lo
+    rcall   __umulditi3_12
+
+    .Mul    A.lo, B.hi
+    rcall   __umulditi3_12
+
+    ;; Move result into place.
+    mov8    C0 + 0x8, C8
+
+    ;; Epilogue:  We pushed 18 bytes.  Let epilogue_restores pop
+    ;; them by adjusting SP accordingly.
+    ldi     r30, 18
+    ;; Pretend we pushed only 2 bytes (Y) so that the low part of
+    ;; the return value in R10..R17 won't be overridden by LDDs.
+    XJMP    __epilogue_restores__ + ((18 - 2) * 2)
+
+__umulditi3_12:
+    ADD     C4, M0
+    adc     C5, M1
+    adc     C6, M2
+    adc     C7, M3
+    adc     C8, M4
+    adc     C9, M5
+    adc     Ca, M6
+    adc     Cb, M7
+    adc     Cc, __zero_reg__
+    adc     Cd, __zero_reg__
+    adc     Ce, __zero_reg__
+    adc     Cf, __zero_reg__
+    ret
+
+;;; uint64_t R18 = uint32_t BE *Z  *  uint32_t BE *W
+__umulsidi3_pBE:
+    ldd     A0, Z + 3
+    ldd     A1, Z + 2
+    ldd     A2, Z + 1
+    ldd     A3, Z + 0
+    wmov    r30, r24
+    ldd     A4, Z + 3
+    ldd     A5, Z + 2
+    ldd     A6, Z + 1
+    ldd     A7, Z + 0
+    XJMP    __umulsidi3
+ENDF __umulditi3_raw
+#endif /* L_umulditi3_raw */
+
+#if defined (L_muluda3)
+;;; uint128_t R10 = umulsidi3 (uint32_t R22, uint32_t R18)
+FALIAS __usmuluda3
+DEFUN __muluda3
+    clt
+ENTRY __muluda3.2
+    do_prologue_saves 18
+    bld     __tmp_reg__, 7
+    push    __tmp_reg__
+    XCALL __umulditi3_raw
+    or      A7, A6
+    or      A7, A5
+    or      A7, A4
+    mov8    A0, r14
+    mov     r27, r13
+    XJMP    __muluQ64_tail
+ENDF __muluda3
+#endif /* L_muluda3 */
+
+#if defined (L_muluta3)
+FALIAS __usmuluta3
+DEFUN __muluta3
+    clt
+ENTRY __muluta3.2
+    do_prologue_saves 18
+    bld     __tmp_reg__, 7
+    push    __tmp_reg__
+    XCALL __umulditi3_raw
+    or      A7, A6
+    mov8    A0, r16
+    mov     r27, r15
+    XJMP    __muluQ64_tail
+ENDF __muluta3
+#endif /* L_muluta3 */
+
+#if defined (L_muludq3)
+FALIAS __usmuludq3
+DEFUN __muludq3
+    clt
+ENTRY __muludq3.2
+    do_prologue_saves 18
+    bld     __tmp_reg__, 7
+    push    __tmp_reg__
+    XCALL __umulditi3_raw
+    sez
+    mov     r27, r17
+    XJMP    __muluQ64_tail
+ENDF __muludq3
+#endif /* L_muludq3 */
+
+#if defined (L_muluQ64_tail)
+;;; Inputs:
+;;;    R27.7 = LSB (bit -1)
+;;;    Z = 0 -> Overflow
+;;;    Stack.7: On behalf of signed routines?
+DEFUN __muluQ64_tail
+    pop     __tmp_reg__
+    brne 1f
+    ;; tmp.7 = for signed?
+    ;; For signed: return LSB in T, no rounding
+    bst     r27, 7
+    tst     __tmp_reg__
+    brmi 9f
+
+    ;; For unsigned: round
+    lsl     r27
+    brcc 9f
+    ldi     r26, 1
+    XCALL   __adddi3_s8
+    brcs 1f
+9:  do_epilogue_restores 18
+
+1:  ;; Unsigned overflow: Saturate to 0xff...
+    sec
+    XCALL   __sbc_8
+    set
+    rjmp    9b
+ENDF __muluQ64_tail
+#endif /* L_muluQ64_tail */
+
+#if defined (L_muldq3)
+FALIAS __ssmuldq3
+DEFUN __muldq3
+    ldi     r30, lo8(gs(__muludq3.2))
+    ldi     r31, hi8(gs(__muludq3.2))
+    XJMP    __mulQ64_work
+ENDF  __muldq3
+#endif /* L_muldq3 */
+
+#if defined (L_mulda3)
+FALIAS __ssmulda3
+DEFUN __mulda3
+    ldi     r30, lo8(gs(__muluda3.2))
+    ldi     r31, hi8(gs(__muluda3.2))
+    XJMP    __mulQ64_work
+ENDF  __mulda3
+#endif /* L_mulda3 */
+
+#if defined (L_multa3)
+FALIAS __ssmulta3
+DEFUN __multa3
+    ldi     r30, lo8(gs(__muluta3.2))
+    ldi     r31, hi8(gs(__muluta3.2))
+    XJMP    __mulQ64_work
+ENDF  __multa3
+#endif /* L_multa3 */
+
+#if defined (L_mulQ64_work)
+DEFUN __mulQ64_work
+    mov     __tmp_reg__, A7
+    eor     __tmp_reg__, B7
+    push    __tmp_reg__
+
+    ;; A = |A|
+    .call_if_neg  A7, __ssneg_8
+
+    ;; Stash away |A|
+    wmov    r26, A6
+#ifdef __AVR_HAVE_MUL__
+    wmov    r0, A4
+#else
+    push    A5
+    push    A4
+#endif
+    push    A3
+    push    A2
+    push    A1
+    push    A0
+
+    ;; A = |B|
+    mov8    A0, B0
+    .call_if_neg  A7, __ssneg_8
+
+    ;; Restore B = |A|
+    wmov    B6, r26
+    pop     B0
+    pop     B1
+    pop     B2
+    pop     B3
+#ifdef __AVR_HAVE_MUL__
+    wmov    B4, r0
+    ;; No need to clear zero_reg since it won't be used until the
+    ;; next MUL in __umulditi3_raw -> __umulsidi3 -> __umulhisi3.
+#else
+    pop     B4
+    pop     B5
+#endif
+
+    XICALL ; __muluxx3.2
+
+    ;; C = T = LSB (bit -1) from the unsigned mult.
+    bld     __tmp_reg__, 7
+    rol     __tmp_reg__
+    ;; T = result sign
+    pop     __tmp_reg__
+    bst     __tmp_reg__, 7
+    ;; Adjust for signed Q formats that have one FBIT less.
+    rol     A0
+    rol     A1
+    rol     A2
+    rol     A3
+    rol     A4
+    rol     A5
+    rol     A6
+    rol     A7
+    brts .Lneg
+
+    ;; Result must be is >= 0
+    ;; C = 1: Positive overflow
+    brcs .Lsaturate
+    ;; A < 0: Positive overflow
+    sec
+    brmi .Lsaturate
+    ret
+
+.L0x80:
+    ;; Return 0x80..
+    clc
+.Lsaturate:
+    ;; C = 1 -> 0x7f...
+    ;; C = 0 -> 0x80...
+    XCALL   __sbc_8
+    subi    A7, 0x80
+    ret
+
+.Lneg:
+    ;; Result must be <= 0
+    brcs .L0x80
+    XCALL   __negdi2
+    brmi 9f
+    ;; Values that are > 0 after the negation are overflow.
+    sbiw    A6, 0
+    sbci    A5, 0
+    sbci    A4, 0
+    sbci    A3, 0
+    sbci    A2, 0
+    sbci    A1, 0
+    sbci    A0, 0
+    brne .L0x80
+9:  ret
+ENDF __mulQ64_work
+#endif /* L_mulQ64_work */
+
+#undef A0
+#undef A1
+#undef A2
+#undef A3
+#undef A4
+#undef A5
+#undef A6
+#undef A7
+
+#undef B0
+#undef B1
+#undef B2
+#undef B3
+#undef B4
+#undef B5
+#undef B6
+#undef B7
+
+#undef C0
+#undef C1
+#undef C2
+#undef C3
+#undef C4
+#undef C5
+#undef C6
+#undef C7
+#undef C8
+#undef C9
+#undef Ca
+#undef Cb
+#undef Cc
+#undef Cd
+#undef Ce
+#undef Cf
+
+#undef M0
+#undef M1
+#undef M2
+#undef M3
+#undef M4
+#undef M5
+#undef M6
+#undef M7
+
+.popsection ; .text.libgcc.mul64
+
 #endif /* ! AVR_TINY */
 
 /*******************************************************

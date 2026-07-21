@@ -194,6 +194,19 @@
 .endm
 
 
+.macro  mov8  dst, src
+    REGNO ..mov8.dst, \dst
+    REGNO ..mov8.src, \src
+    .if ..mov8.dst < ..mov8.src
+        mov4    ..mov8.dst+0, ..mov8.src+0
+        mov4    ..mov8.dst+4, ..mov8.src+4
+    .else
+        mov4    ..mov8.dst+4, ..mov8.src+4
+        mov4    ..mov8.dst+0, ..mov8.src+0
+    .endif
+.endm
+
+
 ;; Negate a 2-byte value held in consecutive registers.
 .macro  NEG2  reg
     com     \reg+1
@@ -245,6 +258,12 @@
     .endfunc
 .endm
 
+.macro ENTRY name
+    .global \name
+    .type \name, @function
+    .size \name, 0
+    \name:
+.endm
 
 #ifndef __AVR_TINY__
 

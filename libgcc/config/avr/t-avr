@@ -95,6 +95,10 @@ FUNCS_notiny += \
 	_fractsfsq _fractsfusq _fractsfsa _fractsfusa \
 	_mulsa3 _mulusa3 \
 	_usmulusa3 _ssmulsa3 \
+	_umulditi3_raw \
+	_muluda3 _muluta3 _muludq3 \
+	_mulda3 _multa3 _muldq3 \
+	_muluQ64_tail _mulQ64_work \
 	_divsa3 _udivusa3 \
 	_clr_8 \
 	_ssneg_4 _ssneg_8 \
