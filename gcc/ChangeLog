@@ -1,3 +1,13 @@
+2026-07-20  Kyrylo Tkachov  <ktkachov@nvidia.com>
+
+	Backported from master:
+	2026-06-29  Kyrylo Tkachov  <ktkachov@nvidia.com>
+
+	PR target/105116
+	* lra-constraints.cc (simplify_operand_subreg): Reload a
+	non-representable narrowing subreg of a hard register through
+	memory instead of resolving it lossily.
+
 2026-07-16  Jakub Jelinek  <jakub@redhat.com>
 
 	Backported from master:

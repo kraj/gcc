@@ -1,3 +1,21 @@
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	Backported from master:
+	2026-07-03  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/97592
+	PR fortran/125998
+	* gfortran.dg/contiguous_17.f90: New test.
+
+2026-07-20  Kyrylo Tkachov  <ktkachov@nvidia.com>
+
+	Backported from master:
+	2026-06-29  Kyrylo Tkachov  <ktkachov@nvidia.com>
+
+	PR target/105116
+	* gcc.target/aarch64/sve/pr105116.c: New test.
+	* gcc.target/aarch64/sve/pr105116-run.c: New test.
+
 2026-07-16  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
 	Backported from master:
