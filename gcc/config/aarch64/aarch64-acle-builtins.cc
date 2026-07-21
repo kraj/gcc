@@ -2982,22 +2982,9 @@ gimple *
 gimple_folder::fold_to_vl_pred (unsigned int vl)
 {
   tree vectype = TREE_TYPE (lhs);
-  tree element_type = TREE_TYPE (vectype);
-  tree minus_one = build_all_ones_cst (element_type);
-  tree zero = build_zero_cst (element_type);
   unsigned int element_bytes = type_suffix (0).element_bytes;
-
-  /* Construct COUNT elements that contain the ptrue followed by
-     a repeating sequence of COUNT elements.  */
-  unsigned int count = constant_lower_bound (TYPE_VECTOR_SUBPARTS (vectype));
-  gcc_assert (vl * element_bytes <= count);
-  tree_vector_builder builder (vectype, count, 2);
-  for (unsigned int i = 0; i < count * 2; ++i)
-    {
-      bool bit = (i & (element_bytes - 1)) == 0 && i < vl * element_bytes;
-      builder.quick_push (bit ? minus_one : zero);
-    }
-  return gimple_build_assign (lhs, builder.build ());
+  tree pred = aarch64_fold_sve_ptrue_vl (vectype, vl, element_bytes);
+  return gimple_build_assign (lhs, pred);
 }
 
 /* Try to fold the call to a constant, given that, for integers, the call

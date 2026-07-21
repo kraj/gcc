@@ -1035,6 +1035,7 @@ unsigned aarch64_debugger_regno (unsigned);
 unsigned aarch64_trampoline_size (void);
 void aarch64_asm_output_labelref (FILE *, const char *);
 void aarch64_cpu_cpp_builtins (cpp_reader *);
+tree aarch64_fold_sve_ptrue_vl (tree, unsigned int, unsigned int);
 const char * aarch64_gen_far_branch (rtx *, int, const char *, const char *);
 const char * aarch64_output_probe_stack_range (rtx, rtx);
 const char * aarch64_output_probe_sve_stack_clash (rtx, rtx, rtx, rtx);

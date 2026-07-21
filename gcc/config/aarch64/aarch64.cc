@@ -63,6 +63,7 @@
 #include "gimple-iterator.h"
 #include "gimple-fold.h"
 #include "tree-vectorizer.h"
+#include "tree-vector-builder.h"
 #include "aarch64-cost-tables.h"
 #include "dumpfile.h"
 #include "builtins.h"
@@ -2331,72 +2332,6 @@ aarch64_try_widen_mult_by_pow2 (const gassign *convert,
   return true;
 }
 
-/* Implement TARGET_INSTRUCTION_SELECTION.  The target hook is used to
-   change generic sequences to a form AArch64 has an easier time expanding
-   instructions for.  It's not supposed to be used for generic rewriting that
-   all targets would benefit from.  */
-
-static bool
-aarch64_instruction_selection (function * /* fun */, gimple_stmt_iterator *gsi)
-{
-  auto stmt = gsi_stmt (*gsi);
-  gassign *assign = dyn_cast<gassign *> (stmt);
-
-  if (!assign)
-    return false;
-
-  if (CONVERT_EXPR_CODE_P (gimple_assign_rhs_code (assign))
-      && aarch64_try_widen_mult_by_pow2 (assign, gsi))
-    return true;
-
-  /* Convert
-	p == q ? s1 : s2;
-     to
-	p != q ? s2 : s1;
-     where p and q are svbool_t expr.  Due to the absence of predicate
-     comparison instructions, we use bitwise xor for checking inequality.
-     Transforming == to != avoids an extra bitwise inversion to the xor.  */
-  if (gimple_assign_rhs_code (assign) != VEC_COND_EXPR)
-    return false;
-
-  tree lhs = gimple_assign_lhs (assign);
-  tree rhs1 = gimple_assign_rhs1 (assign);
-  tree rhs2 = gimple_assign_rhs2 (assign);
-  tree rhs3 = gimple_assign_rhs3 (assign);
-
-  if (TREE_CODE (rhs1) != SSA_NAME || !VECTOR_BOOLEAN_TYPE_P (TREE_TYPE (rhs1)))
-    return false;
-
-  gassign *da = dyn_cast<gassign *> (SSA_NAME_DEF_STMT (rhs1));
-
-  if (!da)
-    return false;
-
-  if (gimple_assign_rhs_code (da) != EQ_EXPR)
-    return false;
-
-  tree eqa = gimple_assign_rhs1 (da);
-  tree eqb = gimple_assign_rhs2 (da);
-
-  if (!VECTOR_BOOLEAN_TYPE_P (TREE_TYPE (eqa))
-      || !VECTOR_BOOLEAN_TYPE_P (TREE_TYPE (eqb)))
-    return false;
-
-  tree ne_expr_var = create_tmp_var (TREE_TYPE (rhs1));
-  gimple *ne_stmt = gimple_build_assign (ne_expr_var, NE_EXPR, eqa, eqb);
-  gsi_safe_insert_before (gsi, ne_stmt);
-
-  gimple *g = gimple_build_call_internal (IFN_VCOND_MASK, 3,
-					  ne_expr_var, rhs3, rhs2);
-  if (!g)
-    return false;
-
-  gimple_set_lhs (g, lhs);
-  gsi_replace (gsi, g, false);
-
-  return true;
-}
-
 /* Implement TARGET_MAX_NOCE_IFCVT_SEQ_COST.  If an explicit max was set then
    honor it, otherwise apply a tuning specific scale to branch costs.  */
 
@@ -4500,6 +4435,97 @@ aarch64_fold_sve_cnt_pat (aarch64_svpattern pattern, unsigned int nelts_per_vq)
     return 0;
 
   return -1;
+}
+
+/* Build a predicate of type VECTYPE in which the first VL elements of size
+   ELEMENT_BYTES are set and the rest are clear.  */
+
+tree
+aarch64_fold_sve_ptrue_vl (tree vectype, unsigned int vl,
+			   unsigned int element_bytes)
+{
+  tree element_type = TREE_TYPE (vectype);
+  tree minus_one = build_all_ones_cst (element_type);
+  tree zero = build_zero_cst (element_type);
+
+  /* Construct COUNT elements that contain the ptrue followed by
+     a repeating sequence of COUNT elements.  */
+  unsigned int count = constant_lower_bound (TYPE_VECTOR_SUBPARTS (vectype));
+  count = MAX (count, vl * element_bytes);
+  count = pow2p_hwi (count) ? count : 1U << ceil_log2 (count);
+  tree_vector_builder builder (vectype, count, 2);
+  for (unsigned int i = 0; i < count * 2; ++i)
+    {
+      bool bit = (i & (element_bytes - 1)) == 0 && i < vl * element_bytes;
+      builder.quick_push (bit ? minus_one : zero);
+    }
+  return builder.build ();
+}
+
+/* Implement TARGET_INSTRUCTION_SELECTION.  The target hook is used to
+   change generic sequences to a form AArch64 has an easier time expanding
+   instructions for.  It's not supposed to be used for generic rewriting that
+   all targets would benefit from.  */
+
+static bool
+aarch64_instruction_selection (function * /* fun */, gimple_stmt_iterator *gsi)
+{
+  auto stmt = gsi_stmt (*gsi);
+  gassign *assign = dyn_cast<gassign *> (stmt);
+
+  if (!assign)
+    return false;
+
+  if (CONVERT_EXPR_CODE_P (gimple_assign_rhs_code (assign))
+      && aarch64_try_widen_mult_by_pow2 (assign, gsi))
+    return true;
+
+  /* Convert
+	p == q ? s1 : s2;
+     to
+	p != q ? s2 : s1;
+     where p and q are svbool_t expr.  Due to the absence of predicate
+     comparison instructions, we use bitwise xor for checking inequality.
+     Transforming == to != avoids an extra bitwise inversion to the xor.  */
+  if (gimple_assign_rhs_code (assign) != VEC_COND_EXPR)
+    return false;
+
+  tree lhs = gimple_assign_lhs (assign);
+  tree rhs1 = gimple_assign_rhs1 (assign);
+  tree rhs2 = gimple_assign_rhs2 (assign);
+  tree rhs3 = gimple_assign_rhs3 (assign);
+
+  if (TREE_CODE (rhs1) != SSA_NAME || !VECTOR_BOOLEAN_TYPE_P (TREE_TYPE (rhs1)))
+    return false;
+
+  gassign *da = dyn_cast<gassign *> (SSA_NAME_DEF_STMT (rhs1));
+
+  if (!da)
+    return false;
+
+  if (gimple_assign_rhs_code (da) != EQ_EXPR)
+    return false;
+
+  tree eqa = gimple_assign_rhs1 (da);
+  tree eqb = gimple_assign_rhs2 (da);
+
+  if (!VECTOR_BOOLEAN_TYPE_P (TREE_TYPE (eqa))
+      || !VECTOR_BOOLEAN_TYPE_P (TREE_TYPE (eqb)))
+    return false;
+
+  tree ne_expr_var = create_tmp_var (TREE_TYPE (rhs1));
+  gimple *ne_stmt = gimple_build_assign (ne_expr_var, NE_EXPR, eqa, eqb);
+  gsi_safe_insert_before (gsi, ne_stmt);
+
+  gimple *g = gimple_build_call_internal (IFN_VCOND_MASK, 3,
+					  ne_expr_var, rhs3, rhs2);
+  if (!g)
+    return false;
+
+  gimple_set_lhs (g, lhs);
+  gsi_replace (gsi, g, false);
+
+  return true;
 }
 
 /* Return true if a single CNT[BHWD] instruction can multiply FACTOR
