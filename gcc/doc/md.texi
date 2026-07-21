@@ -7439,11 +7439,11 @@ Mask elements @var{i} with @var{i} > (operand 4 + operand 5) are ignored.
 
 @mdindex scatter_store@var{m}@var{n}
 @item @samp{scatter_store@var{m}@var{n}}
-Store a vector of mode @var{m} into several distinct memory locations.
-Operand 0 is a scalar base address and operand 1 is a vector of mode
-@var{n} containing offsets from that base.  Operand 4 is the vector of
-values that should be stored, which has the same number of elements as
-@var{n}.  For each element index @var{i}:
+Store a vector of mode @var{m} into several, not necessarily distinct,
+memory locations.  Operand 0 is a scalar base address and operand 1 is
+a vector of mode @var{n} containing offsets from that base.  Operand 4
+is the vector of values that should be stored, which has the same number
+of elements as @var{n}.  For each element index @var{i}:
 
 @itemize @bullet
 @item
@@ -7459,6 +7459,10 @@ store element @var{i} of operand 4 to that address.
 
 The value of operand 2 does not matter if the offsets are already
 address width.
+
+If two or more offset elements point to the same location, it is expected that
+the one with the highest element index is being written last.  This implies a
+left-to-right ordering of the store.
 
 @mdindex mask_scatter_store@var{m}@var{n}
 @item @samp{mask_scatter_store@var{m}@var{n}}
@@ -7476,7 +7480,7 @@ Mask elements @var{i} with @var{i} > (operand 6 + operand 7) are ignored.
 
 @mdindex mask_len_strided_store@var{m}
 @item @samp{mask_len_strided_store@var{m}}
-Store a vector of mode m into several distinct memory locations.
+Store a vector of mode m into several, not necessarily distinct, memory locations.
 Operand 0 is a scalar base address and operand 1 is scalar stride of Pmode.
 Operand 2 is the vector of values that should be stored, which is of mode @var{m}.
 operand 3 is mask operand, operand 4 is length operand and operand 5 is bias operand.
