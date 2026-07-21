@@ -825,7 +825,8 @@ do_SUBST_LINK (struct insn_link **into, struct insn_link *newval)
 
 static bool
 combine_validate_cost (rtx_insn *i0, rtx_insn *i1, rtx_insn *i2, rtx_insn *i3,
-		       rtx newpat, rtx newi2pat, rtx newotherpat)
+		       rtx newpat, rtx newi2pat, rtx newotherpat,
+		       int insn_code, int i2_code, int other_code)
 {
   int i0_cost, i1_cost, i2_cost, i3_cost;
   int new_i2_cost, new_i3_cost;
@@ -867,7 +868,7 @@ combine_validate_cost (rtx_insn *i0, rtx_insn *i1, rtx_insn *i2, rtx_insn *i3,
   rtx tmp = PATTERN (i3);
   PATTERN (i3) = newpat;
   int tmpi = INSN_CODE (i3);
-  INSN_CODE (i3) = -1;
+  INSN_CODE (i3) = insn_code;
   new_i3_cost = insn_cost (i3, optimize_this_for_speed_p);
   PATTERN (i3) = tmp;
   INSN_CODE (i3) = tmpi;
@@ -876,7 +877,7 @@ combine_validate_cost (rtx_insn *i0, rtx_insn *i1, rtx_insn *i2, rtx_insn *i3,
       tmp = PATTERN (i2);
       PATTERN (i2) = newi2pat;
       tmpi = INSN_CODE (i2);
-      INSN_CODE (i2) = -1;
+      INSN_CODE (i2) = i2_code;
       new_i2_cost = insn_cost (i2, optimize_this_for_speed_p);
       PATTERN (i2) = tmp;
       INSN_CODE (i2) = tmpi;
@@ -897,7 +898,7 @@ combine_validate_cost (rtx_insn *i0, rtx_insn *i1, rtx_insn *i2, rtx_insn *i3,
       tmp = PATTERN (undobuf.other_insn);
       PATTERN (undobuf.other_insn) = newotherpat;
       tmpi = INSN_CODE (undobuf.other_insn);
-      INSN_CODE (undobuf.other_insn) = -1;
+      INSN_CODE (undobuf.other_insn) = other_code;
       new_other_cost = insn_cost (undobuf.other_insn,
 				  optimize_this_for_speed_p);
       PATTERN (undobuf.other_insn) = tmp;
@@ -4134,7 +4135,9 @@ try_combine (rtx_insn *i3, rtx_insn *i2, rtx_insn *i1, rtx_insn *i0,
 
   /* Reject this combination if insn_cost reports that the replacement
      instructions are more expensive than the originals.  */
-  if (!combine_validate_cost (i0, i1, i2, i3, newpat, newi2pat, other_pat))
+  if (!combine_validate_cost (i0, i1, i2, i3, newpat, newi2pat, other_pat,
+			      insn_code_number, i2_code_number,
+			      other_code_number))
     {
       undo_all ();
       return 0;
