@@ -21931,6 +21931,31 @@
   split_double_mode (DImode, &operands[0], 1, &operands[2], &operands[3]);
 })
 
+;; Split *vec_extractv2di_0_sse before reload with -m32 -msse2 -mno-sse4.1
+;; to avoid going via memory.
+(define_split
+  [(set (match_operand:DI 0 "register_operand")
+	(vec_select:DI
+	  (match_operand:V2DI 1 "register_operand")
+	  (parallel [(const_int 0)])))]
+  "!TARGET_64BIT && TARGET_SSE2 && !TARGET_SSE4_1
+   && TARGET_INTER_UNIT_MOVES_FROM_VEC
+   && ix86_pre_reload_split ()"
+  [(set (match_dup 2) (match_dup 4))
+   (set (match_dup 5)
+	(vec_select:V4SI
+	  (match_dup 6)
+	  (parallel [(const_int 1) (const_int 0)
+		     (const_int 2) (const_int 3)])))
+   (set (match_dup 3) (match_dup 7))]
+{
+  operands[4] = gen_lowpart (SImode, operands[1]);
+  operands[5] = gen_reg_rtx (V4SImode);
+  operands[6] = gen_lowpart (V4SImode, operands[1]);
+  operands[7] = gen_lowpart (SImode, operands[5]);
+  split_double_mode (DImode, &operands[0], 1, &operands[2], &operands[3]);
+})
+
 (define_split
   [(set (match_operand:SWI48x 0 "nonimmediate_operand")
 	(vec_select:SWI48x
@@ -22496,6 +22521,34 @@
 	      (symbol_ref "TARGET_INTER_UNIT_MOVES_TO_VEC")
 	   ]
 	   (symbol_ref "true")))])
+
+;; Split *vec_concatv2di_0 before reload with -m32 -msse2 -mno-sse4.1
+;; to avoid going via memory.  Also helps reload with -m32 -msse4.1.
+(define_split
+  [(set (match_operand:V2DI 0 "register_operand")
+	(vec_concat:V2DI
+	  (match_operand:DI 1 "register_operand")
+	  (const_int 0)))]
+  "!TARGET_64BIT && TARGET_SSE2
+   && TARGET_INTER_UNIT_MOVES_TO_VEC
+   && ix86_pre_reload_split ()"
+  [(set (match_dup 0) (match_dup 2))]
+{
+  rtx lo, hi;
+  split_double_mode (DImode, &operands[1], 1, &lo, &hi);
+  rtx tmp1 = gen_reg_rtx (V4SImode);
+  emit_insn (gen_vec_setv4si_0 (tmp1, CONST0_RTX (V4SImode), lo));
+  rtx result = gen_reg_rtx (V4SImode);
+  if (TARGET_SSE4_1)
+    emit_insn (gen_sse4_1_pinsrd (result, tmp1, hi, GEN_INT (2)));
+  else
+    {
+      rtx tmp2 = gen_reg_rtx (V4SImode);
+      emit_insn (gen_vec_setv4si_0 (tmp2, CONST0_RTX (V4SImode), hi));
+      emit_insn (gen_vec_interleave_lowv4si (result, tmp1, tmp2));
+    }
+  operands[2] = gen_lowpart (V2DImode, result);
+})
 
 ;; vmovq clears also the higher bits.
 (define_insn "vec_set<mode>_0"
