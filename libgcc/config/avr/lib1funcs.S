@@ -802,9 +802,9 @@ __muldi3_6:
     adc     C3, 23
     adc     C4, 24
     adc     C5, 25
-    brcc    0f
-    adiw    C6, 1
-0:  ret
+    adc     C6, __zero_reg__
+    adc     C7, __zero_reg__
+    ret
 ENDF __muldi3_6
 #endif /* L_muldi3_6 */
 
