@@ -40,6 +40,8 @@ along with GCC; see the file COPYING3.  If not see
 #include "gimple-fold.h"
 #include "internal-fn.h"
 #include "fold-const.h"
+#include "gimple-range.h"
+
 
 /* Expand all ARRAY_REF(VIEW_CONVERT_EXPR) gimple assignments into calls to
    internal function based on vector type of selected expansion.
@@ -1352,6 +1354,8 @@ pass_gimple_isel::execute (struct function *fun)
   gimple_stmt_iterator gsi;
   basic_block bb;
   bool cfg_changed = false;
+  if (optimize)
+    enable_ranger (fun);
 
   FOR_EACH_BB_FN (bb, fun)
     {
@@ -1390,6 +1394,8 @@ pass_gimple_isel::execute (struct function *fun)
 	}
     }
 
+  if (optimize)
+    disable_ranger (fun);
   return cfg_changed ? TODO_cleanup_cfg : 0;
 }
 
