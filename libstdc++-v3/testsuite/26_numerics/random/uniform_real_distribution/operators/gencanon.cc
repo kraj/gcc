@@ -16,7 +16,7 @@ struct local_rng : std::mt19937
   static constexpr std::uint64_t max() { return max_val; }
   std::uint64_t operator()()
   { return std::mt19937::operator()() % (max() + 1); }
-  
+
   local_rng(std::mt19937 const& arg) : std::mt19937(arg) {}
 };
 
@@ -30,7 +30,7 @@ int ifloor(__float128 t)
 #endif
 
 // Verify P0952R2 implementation requiring a second round-trip
-// if first yields exactly 1. 
+// if first yields exactly 1.
 template<typename T, size_t bits,
 	 size_t call_per_elem, size_t max_skips_per_elem,
 	 typename RNG>
@@ -106,12 +106,13 @@ test_2p32(const std::mt19937& rng)
     VERIFY(zeros == 0);
     break;
   case 53: // ieee64
-  case 64: // ieee80 
+  case 64: // ieee80
     VERIFY(deviation == 7650);
     VERIFY(max == 259);
     VERIFY(rms == 975);
     VERIFY(zeros == 0);
     break;
+  case 106: // ibm128
   case 113: // ieee128
     VERIFY(deviation == 9086);
     VERIFY(max == 290);
@@ -159,11 +160,18 @@ test_10p6(const std::mt19937& rng)
     VERIFY(rms == 921);
     VERIFY(zeros == 0);
     break;
-  case 64: // ieee80 
+  case 64: // ieee80
     VERIFY(skips == 1);
     VERIFY(deviation == 7774);
     VERIFY(max == 250);
     VERIFY(rms == 958);
+    VERIFY(zeros == 0);
+    break;
+  case 106: // ibm128
+    VERIFY(skips == 96);
+    VERIFY(deviation == 6980);
+    VERIFY(max == 260);
+    VERIFY(rms == 876);
     VERIFY(zeros == 0);
     break;
   case 113: // ieee128
@@ -214,11 +222,18 @@ test_2p31m1(const std::mt19937& rng)
     VERIFY(rms == 937);
     VERIFY(zeros == 0);
     break;
-  case 64: // ieee80 
+  case 64: // ieee80
     VERIFY(skips == 143342);
     VERIFY(deviation == 7788);
     VERIFY(max == 296);
     VERIFY(rms == 977);
+    VERIFY(zeros == 0);
+    break;
+  case 106: // ibm128
+    VERIFY(skips == 0);
+    VERIFY(deviation == 8828);
+    VERIFY(max == 330);
+    VERIFY(rms == 1084);
     VERIFY(zeros == 0);
     break;
   case 113: // ieee128
@@ -240,7 +255,7 @@ int main()
   std::seed_seq sequence{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
   rng.seed(sequence);
   rng.discard(12 * 629143);
-      
+
   test_2p32<float>(rng);
   test_10p6<float>(rng);
   test_2p31m1<float>(rng);
