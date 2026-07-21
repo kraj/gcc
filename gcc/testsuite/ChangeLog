@@ -1,3 +1,115 @@
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/126261
+	* lib/target-supports.exp (check_effective_target_can_deref_null):
+	Cast argument to char*.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR target/124364
+	* gcc.dg/Wstringop-overflow-47.c: Remove xfail.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/126261
+	* g++.dg/torture/pr101373.C: Use effective-target can_deref_null.
+	* lib/target-supports.exp (check_effective_target_can_deref_null):
+	New proc.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/118407
+	* gcc.dg/tree-ssa/predcom-8.c: Xfail test for arm*-*-* in hard
+	float ABI without MVE.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124043
+	* gcc.target/arm/crypto-vsha1cq_u32.c: Xfail test for -mthumb
+	-mfloat-abi=hard.
+	* gcc.target/arm/crypto-vsha1h_u32.c: Likewise.
+	* gcc.target/arm/crypto-vsha1mq_u32.c: Likewise.
+	* gcc.target/arm/crypto-vsha1pq_u32.c: Likewise.
+
+2026-07-20  Alexandre Oliva  <oliva@adacore.com>
+
+	Backported from master:
+	2026-01-31  Alexandre Oliva  <oliva@adacore.com>
+
+	* gcc.target/arm/crypto-vsha1cq_u32.c: Accept d regs in
+	vdup.32.  Drop extraneous + after ] in vmov.32 pattern.
+	* gcc.target/arm/crypto-vsha1h_u32.c: Likewise.
+	* gcc.target/arm/crypto-vsha1mq_u32.c: Likewise.
+	* gcc.target/arm/crypto-vsha1pq_u32.c: Likewise.
+
+2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
+
+	Backported from master:
+	2026-07-03  Mikael Morin  <mikael@gcc.gnu.org>
+
+	PR fortran/97592
+	PR fortran/125998
+	* gfortran.dg/contiguous_17.f90: New test.
+
+2026-07-20  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2026-06-25  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/125953
+	* gcc.dg/torture/pr125953.c: New testcase.
+
+2026-07-20  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2026-06-02  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/125502
+	* gcc.dg/torture/pr125502.c: New testcase.
+
+2026-07-20  Richard Biener  <rguenther@suse.de>
+
+	Backported from master:
+	2026-07-14  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/126194
+	* g++.dg/lto/pr126194.h: New testcase.
+	* g++.dg/lto/pr126194_0.C: Likewise.
+	* g++.dg/lto/pr126194_1.C: Likewise.
+	* g++.dg/lto/pr126194_2.C: Likewise.
+
+2026-07-20  Kyrylo Tkachov  <ktkachov@nvidia.com>
+
+	Backported from master:
+	2026-06-29  Kyrylo Tkachov  <ktkachov@nvidia.com>
+
+	PR target/105116
+	* gcc.target/aarch64/sve/pr105116.c: New test.
+	* gcc.target/aarch64/sve/pr105116-run.c: New test.
+
+2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-13  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR driver/124058
+	* c-c++-common/Wuse-after-free-8.c: New test.
+
 2026-07-16  Michal Jires  <mjires@suse.cz>
 
 	Backported from master:
