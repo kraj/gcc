@@ -53,6 +53,8 @@
 	"%{Wno-high-order-bit} "
 	"%{Wno-bad-line-directive} "
 	"%{Wno-bad-numeric} "
+	"%{Wassign-external} "
+	"%{Wassign-file} "
 	"%{Wno-binary-long-long} "
 	"%{Wno-call-fd} "
 	"%{Wno-call-giving} "

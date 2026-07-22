@@ -139,7 +139,11 @@ std::set<cbl_diag_t> cbl_diagnostics {
 
   // RESUME not supported by IBM
   { IsoResume, "-Wcobol-resume", diagnostics::kind::error, dialect_ibm_e },
+  // IBM, MF, and GNU all support ASSIGN TO filename, so we keep mum. 
+  { IsoAssignFile, "-Wassign-file", diagnostics::kind::ignored, dialect_ibm_mf_gnu },
+  
 
+  { MfAssignExternal, "-Wassign-external", diagnostics::kind::error, dialect_mf_gnu },
   { MfBinaryLongLong, "-Wbinary-long-long", diagnostics::kind::error, dialect_mf_gnu },
   { MfCallGiving, "-Wcall-giving", diagnostics::kind::error, dialect_mf_gnu },
   { MfCallLiteral, "-Wcall-literal", diagnostics::kind::error, dialect_mf_e },

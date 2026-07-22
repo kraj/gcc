@@ -1,3 +1,4 @@
+
 ; lang.opt -- Options for the gcc Cobol front end.
 
 ; Copyright (C) 2021-2026 Free Software Foundation, Inc.
@@ -102,6 +103,16 @@ Truncate BINARY PIC 9(n) to n digits.
 Wlevel-78-defined
 Cobol Warning Var(level_78_defined, 1) Init(1)
 Warn if CDF defines Level 78 constant.
+
+; IbmAssignFile
+Wassign-file
+Cobol Warning Var(assign_file, 1) Init(1)
+Warn if filename is used with ASSIGN.
+
+; MfAssignExternal
+Wassign-external
+Cobol Warning Var(assign_external, 1) Init(1)
+Warn if EXTERNAL is used with ASSIGN.
 
 ; MfBinaryLongLong
 Wbinary-long-long

@@ -789,13 +789,13 @@ class locale_tgt_t {
 %type   <min_max>       record_vary rec_contains from_to record_desc
 %type   <file_op>       read_file rewrite1 write_file
 %type   <field>         data_descr data_descr1 write_what file_record
-%type   <field>         name88
+%type   <field>         name88 selected_name 
 %type   <refer>         advancing  advance_by
 %type   <refer>         alphaval alpha_val numeref scalar scalar88 scalar_any
 %type   <refer>         tableref tableish
 %type   <refer>         varg varg1 varg1a start_after start_pos
 %type   <refer>         expr expr_term compute_expr free_tgt by_value_arg
-%type   <refer>         move_tgt selected_name read_key read_into vary_by
+%type   <refer>         move_tgt read_key read_into vary_by
 %type   <refer>         num_operand envar search_expr any_arg
 %type   <accept_func>	accept_body
 %type   <refers>        subscript_exprs subscripts arg_list free_tgts 
@@ -2161,7 +2161,12 @@ select:         SELECT optional NAME[name] select_clauses[clauses] '.'
                   if( file_add(@name, &file) == NULL ) YYERROR;
                 }
                 ;
-selected_name:  external scalar { $$ = $2; }
+selected_name:  external NAME {
+                  enum { parent = 0 };
+                  auto e = symbol_field_forward_add(PROGRAM, parent,
+                                                    $NAME, @NAME.first_line);
+                  $$ = cbl_field_of(e); // might become a data item
+                }
         |       external LITERAL[name]
                 {
                   const char *name = string_of($name);
@@ -2176,11 +2181,13 @@ selected_name:  external scalar { $$ = $2; }
 				      {len,len,0,0, $name.data} };
                   field.attr |= literal_attr($name.prefix);
                   field.codeset.set();
-                  $$ = new cbl_refer_t( field_add(@name, &field) );
+                  $$ = field_add(@name, &field);
                 }
                 ;
 external:       %empty /* GnuCOBOL uses EXTERNAL to control name resolution.  */
-        |       EXTERNAL
+        |       EXTERNAL {
+                  dialect_ok(@1, MfAssignExternal, "EXTERNAL");
+                }
                 ;
 
 select_clauses: select_clause { $$.clauses = $1.clause; $$.file = $1.file; }
@@ -2364,21 +2371,52 @@ unique_key:     %empty          { $$ = true; }
         |       with DUPLICATES { $$ = false; }
                 ;
 
+                /*
+                 * IBM:  SELECT fd-name ASSIGN to filename
+                 * ISO:  SELECT fd-name ASSIGN to device USING data-item 
+                 * both: SELECT fd-name ASSIGN to literal
+                 * 
+                 * For ISO, device is implementation-defined. We use
+                 * cbl_special_name_t, and whatever file is defined for it. The
+                 * interpretation of data-item is likewise implemetation
+                 * defined.  If both device and data-item are present, it seems
+                 * logical to assign the device to the file described by the
+                 * value of data-item.
+                 * 
+                 * For IBM, we interpret filename as a potential runtime
+                 * environment variable. If libgcobol finds filename as an
+                 * environment variable, the value of that variable is used as
+                 * the filename, else filename itself is used verbatim.
+                 * 
+                 * If the argument to ASSIGN to is a literal, that exact name
+                 * will be opened.  ASSIGN to literal cannot be used with USING.
+                 */
 assign_clause:  ASSIGN to selected_name[selected]  {
                   $$.clause = assign_clause_e;
                   $$.file = new cbl_file_t(protofile);
-                  $$.file->filename = field_index($selected->field);
+                  $$.file->filename = field_index($selected);  // of the FldLiteralA
+                  if( ! is_quoted($selected) ) {
+                    dialect_ok(@selected, IsoAssignFile, $selected->name);
+                  }
                 }
         |       ASSIGN to device_name[dev] USING name {
                   $$.clause = assign_clause_e;
                   $$.file = new cbl_file_t(protofile);
-                  $$.file->assign($dev.id);
+                  $$.file->device = $dev.id;
                   $$.file->filename = field_index($name);
+                  cbl_unimplemented_at(@$, "ISO ASSIGN TO %s USING", "...");
                 }
-        |       ASSIGN to device_name[dev] {
+        |       ASSIGN to device_name[dev] { // ISO syntax
                   $$.clause = assign_clause_e;
                   $$.file = new cbl_file_t(protofile);
-                  $$.file->assign($dev.id);
+                  auto special = symbol_special($dev.id);
+                  uint32_t len = strlen(special->os_filename);
+                  cbl_field_t field { FldLiteralA,
+                                      hex_encoded_e | quoted_e | constant_e,
+				      {len,len,0,0, special->os_filename} };
+                  field.codeset.set();
+                  auto f = field_add(@dev, &field);
+                  $$.file->filename = field_index(f);
                   if( $$.file->org == file_disorganized_e ) {
                     $$.file->org = file_sequential_e;
                   } 
@@ -7431,7 +7469,7 @@ name:           qname
                   if( ($$ = field_find(@1, names)) == NULL ) {
                     if( procedure_div_e == current_division  ) {
                       error_msg(inner.loc,
-                                "DATA-ITEM '%s' not found", inner.name );
+                                "DATA-ITEM %qs not found", inner.name );
                       YYERROR;
                     }
                     /*

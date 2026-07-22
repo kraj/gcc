@@ -577,6 +577,14 @@ cobol_langhook_handle_option (size_t scode,
 
         // Warnings and errors
 
+        case OPT_Wassign_external:
+          cobol_warning(MfAssignExternal, assign_external, warning_as_error);
+          return true;
+
+        case OPT_Wassign_file:
+          cobol_warning(IsoAssignFile, assign_file, warning_as_error);
+          return true;
+
         case OPT_Wbinary_long_long:
           cobol_warning(MfBinaryLongLong, binary_long_long, warning_as_error);
           return true;

@@ -43,6 +43,8 @@
 .Op Fl Wno-high-order-bit
 .Op Fl Wno-bad-line-directive
 .Op Fl Wno-bad-numeric
+.Op Fl Wno-assign-external
+.Op Fl Wassign-file
 .Op Fl Wno-binary-long-long
 .Op Fl Wno-call-fd
 .Op Fl Wno-call-giving
@@ -602,6 +604,10 @@ Warn if APPLY COMMIT is used.
 Warn if malformed
 .Ql #line
 directive is encountered.
+.It Fl Wno-assign-external
+Warn if EXTERNAL is used with ASSIGN.
+.It Fl Wassign-file
+Warn if filename is used with ASSIGN.
 .It Fl Wno-binary-long-long
 Warn if BINARY-LONG-LONG is used.
 .It Fl Wno-call_fd
@@ -1282,6 +1288,48 @@ aliases.
 .Pp
 All computation \(em both integer and floating point \(em is done
 using 128-bit intermediate forms.
+.
+.Ss Devices
+.Nm
+implements these devices for the
+.Ql "SELECT ... ASSIGN TO"
+clause:
+.Bl -tag -width "standard output"
+.It Sy standard input
+STDIN
+SYSIN
+SYSIPT
+.It Sy standard output
+CONSOLE
+STDOUT
+SYSLIST
+SYSLST
+SYSOUT
+.It Sy standard error
+STDERR
+SYSPCH
+SYSPUNCH
+.It Sy /dev/null
+AFP_5A
+C01
+C02
+C03
+C04
+C05
+C06
+C07
+C08
+C09
+C10
+C11
+C12
+CSP
+S01
+S02
+S03
+S04
+S05
+.El
 .
 .Ss Environment Names
 In
