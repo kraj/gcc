@@ -9012,7 +9012,8 @@ lookup_placeholder (const constexpr_ctx *ctx, value_cat lval, tree type)
 	ob = NULL_TREE;
     }
 
-  return ob;
+  /* Like in replace_placeholders_r.  */
+  return unshare_expr (ob);
 }
 
 /* Complain about an attempt to evaluate inline assembly.  If FUNDEF_P is
