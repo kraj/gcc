@@ -89,8 +89,8 @@ ENDF __mulqi3
 #define CC1  21
 
 #if defined (L_umulqihi3)
-;;; R25:R24 = (unsigned int) R22 * (unsigned int) R24
-;;; (C1:C0) = (unsigned int) A0  * (unsigned int) B0
+;;; R25:R24 = (uint16_t) R22 * (uint16_t) R24
+;;; (C1:C0) = (uint16_t) A0  * (uint16_t) B0
 ;;; Clobbers: __tmp_reg__, R21..R23
 DEFUN __umulqihi3
     clr     A1
@@ -100,8 +100,8 @@ ENDF __umulqihi3
 #endif /* L_umulqihi3 */
 
 #if defined (L_mulqihi3)
-;;; R25:R24 = (signed int) R22 * (signed int) R24
-;;; (C1:C0) = (signed int) A0  * (signed int) B0
+;;; R25:R24 = (int16_t) R22 * (int16_t) R24
+;;; (C1:C0) = (int16_t) A0  * (int16_t) B0
 ;;; Clobbers: __tmp_reg__, R20..R23
 DEFUN __mulqihi3
     ;; Sign-extend B0
@@ -111,22 +111,11 @@ DEFUN __mulqihi3
     ;; The multiplication runs twice as fast if A1 is zero, thus:
     ;; Zero-extend A0
     clr     A1
-#ifdef __AVR_HAVE_JMP_CALL__
-    ;; Store  B0 * sign of A
-    clr     BB0
-    sbrc    A0, 7
-    mov     BB0, B0
-    call    __mulhi3
-#else /* have no CALL */
-    ;; Skip sign-extension of A if A >= 0
-    ;; Same size as with the first alternative but avoids errata skip
-    ;; and is faster if A >= 0
-    sbrs    A0, 7
-    rjmp    __mulhi3
+    ;; Skip sign-extension of A if A >= 0.
+    .branch_plus  A0, __mulhi3
     ;; If  A < 0  store B
     mov     BB0, B0
-    rcall   __mulhi3
-#endif /* HAVE_JMP_CALL */
+    XCALL   __mulhi3
     ;; 1-extend A after the multiplication
     sub     C1, BB0
     ret
@@ -364,8 +353,8 @@ ENDF __mulsi3_helper
 *******************************************************/
 
 #if defined (L_mulhisi3)
-;;; R25:R22 = (signed long) R27:R26 * (signed long) R19:R18
-;;; C3:C0   = (signed long) A1:A0   * (signed long) B1:B0
+;;; R25:R22 = (int32_t) R27:R26 * (int32_t) R19:R18
+;;; C3:C0   = (int32_t) A1:A0   * (int32_t) B1:B0
 ;;; Clobbers: __tmp_reg__
 DEFUN __mulhisi3
     XCALL   __umulhisi3
@@ -380,8 +369,8 @@ ENDF __mulhisi3
 #endif /* L_mulhisi3 */
 
 #if defined (L_usmulhisi3)
-;;; R25:R22 = (signed long) R27:R26 * (unsigned long) R19:R18
-;;; C3:C0   = (signed long) A1:A0   * (unsigned long) B1:B0
+;;; R25:R22 = (int32_t) R27:R26 * (uint32_t) R19:R18
+;;; C3:C0   = (int32_t) A1:A0   * (uint32_t) B1:B0
 ;;; Clobbers: __tmp_reg__
 DEFUN __usmulhisi3
     XCALL   __umulhisi3
@@ -399,8 +388,8 @@ ENDF __usmulhisi3_tail
 #endif /* L_usmulhisi3 */
 
 #if defined (L_umulhisi3)
-;;; R25:R22 = (unsigned long) R27:R26 * (unsigned long) R19:R18
-;;; C3:C0   = (unsigned long) A1:A0   * (unsigned long) B1:B0
+;;; R25:R22 = (uint32_t) R27:R26 * (uint32_t) R19:R18
+;;; C3:C0   = (uint32_t) A1:A0   * (uint32_t) B1:B0
 ;;; Clobbers: __tmp_reg__
 DEFUN __umulhisi3
     mul     A0, B0
@@ -426,8 +415,8 @@ ENDF __umulhisi3
 *******************************************************/
 
 #if defined (L_mulshisi3)
-;;; R25:R22 = (signed long) R27:R26 * R21:R18
-;;; (C3:C0) = (signed long) A1:A0   * B3:B0
+;;; R25:R22 = (int32_t) R27:R26 * R21:R18
+;;; (C3:C0) = (int32_t) A1:A0   * B3:B0
 ;;; Clobbers: __tmp_reg__
 DEFUN __mulshisi3
     .branch_plus A1, __muluhisi3
@@ -447,8 +436,8 @@ ENDF __mulohisi3
 #endif /* L_mulshisi3 */
 
 #if defined (L_muluhisi3)
-;;; R25:R22 = (unsigned long) R27:R26 * R21:R18
-;;; (C3:C0) = (unsigned long) A1:A0   * B3:B0
+;;; R25:R22 = (uint32_t) R27:R26 * R21:R18
+;;; (C3:C0) = (uint32_t) A1:A0   * B3:B0
 ;;; Clobbers: __tmp_reg__
 DEFUN __muluhisi3
     XCALL   __umulhisi3
@@ -957,7 +946,9 @@ DEFUN __umulsidi3
     clt
     ;; FALLTHRU
 ENDF  __umulsidi3
-    ;; T = sign (A)
+
+;; T = sign (A)
+;; If T = 1 we perform a post-mul one-extension of A.
 DEFUN __umulsidi3_helper
     push    29  $  push    28 ; Y
     wmov    30, A2
@@ -1019,8 +1010,7 @@ ENDF __umulsidi3_helper
 ;; Ordinary ABI Function
 DEFUN __mulsidi3
     bst     A3, 7
-    sbrs    B3, 7           ; Enhanced core has no skip bug
-    XJMP __umulsidi3_helper
+    .branch_plus  B3, __umulsidi3_helper
 
     ;; B needs sign-extension
     push    A3
@@ -1932,14 +1922,12 @@ ENDF __cmpdi2_s8
 ;;      (neg:DI (reg:DI 18)))
 ;; Sets the V flag for signed overflow tests
 DEFUN __negdi2
-
     com  A4    $  com  A5    $  com  A6    $  com  A7
                $  com  A1    $  com  A2    $  com  A3
     NEG  A0
                $  sbci A1,-1 $  sbci A2,-1 $  sbci A3,-1
     sbci A4,-1 $  sbci A5,-1 $  sbci A6,-1 $  sbci A7,-1
     ret
-
 ENDF __negdi2
 #endif /* L_negdi2 */
 
