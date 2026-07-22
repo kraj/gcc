@@ -11953,15 +11953,12 @@ vect_schedule_slp_node (vec_info *vinfo,
 	    unsigned j;
 	    tree def;
 	    FOR_EACH_VEC_ELT (SLP_TREE_SCALAR_OPS (child), j, def)
-	      if (TREE_CODE (def) == SSA_NAME
-		  && !SSA_NAME_IS_DEFAULT_DEF (def))
+	      /* If the stmt is not inside the region do not
+		 use it as possible insertion point.  */
+	      if (auto stmt_info = vinfo->lookup_def (def))
 		{
-		  gimple *stmt = SSA_NAME_DEF_STMT (def);
-		  if (gimple_uid (stmt) == -1u)
-		    /* If the stmt is not inside the region do not
-		       use it as possible insertion point.  */
-		    ;
-		  else if (!last_stmt)
+		  gimple *stmt = stmt_info->stmt;
+		  if (!last_stmt)
 		    last_stmt = stmt;
 		  else if (vect_stmt_dominates_stmt_p (last_stmt, stmt))
 		    last_stmt = stmt;
