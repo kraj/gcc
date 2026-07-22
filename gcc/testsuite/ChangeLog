@@ -1,3 +1,126 @@
+2026-07-21  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	Backported from master:
+	2026-07-20  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	* gcc.target/bpf/const-cost-model.c: New test prefers const.
+	* gcc.target/bpf/const-cost-model-2.c: New test prefers const.
+
+2026-07-21  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	Backported from master:
+	2026-07-20  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	* gcc.target/bpf/divmod-libcall-2.c: Change args/ret to signed.
+	* gcc.target/bpf/mult-large.c: New test.
+	* gcc.target/bpf/mult-small.c: New test.
+
+2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124726
+	* gcc.dg/vect/tsvc/vect-tsvc-s124.c: Remove xfail for arm_neon.
+	* gcc.dg/vect/tsvc/vect-tsvc-s276.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s3111.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s3113.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s312.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s314.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s316.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s317.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s319.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s441.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s443.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s453.c: Likewise.
+
+2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124361
+	* gcc.dg/tree-ssa/ssa-dom-cse-2.c: Remove xfail for arm_mve.
+
+2026-07-21  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2026-07-09  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/125207
+	* gcc.dg/ipa/pr125207.c: New test.
+	* gcc.dg/vla-1.c (f1): Make function f1 static.
+
+2026-07-21  Jose E. Marchesi  <jemarch@gnu.org>
+
+	Backported from master:
+	2026-07-20  Jose E. Marchesi  <jemarch@gnu.org>
+
+	* algol68/execute/max-abs-char-1.a68: New test.
+
+2026-07-21  chris hermansen  <clhermansen@gmail.com>
+
+	Backported from master:
+	2026-07-20  chris hermansen  <clhermansen@gmail.com>
+
+	* algol68/execute/whole-1.a68: New test.
+
+2026-07-21  Jose E. Marchesi  <jemarch@gnu.org>
+
+	Backported from master:
+	2026-06-15  Jose E. Marchesi  <jemarch@gnu.org>
+
+	* algol68/execute/modules/module26.a68: New file.
+	* algol68/execute/modules/program-26.a68: New test.
+
+2026-07-21  Jose E. Marchesi  <jemarch@gnu.org>
+
+	Backported from master:
+	2026-06-13  Jose E. Marchesi  <jemarch@gnu.org>
+
+	* algol68/execute/modules/module1.a68: Add an operator %.
+	* algol68/execute/modules/program-1.a68: Use operator %.
+
+2026-07-21  Jose E. Marchesi  <jemarch@gnu.org>
+
+	Backported from master:
+	2026-06-13  Jose E. Marchesi  <jemarch@gnu.org>
+
+	* algol68/execute/gen-in-constructor-1.a68: New test.
+	* algol68/execute/gen-in-constructor-2.a68: Likewise.
+
+2026-07-21  Jose E. Marchesi  <jemarch@gnu.org>
+
+	Backported from master:
+	2026-06-13  Jose E. Marchesi  <jemarch@gnu.org>
+
+	* algol68/execute/formula-3.a68: New test.
+	* algol68/execute/formula-4.a68: Likewise.
+	* algol68/execute/formula-5.a68: Likewise.
+
+2026-07-21  Jose E. Marchesi  <jemarch@gnu.org>
+
+	Backported from master:
+	2026-06-08  Jose E. Marchesi  <jemarch@gnu.org>
+
+	* algol68/compile/error-attr-format-token-1.a68: New test.
+
+2026-07-21  Jose E. Marchesi  <jemarch@gnu.org>
+
+	Backported from master:
+	2026-06-02  Jose E. Marchesi  <jemarch@gnu.org>
+
+	* algol68/compile/malformed-mode-1.a68: New test.
+	* algol68/compile/malformed-mode-2.a68: Likewise.
+
+2026-07-21  Pietro Monteiro  <pietro@sociotechnical.xyz>
+
+	Backported from master:
+	2026-05-20  Pietro Monteiro  <pietro@sociotechnical.xyz>
+
+	* algol68/execute/entier-1.a68: Add test for FLOOR = ENTIER.
+	* algol68/compile/floor-1.a68: New test.
+
 2026-07-20  Jakub Jelinek  <jakub@redhat.com>
 
 	Backported from master:

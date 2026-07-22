@@ -1,3 +1,51 @@
+2026-07-21  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	Backported from master:
+	2026-07-20  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	* config/bpf/bpf.cc (bpf_insn_cost): Return pattern_cost () by default.
+
+2026-07-21  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	Backported from master:
+	2026-07-20  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	* config/bpf/bpf.cc (bpf_rtx_costs): set CONST_INT 0 insns.
+	* config/bpf/bpf.h (BPF_IMM32_P): New helper macro.
+	* config/bpf/predicates.md (imm32_operand): Use new macro.
+
+2026-07-21  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	Backported from master:
+	2026-07-20  Vineet Gupta  <vineet.gupta@linux.dev>
+
+	* config/bpf/bpf.cc (bpf_rtx_costs): Assign MPY/DIV/MOD cost 1.
+
+2026-07-21  Dhruv Chawla  <dhruvc@nvidia.com>
+
+	Backported from master:
+	2026-06-01  Dhruv Chawla  <dhruvc@nvidia.com>
+
+	* config/bpf/bpf.cc (bpf_asm_named_section): Fix typos.
+	* config/bpf/core-builtins.cc (remove_parser_plugin): Likewise.
+	(make_core_relo): Likewise.
+	(bpf_handle_plugin_finish_type): Likewise.
+	(bpf_output_core_reloc): Likewise.
+	(core_make_builtins): Likewise.
+
+2026-07-21  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2026-07-09  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/125207
+	* ipa-cp.cc (decide_about_value): Add detailed dumping about skipping
+	a value when there are no edges for it.  Make dumping about skipping
+	because of growth limit violation consistent with other cases.
+	(decide_whether_version_node): Only create all-context nodes for local
+	nodes, remove the logic doing it in other cases, allow cloning for
+	single constant lattices for non-local nodes.  Adjust dumping.
+
 2026-07-20  Alice Carlotti  <alice.carlotti@arm.com>
 
 	* config/aarch64/aarch64.cc (aarch64_start_call_args): Extend
