@@ -251,11 +251,31 @@ struct recent_token_t {
   cbl_loc_t loc;
   recent_token_t( int token, YYSTYPE value, cbl_loc_t loc )
     : token(token), value(value), loc(loc) {}
+  // for matching the current token against the token queue
+  recent_token_t( int token, cbl_loc_t loc )
+    : token(token), loc(loc) {}
 };
 #define RECENT(T) recent_token_t( (T), yylval )
 
 namespace cdf {
   int used_token();
+  cbl_loc_t location();
+}
+
+static bool
+same_end(const cbl_loc_t& a, const cbl_loc_t& b ) {
+  return a.last_line == b.last_line
+    &&   a.last_column == b.last_column;
+}
+
+/*
+ * Two tokens are one and the same if they have the type and end at the same
+ * place.  The scanner's idea of the current location might embrace more
+ * characters.
+ */
+static bool
+same_token( const recent_token_t& a, const recent_token_t& b ) {
+  return a.token == b.token && same_end(a.loc, b.loc);
 }
 
 /*
@@ -299,8 +319,9 @@ static struct recent_tokens_t : protected std::queue<recent_token_t>
      * the lookahead token.  Because it was the last one returned by lexer(),
      * the location is accurate.  Else return the next token.
      */
-    if( ! empty() && front().token == end_token ) pop();
-    if( ! empty() && back().token == end_token ) c.clear();
+    recent_token_t ending(end_token, cdf::location());
+    if( ! empty() && same_token(front(), ending) ) pop();
+    if( ! empty() && same_token(back(), ending) ) c.clear();
 
     end_token = 0;
 
@@ -312,6 +333,7 @@ static struct recent_tokens_t : protected std::queue<recent_token_t>
       }
     }
 
+    dbgmsg("%s:%d: returning %s", __func__, __LINE__, keyword_str(end_token));
     return end_token;
   }
 } recent_tokens;

@@ -932,6 +932,13 @@ location_set( const cbl_loc_t& loc ) {
   return cdf_location = loc;
 }
 
+namespace cdf {
+    cbl_loc_t
+    location() {
+        return ::cdf_location;
+    }
+}
+
 bool // used by cobol1.cc
 defined_cmd( const char arg[] )
 {
