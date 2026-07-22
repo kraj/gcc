@@ -11906,7 +11906,6 @@ vect_schedule_slp_node (vec_info *vinfo,
       /* Emit other stmts after the children vectorized defs which is
 	 earliest possible.  */
       gimple *last_stmt = NULL;
-      bool seen_vector_def = false;
       FOR_EACH_VEC_ELT (SLP_TREE_CHILDREN (node), i, child)
 	if (SLP_TREE_DEF_TYPE (child) == vect_internal_def)
 	  {
@@ -11976,7 +11975,7 @@ vect_schedule_slp_node (vec_info *vinfo,
 	       we do not insert before the region boundary.  */
 	    if (SLP_TREE_SCALAR_OPS (child).is_empty ()
 		&& !vinfo->lookup_def (SLP_TREE_VEC_DEFS (child)[0]))
-	      seen_vector_def = true;
+	      ;
 	    else
 	      {
 		unsigned j;
@@ -11997,26 +11996,17 @@ vect_schedule_slp_node (vec_info *vinfo,
 		    }
 	      }
 	  }
-      /* This can happen when all children are pre-existing vectors or
-	 constants.  */
-      if (!last_stmt)
-	last_stmt = vect_find_first_scalar_stmt_in_slp (node)->stmt;
-      if (!last_stmt)
-	{
-	  gcc_assert (seen_vector_def);
-	  si = gsi_after_labels (vinfo->bbs[0]);
-	}
-      else if (is_ctrl_altering_stmt (last_stmt))
-	{
-	  /* We split regions to vectorize at control altering stmts
-	     with a definition so this must be an external which
-	     we can insert at the start of the region.  */
-	  si = gsi_after_labels (vinfo->bbs[0]);
-	}
-      else if (is_a <bb_vec_info> (vinfo)
-	       && !SLP_TREE_PERMUTE_P (node)
-	       && gimple_bb (last_stmt) != gimple_bb (stmt_info->stmt)
-	       && gimple_could_trap_p (stmt_info->stmt))
+
+      /* We split regions to vectorize at control altering stmts
+	 with a definition so this can only be an external.  */
+      gcc_checking_assert (!last_stmt
+			   || !is_ctrl_altering_stmt (last_stmt));
+
+      if (is_a <bb_vec_info> (vinfo)
+	  && !SLP_TREE_PERMUTE_P (node)
+	  && (!last_stmt
+	      || gimple_bb (last_stmt) != gimple_bb (stmt_info->stmt))
+	  && gimple_could_trap_p (stmt_info->stmt))
 	{
 	  /* We've constrained possibly trapping operations to all come
 	     from the same basic-block, if vectorized defs would allow earlier
@@ -12024,16 +12014,23 @@ vect_schedule_slp_node (vec_info *vinfo,
 	     This is only necessary for BB vectorization since for loop vect
 	     all operations are in a single BB and scalar stmt based
 	     placement doesn't play well with epilogue vectorization.  */
-	  gcc_assert (dominated_by_p (CDI_DOMINATORS,
-				      gimple_bb (stmt_info->stmt),
-				      gimple_bb (last_stmt)));
+	  gcc_assert (!last_stmt
+		      || dominated_by_p (CDI_DOMINATORS,
+					 gimple_bb (stmt_info->stmt),
+					 gimple_bb (last_stmt)));
 	  si = gsi_after_labels (gimple_bb (stmt_info->stmt));
 	}
+      /* When there is no in-region child def to guide placement, insert
+	 at region boundary.  */
+      else if (!last_stmt)
+	si = gsi_after_labels (vinfo->bbs[0]);
       else if (is_a <gphi *> (last_stmt))
 	si = gsi_after_labels (gimple_bb (last_stmt));
       else
 	{
 	  si = gsi_for_stmt (last_stmt);
+	  /* We use gsi_insert_before, so when last_stmt is a vector
+	     def we have to advance (or use gsi_insert_after).  */
 	  gsi_next (&si);
 
 	  if (auto loop_vinfo = dyn_cast <loop_vec_info> (vinfo))
