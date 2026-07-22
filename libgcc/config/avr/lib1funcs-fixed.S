@@ -1192,11 +1192,10 @@ DEFUN __mulQ64_work
     set    ; for signed
     XICALL ; __muluxx3.2
 
-    ;; C = T = LSB (bit -1) from the unsigned mult.
-    bld     __tmp_reg__, 7
-    rol     __tmp_reg__
     ;; Adjust for signed Q formats that have one FBIT less.
-    rol     A0
+    lsl     A0
+    ;; Insert LSB from the unsigned mult.
+    bld     A0, 0
     rol     A1
     rol     A2
     rol     A3
