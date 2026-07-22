@@ -1,4 +1,4 @@
-// { dg-do compile { target c++11 } }
+// { dg-do compile { target c++17 } }
 
 // LWG 3990. Program-defined specializations of std::tuple and std::variant
 // can't be properly supported
