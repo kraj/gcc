@@ -1,3 +1,94 @@
+2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR tree-optimization/124663
+	* match.pd: Fold constant conditional selects.
+
+2026-07-21  Tamar Christina  <tamar.christina@arm.com>
+
+	* config/aarch64/aarch64.cc (aarch64_fold_while_ult_to_ptrue): New.
+	(aarch64_instruction_selection): Use it.
+
+2026-07-21  Tamar Christina  <tamar.christina@arm.com>
+
+	* config/aarch64/aarch64-acle-builtins.cc
+	(gimple_folder::fold_to_vl_pred): Refactor folding logic into
+	aarch64_fold_sve_ptrue_vl.
+	* config/aarch64/aarch64-protos.h (aarch64_fold_sve_ptrue_vl): New.
+	* config/aarch64/aarch64.cc (aarch64_instruction_selection): Move down.
+	(aarch64_fold_sve_ptrue_vl): New.
+
+2026-07-21  Tamar Christina  <tamar.christina@arm.com>
+
+	* gimple-isel.cc (pass_gimple_isel::execute): Enable and disable ranger
+	on fun.
+
+2026-07-21  Takayuki 'January June' Suwa  <jjsuwa_sys3175@yahoo.co.jp>
+
+	* config/xtensa/xtensa.cc (xtensa_legitimize_address):
+	Completely rewrite it into an equivalent but more easily under-
+	standable description.
+
+2026-07-21  Takayuki 'January June' Suwa  <jjsuwa_sys3175@yahoo.co.jp>
+
+	* config/xtensa/xtensa.h (LOCAL_REGNO):
+	New macro definition.
+
+2026-07-21  Tamar Christina  <tamar.christina@arm.com>
+
+	* tree-vect-slp-patterns.cc (compatible_complex_nodes_p): Support
+	mismatched group sizes and use group size to iterate.
+	* tree-vect-slp.cc (vect_build_slp_instance,
+	vect_analyze_slp_reduc_chain, vect_analyze_slp_reduction,
+	vect_analyze_slp_reduction_group, vect_analyze_slp_instance,
+	vect_analyze_slp): Compare against lanes instead of .length ().
+	(vect_optimize_slp_pass::get_result_with_layout): replace .length ()
+	with .exist ().
+	(vect_transform_slp_perm_load_1): Use lanes instead of .length ().
+	(vect_remove_slp_scalar_calls): Replace iterators.
+	* tree-vect-stmts.cc (vectorizable_shift): Use group size over ops
+	length.
+
+2026-07-21  Jeevitha Palanisamy  <jeevitha@linux.ibm.com>
+	    Kishan Parmar  <kishan@linux.ibm.com>
+
+	* config/rs6000/rs6000.cc (print_operand): Add the `%W`
+	print modifier to print the VSX register number plus two.
+
+2026-07-21  Pan Li  <pan2.li@intel.com>
+
+	* config/riscv/vector.md: Leverage Wvr constraint.
+
+2026-07-21  Kyrylo Tkachov  <ktkachov@nvidia.com>
+
+	PR middle-end/126341
+	* tree-outof-ssa.cc (split_overlapping_partition_decls): Preserve
+	DECL_IGNORED_P.  Check that the replacement uses memory.
+
+2026-07-21  Richard Biener  <rguenther@suse.de>
+
+	* simplify-rtx.cc (simplify_context::simplify_binary_operation_1):
+	Simplify scalar vec_select of vec_concat.
+
+2026-07-21  Robin Dapp  <robin.dapp@oss.qualcomm.com>
+
+	* doc/md.texi: Document that scatters are left-to-right.
+
+2026-07-21  Roger Sayle  <roger@nextmovesoftware.com>
+	    Uros Bizjak  <ubizjak@gmail.com>
+
+	* config/i386/sse.md (define_split): Split *vec_extractv2di_0_sse
+	before reload on !TARGET_64BIT with TARGET_SSE2.
+	(define_split): Likewise split *vec_concatv2di_0 before reload
+	on !TARGET_64BIT with TARGET_SSE2.
+
+2026-07-21  H.J. Lu  <hjl.tools@gmail.com>
+
+	PR target/125297
+	* config/i386/i386.cc (init_cumulative_args): Don't set
+	cum->preserve_none_abi to true for MS ABI functions.
+	* doc/extend.texi: Update x86-64 preserve_none attribute
+	documentation.
+
 2026-07-20  Kael Andrew Alonzo Franco  <kaelfandrew@gmail.com>
 
 	PR tree-optimization/64992

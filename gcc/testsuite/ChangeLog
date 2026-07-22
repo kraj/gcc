@@ -1,3 +1,144 @@
+2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR tree-optimization/124663
+	* g++.dg/tree-ssa/pr124663.C: New test.
+
+2026-07-21  Tamar Christina  <tamar.christina@arm.com>
+
+	* gcc.target/aarch64/sve/fmaxnm_2.c: Update output.
+	* gcc.target/aarch64/sve/fmaxnm_3.c: Likewise.
+	* gcc.target/aarch64/sve/fminnm_2.c: Likewise.
+	* gcc.target/aarch64/sve/fminnm_3.c: Likewise.
+	* gcc.target/aarch64/sve/slp_12.c: Likewise.
+	* gcc.target/aarch64/sve/unpacked_fadd_2.c: Likewise.
+	* gcc.target/aarch64/sve/unpacked_fmul_2.c: Likewise.
+	* gcc.target/aarch64/sve/unpacked_fsubr_2.c: Likewise.
+	* gfortran.dg/pr88833.f90: Likewise.
+	* gcc.target/aarch64/sve/while_ult_1.c: New test.
+	* gcc.target/aarch64/sve/while_ult_2.c: New test.
+	* gcc.target/aarch64/sve/while_ult_1_run.c: New test.
+
+2026-07-21  Thomas Koenig  <tkoenig@gcc.gnu.org>
+
+	PR fortran/126333
+	* gfortran.dg/warn_undefined_vars_8.f90: New test.
+	* gfortran.dg/warn_undefined_vars_9.f90: New test.
+	* gfortran.dg/warn_unused_but_set_variable_5.f90: New test.
+
+2026-07-21  Pan Li  <pan2.li@intel.com>
+
+	* gcc.target/riscv/rvv/base/pr112431-10.c: Remove xfail.
+	* gcc.target/riscv/rvv/base/pr112431-11.c: Ditto.
+	* gcc.target/riscv/rvv/base/pr112431-12.c: Ditto.
+
+2026-07-21  Pan Li  <pan2.li@intel.com>
+
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u16-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u16-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u16-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u16-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u16-mf4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u32-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u32-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u32-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u32-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u8-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u8-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u8-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u8-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u8-mf4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_xu-u8-mf8.c: New test.
+
+2026-07-21  Pan Li  <pan2.li@intel.com>
+
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i16-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i16-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i16-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i16-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i16-mf4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i32-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i32-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i32-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i32-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i8-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i8-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i8-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i8-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i8-mf4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_f_x-i8-mf8.c: New test.
+
+2026-07-21  Kyrylo Tkachov  <ktkachov@nvidia.com>
+
+	PR middle-end/126341
+	* gcc.dg/pr126341.c: New test.
+
+2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124726
+	* gcc.dg/vect/tsvc/vect-tsvc-s124.c: Remove xfail for arm_neon.
+	* gcc.dg/vect/tsvc/vect-tsvc-s276.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s3111.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s3113.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s312.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s314.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s316.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s317.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s319.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s441.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s443.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s453.c: Likewise.
+
+2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124361
+	* gcc.dg/tree-ssa/ssa-dom-cse-2.c: Remove xfail for arm_mve.
+
+2026-07-21  Georg-Johann Lay  <avr@gjlay.de>
+
+	* gcc.target/avr/fx24-mul.c: New test.
+
+2026-07-21  Roger Sayle  <roger@nextmovesoftware.com>
+	    Uros Bizjak  <ubizjak@gmail.com>
+
+	* gcc.target/i386/sse2-stv-7.c: New test case.
+	* gcc.target/i386/sse4_1-stv-13.c: Likewise.
+
+2026-07-21  H.J. Lu  <hjl.tools@gmail.com>
+
+	PR target/125297
+	* gcc.target/i386/preserve-none-1.c: Skip llp64 target.
+	* gcc.target/i386/preserve-none-31a.c: New test.
+	* gcc.target/i386/preserve-none-31b.c: Likewise.
+	* gcc.target/i386/preserve-none-32.c: Likewise.
+	* gcc.target/i386/preserve-none-33a.c: Likewise.
+	* gcc.target/i386/preserve-none-33b.c: Likewise.
+	* gcc.target/i386/preserve-none-34a.c: Likewise.
+	* gcc.target/i386/preserve-none-34b.c: Likewise.
+	* gcc.target/i386/preserve-none-35a.c: Likewise.
+	* gcc.target/i386/preserve-none-35b.c: Likewise.
+	* gcc.target/i386/preserve-none-35c.c: Likewise.
+	* gcc.target/i386/preserve-none-35d.c: Likewise.
+	* gcc.target/i386/preserve-none-35e.c: Likewise.
+	* gcc.target/i386/preserve-none-35f.c: Likewise.
+	* gcc.target/i386/preserve-none-35g.c: Likewise.
+	* gcc.target/i386/preserve-none-36a.c: Likewise.
+	* gcc.target/i386/preserve-none-36b.c: Likewise.
+	* gcc.target/i386/preserve-none-36c.c: Likewise.
+	* gcc.target/i386/preserve-none-36d.c: Likewise.
+	* gcc.target/i386/preserve-none-36e.c: Likewise.
+	* gcc.target/i386/preserve-none-36f.c: Likewise.
+	* gcc.target/i386/preserve-none-36g.c: Likewise.
+	* gcc.target/i386/preserve-none-37a.c: Likewise.
+	* gcc.target/i386/preserve-none-37b.c: Likewise.
+	* gcc.target/i386/preserve-none-37c.c: Likewise.
+	* gcc.target/i386/preserve-none-37d.c: Likewise.
+	* gcc.target/i386/preserve-none-37e.c: Likewise.
+	* gcc.target/i386/preserve-none-37f.c: Likewise.
+	* gcc.target/i386/preserve-none-37g.c: Likewise.
+	* gcc.target/i386/preserve-none-37h.c: Likewise.
+	* gcc.target/i386/preserve-none-37i.c: Likewise.
+	* gcc.target/i386/preserve-none-37j.c: Likewise.
+
 2026-07-20  Jose E. Marchesi  <jemarch@gnu.org>
 
 	* algol68/execute/max-abs-char-1.a68: New test.

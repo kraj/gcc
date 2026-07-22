@@ -1,3 +1,27 @@
+2026-07-21  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	* testsuite/26_numerics/random/uniform_real_distribution/operators/gencanon.cc:
+	Remove trailing whitespace. Handle 106 (ibm128) mantissa size.
+
+2026-07-21  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	* testsuite/26_numerics/random/piecewise_constant_distribution/operators/accessors.cc
+	(test_precision_depended): Define step as 2 * epsilon().
+
+2026-07-21  Tomasz Kamiński  <tkaminsk@redhat.com>
+
+	* acinclude.m4 (libtool_VERSION): Bump version.
+	* config/abi/pre/gnu.ver (GLIBCXX_3.4.37): Add new symbol
+	version and move basic_string's _S_allocate_at_least and
+	_M_create_plus symbols to it.
+	* config/abi/post/x86_64-linux-gnu/baseline_symbols.txt:
+	Regenerate and include new 3.4.36 symbols.
+	* config/abi/post/powerpc64le-linux-gnu/baseline_symbols.txt:
+	Likewise.
+	* configure: Regenerate.
+	* testsuite/util/testsuite_abi.cc: Update known_versions
+	and latestp.
+
 2026-07-20  Tomasz Kamiński  <tkaminsk@redhat.com>
 	    Álvaro Begué  <alvaro.begue@gmail.com>
 

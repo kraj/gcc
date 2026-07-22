@@ -1,3 +1,12 @@
+2026-07-21  Thomas Koenig  <tkoenig@gcc.gnu.org>
+
+	PR fortran/126333
+	* resolve.cc (resolve_allocate_deallocate): Resolve charlen of ts
+	and set as used if present.
+	(resolve_select): Mark code->expr1 as used.
+	(find_unused_vs_set): Do not complain about host-associated
+	variables which are not marked private.
+
 2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
 
 	* trans-expr.cc (gfc_conv_class_to_class): Use the data setter

@@ -1,3 +1,8 @@
+2026-07-21  James K. Lowden  <jklowden@cobolworx.com>
+
+	* cbldiag.h (struct cbl_loc_t): Assert is_trivially_copyable.
+	* parse.y: Define YYLTYPE_IS_TRIVIAL.
+
 2026-07-20  Robert Dubner  <rdubner@symas.com>
 
 	* copybook.h (_COPYBOOK_H): Remove #include <sys/types.h>.

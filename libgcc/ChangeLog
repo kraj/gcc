@@ -1,3 +1,22 @@
+2026-07-21  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/lib1funcs.S (__muldi3_6): Tweak.
+
+2026-07-21  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/lib1funcs-fixed.S (__mulQ64_work): Add a
+	SET instruction (for signed) prior to ICALL-ing.
+
+2026-07-21  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/t-avr (FUNCS_notiny): Add: _umulditi3_raw,
+	_muluda3,  _muluta3,  _muludq3, _mulda3 _multa3 _muldq3,
+	_muluQ64_tail, _mulQ64_work, _divsa3 _udivusa3.
+	* config/avr/asm-defs.h (mov8, ENTRY): New .macro's.
+	* config/avr/lib1funcs-fixed.S (__umulditi3_raw, __muluda3)
+	(__muluta3, __muludq3, __muluQ64_tail, __muldq3, __mulda3)
+	(__multa3, __mulQ64_work): New DEFUN's.
+
 2026-07-11  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
 	* config.host <i[34567]86-*-netbsdelf*> (tmake_file): Add
