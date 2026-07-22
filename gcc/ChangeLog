@@ -1,3 +1,22 @@
+2026-07-21  Alice Carlotti  <alice.carlotti@arm.com>
+
+	* config/aarch64/aarch64.cc (aarch64_start_call_args): Extend
+	comment.
+
+2026-07-21  Alice Carlotti  <alice.carlotti@arm.com>
+
+	* config/aarch64/aarch64.cc (aarch64_mode_confluence): Fix
+	comment typo.
+	* target.def (mode_switching): Fix incorrect variable names in
+	documentation.
+	* doc/tm.texi: Regenerate.
+
+2026-07-21  Alice Carlotti  <alice.carlotti@arm.com>
+
+	PR target/119210
+	* config/aarch64/aarch64.cc (aarch64_mode_emit_local_sme_state):
+	Add PSTATE.ZA enablement, and zero it if already enabled.
+
 2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
 
 	Backported from master:

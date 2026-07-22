@@ -1,3 +1,35 @@
+2026-07-21  Alice Carlotti  <alice.carlotti@arm.com>
+
+	PR target/119210
+	* gcc.target/aarch64/sme/za_state_8.c: New test.
+
+2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124726
+	* gcc.dg/vect/tsvc/vect-tsvc-s124.c: Remove xfail for arm_neon.
+	* gcc.dg/vect/tsvc/vect-tsvc-s276.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s3111.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s3113.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s312.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s314.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s316.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s317.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s319.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s441.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s443.c: Likewise.
+	* gcc.dg/vect/tsvc/vect-tsvc-s453.c: Likewise.
+
+2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124361
+	* gcc.dg/tree-ssa/ssa-dom-cse-2.c: Remove xfail for arm_mve.
+
 2026-07-20  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
 
 	Backported from master:
