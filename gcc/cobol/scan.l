@@ -1742,6 +1742,13 @@ USE({SPC}FOR)?		{ return USE; }
 }
 
 <cdf_state>{
+  CALL-CONVENTION	{ return CALL_CONVENTION; }
+  COBOL-WORDS		{ return COBOL_WORDS; }
+  DEFINE		{ return CDF_DEFINE; }
+  OVERRIDE		{ return OVERRIDE; }
+  PARAMETER		{ return PARAMETER_kw; }
+  SOURCE{BLANK}FORMAT	{ return SOURCE_FORMAT; }
+
   [+-]?{INTEGERZ}       { int value;
 			  if( is_integer_token(&value) ) {
 			    ydflval.number = value;
@@ -2392,10 +2399,10 @@ BASIS		{ yy_push_state(basis); return BASIS; }
   .				{ yy_pop_state(); return RAISING; } // invalid syntax
 }
                 /*
-                 * Catch-all
+                 * Catch-all These tokens may occur anywhere, and may invoke
+		 * the CDF. Token specific to the CDF belong in the <cdf_state>
+		 * start condition.
                  */
-
-
 <*>{
   ^[ ]{6}D.*\n 	{
 		  if( !is_fixed_format() ) {
@@ -2444,17 +2451,10 @@ BASIS		{ yy_push_state(basis); return BASIS; }
 
 
   OTHER		{ return OTHER; }
-  OVERRIDE	{ return OVERRIDE; }
-  PARAMETER	{ return PARAMETER_kw; }
   THRU		{ return THRU; }
   TRUE		{ return TRUE_kw; }
 
   ALL			{ return ALL; }
-  CALL-CONVENTION	{ return CALL_CONVENTION; }
-  COBOL-WORDS		{ return COBOL_WORDS; }
-  DEFINE		{ return CDF_DEFINE; }
-  SOURCE{BLANK}FORMAT	{ return SOURCE_FORMAT; }
-
 }
 
 <cobol_words>{
