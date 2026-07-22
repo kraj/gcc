@@ -1,3 +1,8 @@
+2026-07-21  Alice Carlotti  <alice.carlotti@arm.com>
+
+	PR target/119210
+	* gcc.target/aarch64/sme/za_state_8.c: New test.
+
 2026-07-20  Mikael Morin  <mikael@gcc.gnu.org>
 
 	Backported from master:
