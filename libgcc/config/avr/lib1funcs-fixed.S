@@ -1155,7 +1155,7 @@ DEFUN __mulQ64_work
     push    __tmp_reg__
 
     ;; A = |A|
-    .call_if_neg  A7, __ssneg_8
+    .call_if_neg  A7, __negdi2
 
     ;; Stash away |A|
     wmov    r26, A6
@@ -1172,7 +1172,7 @@ DEFUN __mulQ64_work
 
     ;; A = |B|
     mov8    A0, B0
-    .call_if_neg  A7, __ssneg_8
+    .call_if_neg  A7, __negdi2
 
     ;; Restore B = |A|
     wmov    B6, r26
@@ -1195,9 +1195,6 @@ DEFUN __mulQ64_work
     ;; C = T = LSB (bit -1) from the unsigned mult.
     bld     __tmp_reg__, 7
     rol     __tmp_reg__
-    ;; T = result sign
-    pop     __tmp_reg__
-    bst     __tmp_reg__, 7
     ;; Adjust for signed Q formats that have one FBIT less.
     rol     A0
     rol     A1
@@ -1207,41 +1204,30 @@ DEFUN __mulQ64_work
     rol     A5
     rol     A6
     rol     A7
-    brts .Lneg
 
-    ;; Result must be is >= 0
-    ;; C = 1: Positive overflow
+    ;; r30.7 = result sign
+    pop     r30
+
+    ;; Handle overflow.
     brcs .Lsaturate
-    ;; A < 0: Positive overflow
-    sec
+    ;; In the negative result case, A = 0x80.. is no overflow,
+    ;; but treating it as such keeps the value unchanged.
     brmi .Lsaturate
-    ret
 
-.L0x80:
-    ;; Return 0x80..
-    clc
+    ;; Handle negation.
+    sbrs    r30, 7
+    ret
+    XJMP    __negdi2
+
 .Lsaturate:
+    ;; r30.7 = 0 -> 0x7f...
+    ;; r30.7 = 1 -> 0x80...
+    cpi     r30, 0x80
     ;; C = 1 -> 0x7f...
     ;; C = 0 -> 0x80...
     XCALL   __sbc_8
     subi    A7, 0x80
     ret
-
-.Lneg:
-    ;; Result must be <= 0
-    brcs .L0x80
-    XCALL   __negdi2
-    brmi 9f
-    ;; Values that are > 0 after the negation are overflow.
-    sbiw    A6, 0
-    sbci    A5, 0
-    sbci    A4, 0
-    sbci    A3, 0
-    sbci    A2, 0
-    sbci    A1, 0
-    sbci    A0, 0
-    brne .L0x80
-9:  ret
 ENDF __mulQ64_work
 #endif /* L_mulQ64_work */
 
