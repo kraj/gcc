@@ -361,10 +361,6 @@ enable_exceptions( bool enable ) {
       cbl_message(EcUnknownW, "unrecognized exception '%s'", name);
       continue;
     }
-    ec_disposition_t disposition = ec_type_disposition(type);
-    if( disposition != ec_implemented(disposition) ) {
-      cbl_unimplemented("exception '%s'", name);
-    }
     add_cobol_exception(type, enable );
   }
 }

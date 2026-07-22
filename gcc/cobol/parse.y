@@ -2391,10 +2391,12 @@ unique_key:     %empty          { $$ = true; }
                  * If the argument to ASSIGN to is a literal, that exact name
                  * will be opened.  ASSIGN to literal cannot be used with USING.
                  */
+
 assign_clause:  ASSIGN to selected_name[selected]  {
                   $$.clause = assign_clause_e;
                   $$.file = new cbl_file_t(protofile);
-                  $$.file->filename = field_index($selected);  // of the FldLiteralA
+                  $$.file->filename = field_index($selected);
+
                   if( ! is_quoted($selected) ) {
                     dialect_ok(@selected, IsoAssignFile, $selected->name);
                   }
