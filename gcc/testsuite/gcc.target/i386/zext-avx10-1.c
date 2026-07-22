@@ -19,7 +19,7 @@
 unsigned long long
 func1 (__m128 x)
 {
-  return _mm_cvtts_ss_epu32 (x);
+  return _mm_cvtts_ss_u32 (x);
 }
 
 /*
@@ -35,7 +35,7 @@ func1 (__m128 x)
 unsigned long long
 func2 (__m128 x)
 {
-  return _mm_cvtts_roundss_epu32
+  return _mm_cvtts_roundss_u32
     (x, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC);
 }
 
@@ -52,7 +52,7 @@ func2 (__m128 x)
 unsigned long long
 func3 (__m128 x)
 {
-  return (unsigned int) _mm_cvtts_ss_epi32 (x);
+  return (unsigned int) _mm_cvtts_ss_i32 (x);
 }
 
 /*
@@ -68,7 +68,7 @@ func3 (__m128 x)
 unsigned long long
 func4 (__m128 x)
 {
-  return (unsigned int) _mm_cvtts_roundss_epi32
+  return (unsigned int) _mm_cvtts_roundss_i32
     (x, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC);
 }
 
@@ -85,7 +85,7 @@ func4 (__m128 x)
 unsigned long long
 func5 (__m128d x)
 {
-  return _mm_cvtts_sd_epu32 (x);
+  return _mm_cvtts_sd_u32 (x);
 }
 
 /*
@@ -101,7 +101,7 @@ func5 (__m128d x)
 unsigned long long
 func6 (__m128d x)
 {
-  return _mm_cvtts_roundsd_epu32
+  return _mm_cvtts_roundsd_u32
     (x, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC);
 }
 
@@ -118,7 +118,7 @@ func6 (__m128d x)
 unsigned long long
 func7 (__m128d x)
 {
-  return (unsigned int) _mm_cvtts_sd_epi32 (x);
+  return (unsigned int) _mm_cvtts_sd_i32 (x);
 }
 
 /*
@@ -134,6 +134,6 @@ func7 (__m128d x)
 unsigned long long
 func8 (__m128d x)
 {
-  return (unsigned int) _mm_cvtts_roundsd_epi32
+  return (unsigned int) _mm_cvtts_roundsd_i32
     (x, _MM_FROUND_TO_NEAREST_INT | _MM_FROUND_NO_EXC);
 }
