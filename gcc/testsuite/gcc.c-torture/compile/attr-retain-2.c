@@ -1,4 +1,4 @@
-/* { dg-do compile { target R_flag_in_section } } */
+/* { dg-do compile { target gnu_retain } } */
 /* { dg-final { scan-assembler ".text.used_fn,\"axR\"" } } */
 /* { dg-final { scan-assembler ".text.used_fn2,\"axR\"" } } */
 /* { dg-final { scan-assembler ".bss.used_bss,\"awR\"" } } */

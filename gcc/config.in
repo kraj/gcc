@@ -1528,8 +1528,7 @@
 #endif
 
 
-/* Define 0/1 if your assembler supports marking sections with SHF_GNU_RETAIN
-   flag. */
+/* Define 0/1 if your assembler and linker support SHF_GNU_RETAIN. */
 #ifndef USED_FOR_TARGET
 #undef HAVE_GAS_SHF_GNU_RETAIN
 #endif

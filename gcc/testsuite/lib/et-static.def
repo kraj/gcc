@@ -48,6 +48,14 @@ powerpc_as_p10_htm
 HAVE_AS_POWER10_HTM
 your assembler supports htm insns on power10
 
+shf_gnu_retain
+HAVE_GAS_SHF_GNU_RETAIN
+this target supports SHF_GNU_RETAIN
+
+sht_init_array
+HAVE_INITFINI_ARRAY_SUPPORT
+this target supports SHT_INIT_ARRAY
+
 solaris_as
 HAVE_SOLARIS_AS
 using the Solaris assembler

@@ -3040,9 +3040,6 @@ Target supports weak undefined symbols
 @subsubsection Other attributes
 
 @table @code
-@item R_flag_in_section
-Target supports the 'R' flag in .section directive in assembly inputs.
-
 @item asm_goto_with_outputs
 Target supports 'asm goto' with outputs.
 
@@ -3114,6 +3111,9 @@ Target supports @option{--gc-sections}.
 
 @item gld
 Target uses GNU @command{ld}.
+
+@item gnu_retain
+Target supports GNU retain.
 
 @item keeps_null_pointer_checks
 Target keeps null pointer checks, either due to the use of
@@ -3208,8 +3208,14 @@ and @code{double}.  These optabs are: @code{fma_optab}, @code{fms_optab},
 @item section_anchors
 Target supports section anchors.
 
+@item shf_gnu_retain
+Target supports @code{SHF_GNU_RETAIN}.
+
 @item short_enums
 Target defaults to short enums.
+
+@item sht_init_array
+Target supports @code{SHT_INIT_ARRAY} and @code{SHT_PREINIT_ARRAY} sections.
 
 @item solaris_as
 Target uses the Solaris @command{as}.

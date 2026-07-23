@@ -3771,7 +3771,7 @@ case "${target}" in
 esac
 AC_DEFINE_UNQUOTED(HAVE_GAS_SHF_GNU_RETAIN,
   [`if test $gcc_cv_as_shf_gnu_retain = yes; then echo 1; else echo 0; fi`],
-  [Define 0/1 if your assembler supports marking sections with SHF_GNU_RETAIN flag.])
+  [Define 0/1 if your assembler and linker support SHF_GNU_RETAIN.])
 
 # Test if the assembler supports the section flag 'o' for specifying
 # section with link-order.
