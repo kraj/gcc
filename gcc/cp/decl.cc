@@ -18758,6 +18758,11 @@ xref_basetypes (tree ref, tree base_list)
 		 basetype);
 	  goto dropped_base;
 	}
+      else if (ANON_AGGR_TYPE_P (basetype))
+	{
+	  error ("base type %qT is anonymous struct type", basetype);
+	  goto dropped_base;
+	}
 
       base_binfo = NULL_TREE;
       if (CLASS_TYPE_P (basetype) && !dependent_scope_p (basetype))

@@ -151,6 +151,101 @@ abstract_virtuals_error (tree decl, tree type, abstract_class_use use,
      be abstract.  */
   if (!CLASS_TYPE_P (type))
     return 0;
+
+  if (ANON_AGGR_TYPE_P (type))
+    {
+      /* [class.union.anon]/1: Each object of such an unnamed type shall be
+	 such an unnamed object.  */
+      auto_diagnostic_group d;
+      location_t aloc
+	= DECL_SOURCE_LOCATION (TYPE_MAIN_DECL (TYPE_MAIN_VARIANT (type)));
+      if (decl
+	  && VAR_P (decl)
+	  && DECL_NAME (decl) == NULL_TREE
+	  && ANON_UNION_TYPE_P (type))
+	/* Unnamed variables are ok, those are assumed to be the variable
+	   created for namespace scope anonymous union.  For temporaries
+	   even when in the end they create VAR_DECLs with NULL DECL_NAME,
+	   this function is called first with !decl and so invalid code
+	   can be diagnosed below at that point.  */;
+      else if (!(complain & tf_error))
+	return 1;
+      else if (ANON_UNION_TYPE_P (type))
+	{
+	  if (!decl)
+	    switch (use)
+	      {
+	      default:
+		error ("temporary object with anonymous union type %qT", type);
+		break;
+	      case ACU_CATCH:
+		error ("%<catch%> parameter with anonymous union type %qT",
+		       type);
+		break;
+	      case ACU_THROW:
+		error ("%<throw%> operand has anonymous union type %qT", type);
+		break;
+	      case ACU_ARRAY:
+		error ("object with array of anonymous union type %qT", type);
+		break;
+	      }
+	  else if (VAR_P (decl))
+	    error_at (location_of (decl),
+		      "declaration of variable %qD with anonymous union type "
+		      "%qT", decl, type);
+	  else if (TREE_CODE (decl) == PARM_DECL && DECL_NAME (decl))
+	    error_at (location_of (decl),
+		      "declaration of parameter %qD with anonymous union type "
+		      "%qT", decl, type);
+	  else if (TREE_CODE (decl) == PARM_DECL)
+	    error_at (location_of (decl),
+		      "declaration of a parameter with anonymous union type "
+		      "%qT", type);
+	  inform (aloc, "anonymous union declared here");
+	  if (decl)
+	    TREE_TYPE (decl) = error_mark_node;
+	  return 1;
+	}
+      else
+	{
+	  if (!decl)
+	    switch (use)
+	      {
+	      default:
+		error ("temporary object with anonymous struct type %qT",
+		       type);
+		break;
+	      case ACU_CATCH:
+		error ("%<catch%> parameter with anonymous struct type %qT",
+		       type);
+		break;
+	      case ACU_THROW:
+		error ("%<throw%> operand has anonymous struct type %qT",
+		       type);
+		break;
+	      case ACU_ARRAY:
+		error ("object with array of anonymous struct type %qT", type);
+		break;
+	      }
+	  else if (VAR_P (decl))
+	    error_at (location_of (decl),
+		      "declaration of variable %qD with anonymous struct type "
+		      "%qT", decl, type);
+	  else if (TREE_CODE (decl) == PARM_DECL && DECL_NAME (decl))
+	    error_at (location_of (decl),
+		      "declaration of parameter %qD with anonymous struct type "
+		      "%qT", decl, type);
+	  else if (TREE_CODE (decl) == PARM_DECL)
+	    error_at (location_of (decl),
+		      "declaration of a parameter with anonymous struct type "
+		      "%qT", type);
+	  inform (aloc, "anonymous struct declared here");
+	  if (decl)
+	    TREE_TYPE (decl) = error_mark_node;
+	  return 1;
+	}
+    }
+
   type = TYPE_MAIN_VARIANT (type);
 
 #if 0

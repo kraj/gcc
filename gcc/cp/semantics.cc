@@ -3946,6 +3946,8 @@ finish_compound_literal (tree type, tree compound_literal,
       if (type == error_mark_node)
 	return error_mark_node;
     }
+  if (abstract_virtuals_error (ACU_UNKNOWN, type, complain))
+    return error_mark_node;
   compound_literal = digest_init_flags (type, compound_literal,
 					LOOKUP_NORMAL | LOOKUP_NO_NARROWING,
 					complain);
@@ -4279,12 +4281,69 @@ finish_member_declaration (tree decl)
   if (TREE_CODE (decl) != CONST_DECL)
     DECL_CONTEXT (decl) = current_class_type;
 
-  /* Remember the single FIELD_DECL an anonymous aggregate type is used for.  */
-  if (TREE_CODE (decl) == FIELD_DECL
-      && ANON_AGGR_TYPE_P (TREE_TYPE (decl)))
+  if (TREE_TYPE (decl)
+      && ANON_AGGR_TYPE_P (TREE_TYPE (decl))
+      && TREE_CODE (decl) != TYPE_DECL)
     {
-      gcc_assert (!ANON_AGGR_TYPE_FIELD (TYPE_MAIN_VARIANT (TREE_TYPE (decl))));
-      SET_ANON_AGGR_TYPE_FIELD (TYPE_MAIN_VARIANT (TREE_TYPE (decl)), decl);
+      /* Remember the single FIELD_DECL an anonymous aggregate type is used
+	 for.  */
+      if (TREE_CODE (decl) == FIELD_DECL && DECL_NAME (decl) == NULL_TREE)
+	{
+	  tree type = TYPE_MAIN_VARIANT (TREE_TYPE (decl));
+	  gcc_assert (!ANON_AGGR_TYPE_FIELD (type));
+	  SET_ANON_AGGR_TYPE_FIELD (type, decl);
+	}
+      /* [class.union.anon]/1: Each object of such an unnamed type shall
+	 be such an unnamed object.  */
+      else if (ANON_UNION_TYPE_P (TREE_TYPE (decl)))
+	{
+	  tree adecl = TYPE_MAIN_DECL (TYPE_MAIN_VARIANT (TREE_TYPE (decl)));
+	  auto_diagnostic_group d;
+	  error_at (location_of (decl),
+		    "declaration of member %qD with anonymous union type %qT",
+		    decl, TREE_TYPE (decl));
+	  inform (DECL_SOURCE_LOCATION (adecl),
+		  "anonymous union declared here");
+	}
+      else
+	{
+	  tree adecl = TYPE_MAIN_DECL (TYPE_MAIN_VARIANT (TREE_TYPE (decl)));
+	  auto_diagnostic_group d;
+	  error_at (location_of (decl),
+		    "declaration of member %qD with anonymous struct type %qT",
+		    decl, TREE_TYPE (decl));
+	  inform (DECL_SOURCE_LOCATION (adecl),
+		  "anonymous struct declared here");
+	}
+    }
+  else if (TREE_TYPE (decl)
+	   && TREE_CODE (TREE_TYPE (decl)) == ARRAY_TYPE
+	   && TREE_CODE (decl) != TYPE_DECL)
+    {
+      tree type = strip_array_types (TREE_TYPE (decl));
+      if (ANON_AGGR_TYPE_P (type))
+	{
+	  /* [class.union.anon]/1: Each object of such an unnamed type shall
+	     be such an unnamed object.  */
+	  tree adecl = TYPE_MAIN_DECL (TYPE_MAIN_VARIANT (type));
+	  auto_diagnostic_group d;
+	  if (ANON_UNION_TYPE_P (type))
+	    {
+	      error_at (location_of (decl),
+			"declaration of member %qD with array of anonymous "
+			"union type %qT", decl, TREE_TYPE (decl));
+	      inform (DECL_SOURCE_LOCATION (adecl),
+		      "anonymous union declared here");
+	    }
+	  else
+	    {
+	      error_at (location_of (decl),
+			"declaration of member %qD with array of anonymous "
+			"struct type %qT", decl, TREE_TYPE (decl));
+	      inform (DECL_SOURCE_LOCATION (adecl),
+		      "anonymous struct declared here");
+	    }
+	}
     }
 
   if (TREE_CODE (decl) == USING_DECL)
