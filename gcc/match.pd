@@ -2320,7 +2320,13 @@ DEFINE_INT_AND_FLOAT_ROUND_FN (RINT)
     (view_convert (rshift (view_convert:ntype @0) @1))
     (convert (rshift (convert:ntype @0) @1))))))
 
+/* IFN_AVG_FLOOR (x, x) and IFN_AVG_CEIL (x, x) are both x.  */
 #if GIMPLE
+(for avg (IFN_AVG_FLOOR IFN_AVG_CEIL)
+ (simplify
+  (avg @0 @0)
+  @0))
+
  /* Fold ((x + y) >> 1 into IFN_AVG_FLOOR (x, y) if x and y are vectors in
     which each element is known to have at least one leading zero bit.  */
 (simplify
