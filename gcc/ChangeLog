@@ -1,3 +1,12 @@
+2026-07-22  Martin Jambor  <mjambor@suse.cz>
+
+	Backported from master:
+	2026-06-18  Martin Jambor  <mjambor@suse.cz>
+
+	PR ipa/124128
+	* ipa-cp.cc (ipa_vr_intersect_with_arith_jfunc): Move the check if
+	the final type conversion needs to happen before the conversion.
+
 2026-07-21  Alice Carlotti  <alice.carlotti@arm.com>
 
 	* config/aarch64/aarch64.cc (aarch64_start_call_args): Extend
