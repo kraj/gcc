@@ -1,4 +1,4 @@
-/* { dg-do compile { target fentry } } */
+/* { dg-do compile { target { fentry && { x86 && lp64 } } } } */
 /* { dg-options "-O2 -pg -fno-pie" } */
 /* Keep labels and directives ('.cfi_startproc', '.cfi_endproc').  */
 /* { dg-final { check-function-bodies "**" "" "" { target "*-*-*" } {^\t?\.} } } */
