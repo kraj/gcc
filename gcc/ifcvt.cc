@@ -825,7 +825,9 @@ default_noce_conversion_profitable_p (rtx_insn *seq,
   return speed_p && cost <= if_info->max_seq_cost;
 }
 
-/* Helper function for noce_try_store_flag*.  */
+/* Helper function for noce_try_store_flag*.  Return NULL_RTX on failure,
+   including when REVERSEP is requested but the condition cannot be
+   reversed; callers may rely on this and need not pre-check.  */
 
 static rtx
 noce_emit_store_flag (struct noce_if_info *if_info, rtx x, bool reversep,
@@ -1457,8 +1459,7 @@ noce_try_store_flag (struct noce_if_info *if_info)
     reversep = false;
   else if (if_info->b == const0_rtx
 	   && CONST_INT_P (if_info->a)
-	   && INTVAL (if_info->a) == STORE_FLAG_VALUE
-	   && noce_reversed_cond_code (if_info) != UNKNOWN)
+	   && INTVAL (if_info->a) == STORE_FLAG_VALUE)
     reversep = true;
   else
     return false;
@@ -1619,8 +1620,7 @@ noce_try_shifted_store_flag (struct noce_if_info *if_info)
       && GET_CODE (b) == REG
       && rtx_equal_p (XEXP (a, 0), b)
       && CONST_INT_P (XEXP (a, 1))
-      && pow2p_hwi (INTVAL (XEXP (a, 1)))
-      && noce_reversed_cond_code (if_info) != UNKNOWN)
+      && pow2p_hwi (INTVAL (XEXP (a, 1))))
     {
       code = GET_CODE (a);
       common = XEXP (a, 0);
@@ -1809,7 +1809,7 @@ noce_try_store_flag_constants (struct noce_if_info *if_info)
 	       && STORE_FLAG_VALUE == 1)
 	normalize = 1;
       /* Is this (cond) ? 0 : 2^n?  */
-      else if (itrue == 0 && pow2p_hwi (ifalse) && can_reverse
+      else if (itrue == 0 && pow2p_hwi (ifalse)
 	       && STORE_FLAG_VALUE == 1)
 	{
 	  normalize = 1;
@@ -1820,7 +1820,7 @@ noce_try_store_flag_constants (struct noce_if_info *if_info)
 	       && STORE_FLAG_VALUE == -1)
 	normalize = -1;
       /* Is this (cond) ? x : -1?  */
-      else if (ifalse == -1 && can_reverse
+      else if (ifalse == -1
 	       && STORE_FLAG_VALUE == -1)
 	{
 	  normalize = -1;
@@ -2114,7 +2114,7 @@ noce_try_store_flag_mask (struct noce_if_info *if_info)
 
   if ((if_info->a == const0_rtx
        && (REG_P (if_info->b) || rtx_equal_p (if_info->b, if_info->x)))
-      || ((reversep = (noce_reversed_cond_code (if_info) != UNKNOWN))
+      || ((reversep = true)
 	  && if_info->b == const0_rtx
 	  && (REG_P (if_info->a) || rtx_equal_p (if_info->a, if_info->x))))
     {
