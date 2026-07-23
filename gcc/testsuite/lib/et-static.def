@@ -27,3 +27,7 @@
 ld_at_file
 HAVE_LD_AT_FILE
 your linker supports GNU style response files
+
+solaris_as
+HAVE_SOLARIS_AS
+using the Solaris assembler

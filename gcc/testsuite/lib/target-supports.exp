@@ -11942,7 +11942,7 @@ proc check_effective_target_sha { } {
 proc check_effective_target_avx512dq { } {
     # PR target/123415: In addition to the %k0 issue also affecting avx512bw,
     # Solaris/x86 as doesn't accept {sae} syntax.
-    if { [istarget *-*-solaris2*] && ![check_effective_target_gas] } {
+    if { [check_effective_target_solaris_as] } {
 	return 0;
     }
     return [check_no_compiler_messages avx512dq object {
@@ -11962,7 +11962,7 @@ proc check_effective_target_avx512dq { } {
 proc check_effective_target_avx512bw { } {
     # PR target/123415: Solaris/x86 doesn't accept %k0 as source/destination
     # in some cases.
-    if { [istarget *-*-solaris2*] && ![check_effective_target_gas] } {
+    if { [check_effective_target_solaris_as] } {
 	return 0;
     }
     return [check_no_compiler_messages avx512bw object {
