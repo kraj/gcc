@@ -1923,10 +1923,10 @@ symbols_update( size_t first, bool parsed_ok ) {
        * and its size is calculated above.  If that doesn't happen, it gets
        * flagged here.
        */
-      if( yydebug || parse_error_count() == 0 ) {
+      if( parse_error_count() == 0 ) {
         if( field->type == FldInvalid ) {
-          ERROR_FIELD(field, "line %d: %s %s requires PICTURE",
-                  field->line, field->level_str(), field->name);
+          ERROR_FIELD(field, "%s %s requires PICTURE",
+                  field->level_str(), field->name);
 
         } else {
           cbl_internal_error("%s: data item %s #" HOST_SIZE_T_PRINT_UNSIGNED
@@ -1985,9 +1985,10 @@ symbols_update( size_t first, bool parsed_ok ) {
     }
 
     if( field->type == FldInvalid ) {
-      dbgmsg("%s:%d: %s", __func__, __LINE__, field_str(field));
-      ERROR_FIELD(field, "line %d: %s %s requires PICTURE",
-              field->line, field->level_str(), field->name);
+      dbgmsg("%s:%d: %-20s %s", __func__, __LINE__,
+             cbl_field_type_str(field->type), field_str(field));
+      ERROR_FIELD(field, "%s %s requires PICTURE",
+              field->level_str(), field->name);
       continue;
     }
     if( is_numeric(field) && ! field->has_attr(constant_e) ) {

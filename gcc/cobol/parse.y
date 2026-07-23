@@ -4536,8 +4536,10 @@ data_descr1:    level_name
                   // Any field may become a group, so may have VALUE with no PICTURE
                   const auto stooges3 = (picture_clause_e |
                                          value_clause_e |
+                                         type_clause_e |
                                          usage_clause_e);
-                  if( ($data_clauses & stooges3) == value_clause_e ) { // only
+                  auto clauses($data_clauses);
+                  if( (clauses & stooges3) == value_clause_e ) { // only
                     $field->type = FldInvalid;
                     auto fig = cbl_figconst_of($field->data.original());
                     if( null_value_e != fig ) {
