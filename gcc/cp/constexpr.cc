@@ -3772,16 +3772,9 @@ replace_decl_r (tree *tp, int *walk_subtrees, void *data)
   if (TREE_CODE (*tp) == ADDR_EXPR)
     {
       d->pset->add (*tp);
-      auto save_changed = d->changed;
-      d->changed = false;
       cp_walk_tree (&TREE_OPERAND (*tp, 0), replace_decl_r, d, nullptr);
-      if (d->changed)
-	{
-	  cxx_mark_addressable (*tp);
-	  recompute_tree_invariant_for_addr_expr (*tp);
-	}
-      else
-	d->changed = save_changed;
+      cxx_mark_addressable (*tp);
+      recompute_tree_invariant_for_addr_expr (*tp);
       *walk_subtrees = 0;
     }
   else if (*tp == d->decl)
