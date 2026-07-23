@@ -26807,8 +26807,8 @@ $as_echo "#define HAVE_GAS_HIDDEN 1" >>confdefs.h
 
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking linker supports GNU style respones files" >&5
-$as_echo_n "checking linker supports GNU style respones files... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking linker supports GNU style response files" >&5
+$as_echo_n "checking linker supports GNU style response files... " >&6; }
 gcc_cv_ld_at_file=no
 if test $in_tree_ld = yes ; then
   gcc_cv_ld_at_file=yes

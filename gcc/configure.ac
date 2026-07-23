@@ -3413,7 +3413,7 @@ if test $gcc_cv_as_hidden = yes && test $gcc_cv_ld_hidden = yes; then
   [Define if your assembler and linker support .hidden.])
 fi
 
-AC_MSG_CHECKING(linker supports GNU style respones files)
+AC_MSG_CHECKING(linker supports GNU style response files)
 gcc_cv_ld_at_file=no
 if test $in_tree_ld = yes ; then
   gcc_cv_ld_at_file=yes
