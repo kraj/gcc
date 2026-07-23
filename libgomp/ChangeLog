@@ -1,3 +1,40 @@
+2026-07-22  Thomas Schwinge  <tschwinge@baylibre.com>
+
+	* target.c (gomp_target_init): Fix OpenMP reverse offload
+	capability checking.
+
+2026-07-22  Tobias Burnus  <tburnus@baylibre.com>
+	    Andrew Stubbs  <ams@baylibre.com>
+	    supers1ngular  <supers1ngular@baylibre.com>
+
+	* libgomp-plugin.h (GOMP_OFFLOAD_CAP_APU_SHARED_MEM,
+	GOMP_OFFLOAD_CAP_UNIFIED_ADDR, GOMP_OFFLOAD_CAP_REV_OFFLOAD): Add.
+	(GOMP_OFFLOAD_get_dev_caps): New prototype.
+	(GOMP_OFFLOAD_get_num_devices): Remove requirement argument.
+	* libgomp.h (struct gomp_device_descr): Add get_dev_caps_func.
+	* libgomp.texi (nvptx, AMD Radeon): Update for by-device
+	USM support.
+	* oacc-host.c (host_get_num_devices,
+	host_openacc_get_property): Update call.
+	* oacc-init.c (resolve_device, acc_init_1, acc_shutdown_1,
+	goacc_attach_host_thread_to_device, acc_get_num_devices,
+	acc_set_device_num, get_property_any): Likewise.
+	* plugin/plugin-gcn.c (is_integrated_apu): Remove.
+	(GOMP_OFFLOAD_get_caps): Mark unified address and
+	reverse offload as supported.
+	(GOMP_OFFLOAD_get_dev_caps): New.
+	(GOMP_OFFLOAD_get_num_devices): Remove requirements arg.
+	* plugin/plugin-nvptx.c (using_usm): Init with -1.
+	(GOMP_OFFLOAD_get_caps): Mark unified address and
+	reverse offload as supported.
+	(GOMP_OFFLOAD_get_dev_caps): New.
+	(GOMP_OFFLOAD_get_num_devices): Remove requirements arg.
+	(GOMP_OFFLOAD_is_accessible_ptr): Check for using_usm > 0.
+	* target.c (gomp_load_plugin_for_device): Load get_dev_caps.
+	(gomp_target_init): Change to by-device capabilities, skip
+	only those devices not devices types that do not support a
+	capability.
+
 2026-07-20  Paul-Antoine Arras  <parras@baylibre.com>
 
 	* config/gcn/teams.c (GOMP_distribute_static_worksharing_dispatch):

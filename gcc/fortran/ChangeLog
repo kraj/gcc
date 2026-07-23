@@ -1,3 +1,21 @@
+2026-07-22  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR fortran/78718
+	* resolve.cc (was_declared): Recognize the RESULT attribute so a
+	function's result variable is not mistaken for a host-associated
+	symbol of the same name.
+
+2026-07-22  Jerry DeLisle  <jvdelisle2@gmail.com>
+
+	PR fortran/53296
+	* trans-expr.cc (gfc_conv_procedure_call): Skip the redundant
+	function call added to the pre chain when no_function_call is
+	set and the character result length was already determined
+	without running the callee.
+	* trans-array.cc (gfc_conv_array_parameter): Convert an array
+	constructor's explicit character type-spec length directly
+	instead of using the first elements length.
+
 2026-07-21  Thomas Koenig  <tkoenig@gcc.gnu.org>
 
 	PR fortran/126333

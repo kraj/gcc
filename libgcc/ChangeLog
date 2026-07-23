@@ -1,3 +1,19 @@
+2026-07-22  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/lib1funcs.S (__mulqihi3): Use .branch_plus.
+	(__mulsidi3): Same.
+
+2026-07-22  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/lib1funcs-fixed.S (__mulQ64_work): Shave
+	off one more instruction.
+
+2026-07-22  Georg-Johann Lay  <avr@gjlay.de>
+
+	* config/avr/lib1funcs-fixed.S (__mulQ64_work): Tweak
+	overflow handling.  Use __negsi2 (non-saturating negation)
+	to negate.
+
 2026-07-21  Georg-Johann Lay  <avr@gjlay.de>
 
 	* config/avr/lib1funcs.S (__muldi3_6): Tweak.

@@ -1,3 +1,10 @@
+2026-07-22  Andrea Pinski  <andrew.pinski@oss.qualcomm.com>
+	    Arsen Arsenović  <aarsenovic@baylibre.com>
+
+	PR testsuite/126162
+	* maintainer_utils.py: Move to the older scheme which
+	is valid for MAINTAINERS.yml.
+
 2026-07-17  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
 
 	* test_installed (--with-auto-host-h): New option.

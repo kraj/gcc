@@ -1,3 +1,30 @@
+2026-07-22  James K. Lowden  <jklowden@cobolworx.com>
+
+	* scan.l: Make PARAMETER and friends unspecial outside CDF.
+
+2026-07-22  James K. Lowden  <jklowden@cobolworx.com>
+
+	* cdf.y (cdf::location): New function.
+	* scan_post.h (same_end): New function to match token ending
+	locations.
+	(same_token): New function to match two tokens.
+
+2026-07-22  James K. Lowden  <jklowden@cobolworx.com>
+
+	* cobol1.cc (enable_exceptions): Remove redundant message.
+	* lang-specs.h: Provide both forms of every warning.
+	* parse.y: Remove deleterious comment.
+
+2026-07-22  James K. Lowden  <jklowden@cobolworx.com>
+
+	* cbldiag.h (enum cbl_diag_id_t): New warnings.
+	* cobol1.cc (cobol_langhook_handle_option): Process warnings.
+	* gcobol.1: Document warnings and devices.
+	* lang-specs.h: Accept warngings.
+	* lang.opt: Define warnings.
+	* messages.cc: Associate warnings with dialects.
+	* parse.y: Parse new syntax.
+
 2026-07-21  James K. Lowden  <jklowden@cobolworx.com>
 
 	* cbldiag.h (struct cbl_loc_t): Assert is_trivially_copyable.

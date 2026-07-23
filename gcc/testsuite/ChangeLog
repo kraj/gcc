@@ -1,3 +1,60 @@
+2026-07-23  Andrew Pinski  <andrew.pinski@oss.qualcomm.com>
+
+	* gcc.dg/tree-ssa/pr124405.c: Look at phiopt1 instead of cselim.
+	* gcc.dg/tree-ssa/pr89430-2.c: Likewise.
+	* gcc.dg/tree-ssa/pr89430-7-comp-ref.c: Likewise.
+	* gcc.dg/tree-ssa/pr99473-1.c: Likewise.
+	* gcc.dg/tree-ssa/ssa-pre-17.c: Disable phiopt too.
+	* gcc.dg/tree-ssa/pr89430-1.c: Disable phiopt.
+	* gcc.dg/tree-ssa/pr89430-5.c: Disable phiopt.
+	* gcc.dg/tree-ssa/pr89430-6.c: Disable phiopt.
+	* gcc.dg/tree-ssa/pr89430-1a.c: New test.
+	* gcc.dg/tree-ssa/pr89430-5a.c: New test.
+	* gcc.dg/tree-ssa/pr89430-6a.c: New test.
+
+2026-07-23  Andrew Pinski  <andrew.pinski@oss.qualcomm.com>
+
+	* gcc.dg/tree-ssa/pr99473-1.c: Remove -fallow-store-data-races as it is not
+	needed with cond_store_replacement_limited.
+
+2026-07-22  Jerry DeLisle  <jvdelisle@gcc.gnu.org>
+
+	PR fortran/78718
+	* gfortran.dg/func_result_8.f90: New test.
+
+2026-07-22  Jerry DeLisle  <jvdelisle2@gmail.com>
+
+	PR fortran/53296
+	* gfortran.dg/array_constructor_59.f90: New test.
+
+2026-07-22  Georg-Johann Lay  <avr@gjlay.de>
+
+	* gcc.target/avr/fx24-mul.c: Renamed to...
+	* gcc.target/avr/fx64-mul-1.c: ...this.
+	* gcc.target/avr/fx64-mul-2.c: New test.
+	* gcc.target/avr/fx64-mul.h: New file.
+
+2026-07-22  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	* gcc.target/arm/reg_equal_test.c: Add require effective target
+	cortex-a53 for test.
+
+2026-07-22  Kishan Parmar  <kishan@linux.ibm.com>
+
+	* gcc.target/powerpc/dmf-xxacc.c: New test.
+	* gcc.target/powerpc/nodmf-xxacc.c: New test.
+
+2026-07-22  Juergen Christ  <jchrist@linux.ibm.com>
+
+	* gcc.dg/tree-ssa/gen-vect-11.c: Adjust.
+	* gcc.dg/tree-ssa/gen-vect-11a.c: Adjust.
+	* gcc.dg/vect/vect-early-break_52.c: Adjust.
+	* gcc.dg/vect/vect-early-break_53.c: Adjust.
+	* gcc.dg/vect/vect-early-break_64.c: Adjust.
+	* gcc.dg/vect/vect-uncounted_2.c: Adjust.
+	* lib/target-supports.exp: Add s390x to early-break
+	vectorization
+
 2026-07-21  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
 
 	PR tree-optimization/124663

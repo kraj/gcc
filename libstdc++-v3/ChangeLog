@@ -1,3 +1,36 @@
+2026-07-22  Jonathan Wakely  <jwakely@redhat.com>
+
+	* testsuite/20_util/variant/lwg3990.cc: Change et to c++17.
+
+2026-07-22  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* config/abi/post/i386-solaris/baseline_symbols.txt: Regenerate.
+	* config/abi/post/i386-solaris/amd64/baseline_symbols.txt:
+	Likewise.
+	* config/abi/post/sparc-solaris/baseline_symbols.txt: Likewise.
+	* config/abi/post/sparc-solaris/sparcv9/baseline_symbols.txt:
+	Likewise.
+
+2026-07-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* config/abi/post/aarch64-linux-gnu/baseline_symbols.txt: Regenerate
+	from 16 branch.
+	* config/abi/post/hppa-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/i386-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/i486-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/ia64-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/m68k-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/powerpc-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/powerpc64-linux-gnu/32/baseline_symbols.txt:
+	Likewise.
+	* config/abi/post/powerpc64-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/riscv64-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/s390x-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/sparc64-linux-gnu/32/baseline_symbols.txt: Likewise.
+	* config/abi/post/sparc64-linux-gnu/baseline_symbols.txt: Likewise.
+	* config/abi/post/x86_64-linux-gnu/32/baseline_symbols.txt: Likewise.
+	* config/abi/post/x86_64-linux-gnu/x32/baseline_symbols.txt: Likewise.
+
 2026-07-21  Tomasz Kamiński  <tkaminsk@redhat.com>
 
 	* testsuite/26_numerics/random/uniform_real_distribution/operators/gencanon.cc:

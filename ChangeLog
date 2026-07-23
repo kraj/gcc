@@ -1,3 +1,8 @@
+2026-07-22  Andrea Pinski  <andrew.pinski@oss.qualcomm.com>
+
+	* MAINTAINERS.yml: Update my name.
+	* MAINTAINERS: Regenerate.
+
 2026-07-16  Craig Blackmore  <craig.blackmore@embecosm.com>
 
 	* MAINTAINERS (Write After Approval): Regenerate.
