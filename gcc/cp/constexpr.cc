@@ -4572,6 +4572,13 @@ cxx_eval_call_expression (const constexpr_ctx *ctx, tree t,
 	      cacheable = false;
 	      *jump_target = jmp_target;
 	    }
+	  else if (!*non_constant_p && TREE_THIS_VOLATILE (fun))
+	    {
+	      /* Return from a [[noreturn]] function.  */
+	      if (!ctx->quiet)
+		error ("%<[[noreturn]]%> call returns");
+	      *non_constant_p = true;
+	    }
 	  else if (DECL_CONSTRUCTOR_P (fun))
 	    /* This can be null for a subobject constructor call, in
 	       which case what we care about is the initialization
