@@ -31,3 +31,7 @@ your linker supports GNU style response files
 solaris_as
 HAVE_SOLARIS_AS
 using the Solaris assembler
+
+solaris_ld
+HAVE_SOLARIS_LD
+using the Solaris linker
