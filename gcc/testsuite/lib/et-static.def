@@ -52,6 +52,10 @@ shf_gnu_retain
 HAVE_GAS_SHF_GNU_RETAIN
 this target supports SHF_GNU_RETAIN
 
+shf_link_order
+HAVE_GAS_SECTION_LINK_ORDER
+this target supports SHF_LINK_ORDER
+
 sht_init_array
 HAVE_INITFINI_ARRAY_SUPPORT
 this target supports SHT_INIT_ARRAY

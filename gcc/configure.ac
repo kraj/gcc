@@ -3793,7 +3793,7 @@ case "${target}" in
 esac
 AC_DEFINE_UNQUOTED(HAVE_GAS_SECTION_LINK_ORDER,
   [`if test $gcc_cv_as_section_link_order = yes; then echo 1; else echo 0; fi`],
-  [Define 0/1 if your assembler supports 'o' flag in .section directive.])
+  [Define 0/1 if your assembler and linker support SHF_LINK_ORDER.])
 
 gcc_GAS_CHECK_FEATURE(section merging support, gcc_cv_as_shf_merge,
  [$fw_as_opt],
