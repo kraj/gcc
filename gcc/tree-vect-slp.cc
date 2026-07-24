@@ -1327,26 +1327,16 @@ vect_build_slp_tree_1 (vec_info *vinfo, unsigned char *swap,
 
 	  /* Shift arguments should be equal in all the packed stmts for a
 	     vector shift with scalar shift operand.  */
-	  if (rhs_code == LSHIFT_EXPR || rhs_code == RSHIFT_EXPR
+	  if (rhs_code == LSHIFT_EXPR
+	      || rhs_code == RSHIFT_EXPR
 	      || rhs_code == LROTATE_EXPR
 	      || rhs_code == RROTATE_EXPR)
 	    {
 	      /* First see if we have a vector/vector shift.  */
 	      if (!directly_supported_p (rhs_code, vectype, optab_vector))
 		{
-		  /* No vector/vector shift, try for a vector/scalar shift.  */
-		  if (!directly_supported_p (rhs_code, vectype, optab_scalar))
-		    {
-		      if (dump_enabled_p ())
-			dump_printf_loc (MSG_MISSED_OPTIMIZATION, vect_location,
-					 "Build SLP failed: "
-					 "op not supported by target.\n");
-		      if (is_a <bb_vec_info> (vinfo) && i != 0)
-			continue;
-		      /* Fatal mismatch.  */
-		      matches[0] = false;
-		      return false;
-		    }
+		  /* No vector/vector shift, arrange for a vector/scalar
+		     SLP layout.  */
 		  need_same_oprnds = true;
 		  first_op1 = gimple_assign_rhs2 (stmt);
 		}
