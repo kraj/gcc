@@ -1,3 +1,25 @@
+2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/118407
+	* gcc.dg/tree-ssa/predcom-8.c: Use arm_neon as xfail condition.
+
+2026-07-23  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/126215
+	* g++.dg/cpp1z/constexpr-nsdmi1.C: New test.
+
+2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124112
+	* gcc.dg/vect/vect-early-break_65.c: Prevent packing enum to a
+	smaller object.
+
 2026-07-22  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
 
 	Backported from master:

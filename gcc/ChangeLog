@@ -1,3 +1,11 @@
+2026-07-23  Tobias Burnus  <tburnus@baylibre.com>
+
+	Backported from master:
+	2026-07-23  Tobias Burnus  <tburnus@baylibre.com>
+
+	* config/gcn/gcn-devices.def (gfx9-4-generic): Set sram-ecc
+	default to HSACO_ATTR_ANY.
+
 2026-07-21  Vineet Gupta  <vineet.gupta@linux.dev>
 
 	Backported from master:
