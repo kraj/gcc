@@ -7260,23 +7260,23 @@ expand_builtin_atomic_test_and_set (tree exp, rtx target)
 static tree
 fold_builtin_atomic_always_lock_free (tree arg0, tree arg1)
 {
-  int size;
+  HOST_WIDE_INT size;
   machine_mode mode;
   unsigned int mode_align, type_align;
 
-  if (TREE_CODE (arg0) != INTEGER_CST)
+  if (!tree_fits_shwi_p (arg0))
     return NULL_TREE;
 
   /* We need a corresponding integer mode for the access to be lock-free.  */
-  size = INTVAL (expand_normal (arg0)) * BITS_PER_UNIT;
+  size = tree_to_shwi (arg0) * BITS_PER_UNIT;
   if (!int_mode_for_size (size, 0).exists (&mode))
     return boolean_false_node;
 
   mode_align = GET_MODE_ALIGNMENT (mode);
 
-  if (TREE_CODE (arg1) == INTEGER_CST)
+  if (tree_fits_uhwi_p (arg1))
     {
-      unsigned HOST_WIDE_INT val = UINTVAL (expand_normal (arg1));
+      unsigned HOST_WIDE_INT val = tree_to_uhwi (arg1);
 
       /* Either this argument is null, or it's a fake pointer encoding
          the alignment of the object.  */
