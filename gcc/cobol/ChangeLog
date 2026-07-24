@@ -1,3 +1,12 @@
+2026-07-23  James K. Lowden  <jklowden@cobolworx.com>
+
+	* gcobc: Consolidate warning cases and update comments.
+
+2026-07-23  James K. Lowden  <jklowden@cobolworx.com>
+
+	* parse.y: Add value_clause_e to bitmask for test.
+	* symbols.cc (symbols_update): Improve diagnostic message.
+
 2026-07-22  James K. Lowden  <jklowden@cobolworx.com>
 
 	* scan.l: Make PARAMETER and friends unspecial outside CDF.

@@ -1,3 +1,212 @@
+2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/118407
+	* gcc.dg/tree-ssa/predcom-8.c: Use arm_neon as xfail condition.
+
+2026-07-23  Surya Kumari Jangala  <jskumari@linux.ibm.com>
+
+	* gcc.target/powerpc/dmf-builtin-2.c: New test.
+
+2026-07-23  Odysseas Georgoudis  <odygrd@hotmail.com>
+
+	PR middle-end/122715
+	* gcc.dg/pr122715.c: New test.
+
+2026-07-23  Surya Kumari Jangala  <jskumari@linux.ibm.com>
+
+	* gcc.target/powerpc/dmf-builtin-1.c: New test.
+
+2026-07-23  Surya Kumari Jangala  <jskumari@linux.ibm.com>
+
+	* gcc.target/powerpc/dmf-extract512.c: New test.
+	* gcc.target/powerpc/dmf-disassemble-dmr.c: New test.
+
+2026-07-23  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/112908
+	* g++.dg/ext/is_constructible8.C: Move
+	__reference_*_from_temporary testing to a new test.
+	* g++.dg/ext/reference_xes_from_temporary2.C: New test.
+	* g++.dg/ext/reference_xes_from_temporary3.C: New test.
+
+2026-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/126354
+	* g++.dg/cpp1y/pr126354.C: New test.
+	* g++.dg/cpp26/pr126354.C: New test.
+
+2026-07-23  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/126215
+	* g++.dg/cpp1z/constexpr-nsdmi1.C: New test.
+
+2026-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* g++.dg/cpp0x/anon-union4.C: New test.
+	* g++.dg/reflect/anon6.C: New test.
+	* g++.dg/reflect/anon7.C: New test.
+	* g++.dg/reflect/anon8.C: New test.
+	* g++.dg/reflect/anon9.C: New test.
+	* g++.dg/template/anonunion3.C: Expect an error.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* lib/target-supports.exp
+	(check_effective_target_o_flag_in_section): Remove.
+	* lib/et-static.def (shf_link_order): New effective target.
+	* g++.dg/pr93195a.C: Require shf_link_order.
+	* gcc.dg/pr110729.c: Likewise.
+
+2026-07-23  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/126028
+	* gcc.dg/vect/bb-slp-reduc-1.c: New testcase for a two-lane
+	in-order reduction.
+	* c-c++-common/vector-subscript-4.c: Use -fno-vectorize.
+	* g++.target/i386/pr114187.C: Narrow pattern to better
+	only catch the reported issue.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* lib/et-static.def (shf_gnu_retain, sht_init_array): New
+	effective targets.
+	* lib/target-supports.exp
+	(check_effective_target_R_flag_in_section): Remove.
+	(check_effective_target_gnu_retain): New proc.
+	* c-c++-common/attr-retain-1.c: Use gnu_retain
+	instead of R_flag_in_section.
+	* c-c++-common/attr-retain-2.c: Likewise.
+	* c-c++-common/attr-retain-3.c: Likewise.
+	* c-c++-common/attr-retain-4.c: Likewise.
+	* c-c++-common/attr-retain-5.c: Likewise.
+	* c-c++-common/attr-retain-6.c: Likewise.
+	* c-c++-common/attr-retain-7.c: Likewise.
+	* c-c++-common/attr-retain-8.c: Likewise.
+	* c-c++-common/attr-retain-9.c: Likewise.
+	* c-c++-common/attr-retain-10.c: Likewise.
+	* c-c++-common/attr-retain-11.c: Likewise.
+	* c-c++-common/attr-used-2.c: Likewise.
+	* c-c++-common/attr-used-3.c: Likewise.
+	* c-c++-common/attr-used-4.c: Likewise.
+	* c-c++-common/attr-used-5.c: Likewise.
+	* c-c++-common/attr-used-6.c: Likewise.
+	* c-c++-common/attr-used-7.c: Likewise.
+	* c-c++-common/attr-used-8.c: Likewise.
+	* c-c++-common/attr-used-9.c: Likewise.
+	* c-c++-common/attr-used.c: Likewise.
+	* c-c++-common/pr99113.c: Likewise.
+	* gcc.c-torture/compile/attr-retain-1.c: Likewise.
+	* gcc.c-torture/compile/attr-retain-2.c: Likewise.
+	* gcc.c-torture/compile/attr-used-retain-1.c: Likewise.
+	* gcc.c-torture/compile/attr-used-retain-2.c: Likewise.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* lib/et-static.def (code_6_gottpoff_reloc): New effective target.
+	(fentry): Likewise.
+	(got32x_reloc): Likewise.
+	(pie_copyreloc): Likewise.
+	(powerpc_as_p10_htm): Likewise.
+	(tls_get_addr_via_got): Likewise.
+	* lib/target-supports.exp (check_effective_target_pie_copyreloc):
+	Remove.
+	(check_effective_target_code_6_gottpoff_reloc): Likewise.
+	(check_effective_target_got32x_reloc): Likwise.
+	(check_effective_target_tls_get_addr_via_got): Likewise.
+	(check_effective_target_powerpc_as_p10_htm): Likewise.
+	(check_effective_target_fentry): Likewise.
+	* gcc.target/i386/pr120881-2a.c: Restrict to 64-bit x86.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* lib/et-static.def (solaris_ld): New effective target.
+	* g++.dg/eh/unwind-direct.C: Check solaris_ld instead of !gld.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* lib/et-static.def (solaris_as): New effective target.
+	* g++.dg/abi/lambda-static-1.C: Check solaris_as instead of !gas.
+	* g++.dg/debug/dwarf2/nested-4.C: Likewise.
+	* g++.dg/eh/pr119507.C: Likewise.
+	* gcc.c-torture/compile/pr61159.c: Likewise.
+	* gcc.dg/attr-weakref-1.c: Likewise.
+	* gcc.dg/tree-ssa/cswtch-6.c: Likewise.
+	* gcc.dg/tree-ssa/cswtch-7.c: Likewise.
+	* gcc.target/i386/avx512cd-vpbroadcastmb2q-2.c: Likewise.
+	* gcc.target/i386/avx512cd-vpbroadcastmw2d-2.c: Likewise.
+	* gcc.target/i386/pr91298-1.c: Likewise.
+	* gcc.target/i386/pr91298-2.c: Likewise.
+	* lib/target-supports.exp (check_effective_target_avx512dq):
+	Likewise.
+	(check_effective_target_avx512bw): Likewise.
+
+2026-07-23  Hu, Lin1  <lin1.hu@intel.com>
+
+	* gcc.target/i386/avx10_2-satcvt-1.c: Update intrin names and
+	add _si alias tests.
+	* gcc.target/i386/sse-14.c: Ditto.
+	* gcc.target/i386/sse-22.c: Ditto.
+	* gcc.target/i386/avx10_2-vcvttsd2sis-2.c: Update intrin names.
+	* gcc.target/i386/avx10_2-vcvttsd2usis-2.c: Ditto.
+	* gcc.target/i386/avx10_2-vcvttss2sis-2.c: Ditto.
+	* gcc.target/i386/avx10_2-vcvttss2usis-2.c: Ditto.
+	* gcc.target/i386/zext-avx10-1.c: Ditto.
+
+2026-07-23  liuhongt  <hongtao.liu@intel.com>
+
+	PR target/126160
+	* gcc.target/i386/pr126160.c: New test.
+	* gcc.target/i386/pr126160-2.c: New test.
+
+2026-07-23  Peter Bergner  <bergner@linux.ibm.com>
+	    Surya Kumari Jangala  <jskumari@linux.ibm.com>
+	    Kishan Parmar  <kishan@linux.ibm.com>
+
+	* gcc.target/powerpc/dmf-build-dmr.c: New test.
+	* gcc.target/powerpc/dmf-builtin.c: New test.
+
+2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124112
+	* gcc.dg/vect/vect-early-break_65.c: Prevent packing enum to a
+	smaller object.
+
+2026-07-23  Manjunath Matti  <mmatti@linux.ibm.com>
+
+	* gcc.target/powerpc/dmr1024-alignment.c: New test case.
+	* gcc.target/powerpc/dmr1024-compile.c: Likewise.
+	* gcc.target/powerpc/dmr1024-invalid-use-1.c: Likewise.
+	* gcc.target/powerpc/dmr1024-invalid-use-2.c: Likewise.
+	* gcc.target/powerpc/dmf-no-mma.c: Likewise.
+
+2026-07-23  Pan Li  <pan2.li@intel.com>
+
+	* gcc.target/riscv/rvv/base/pr112431-13-0.c: Remove xfail.
+
+2026-07-23  Pan Li  <pan2.li@intel.com>
+
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f16-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f16-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f16-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f16-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f16-mf4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f32-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f32-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f32-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_xu-f32-mf2.c: New test.
+
+2026-07-23  Pan Li  <pan2.li@intel.com>
+
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f16-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f16-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f16-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f16-mf2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f16-mf4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f32-m1.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f32-m2.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f32-m4.c: New test.
+	* gcc.target/riscv/rvv/autovec/group_overlap/vfwcvt_rtz_x-f32-mf2.c: New test.
+
 2026-07-23  Andrew Pinski  <andrew.pinski@oss.qualcomm.com>
 
 	* gcc.dg/tree-ssa/pr124405.c: Look at phiopt1 instead of cselim.

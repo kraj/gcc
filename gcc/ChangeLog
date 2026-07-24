@@ -1,3 +1,312 @@
+2026-07-23  John David Anglin  <danglin@gcc.gnu.org>
+
+	* crc-verification.cc (sb_match): Use HOST_SIZE_T_PRINT_UNSIGNED
+	instead of "%zu".
+	(lfsr_and_crc_bits_match): Likewise.
+
+2026-07-23  Surya Kumari Jangala  <jskumari@linux.ibm.com>
+
+	* config/rs6000/mma.md (UNSPEC_DMF_DMXVF16GERX2): New UNSPEC entry.
+	(UNSPEC_DMF_DMXVF16GERX2PP): Likewise.
+	(UNSPEC_DMF_DMXVF16GERX2PN): Likewise.
+	(UNSPEC_DMF_DMXVF16GERX2NP): Likewise.
+	(UNSPEC_DMF_DMXVF16GERX2NN): Likewise.
+	(UNSPEC_DMF_PMDMXVF16GERX2): Likewise.
+	(UNSPEC_DMF_PMDMXVF16GERX2PP): Likewise.
+	(UNSPEC_DMF_PMDMXVF16GERX2PN): Likewise.
+	(UNSPEC_DMF_PMDMXVF16GERX2NP): Likewise.
+	(UNSPEC_DMF_PMDMXVF16GERX2NN): Likewise.
+	(DMF_PV): Add UNSPEC_DMF_DMXVF16GERX2.
+	(DMF_DPV): Add f16 variants.
+	(DMF_PVI8I4I2): Add UNSPEC_DMF_PMDMXVF16GERX2.
+	(DMF_DPVI8I4I2): Add f16 prefixed variants.
+	(pv): Add dmxvf16gerx2 attribute.
+	(dpv): Add f16 attributes.
+	(pvi8i4i2): Add pmdmxvf16gerx2 attribute.
+	(dpvi8i4i2): Add f16 prefixed attributes.
+	* config/rs6000/rs6000-builtins.def (__builtin_mma_dmxvf16gerx2): New
+	builtin.
+	(__builtin_mma_dmxvf16gerx2pp): Likewise.
+	(__builtin_mma_dmxvf16gerx2pn): Likewise.
+	(__builtin_mma_dmxvf16gerx2np): Likewise.
+	(__builtin_mma_dmxvf16gerx2nn): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2pp): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2pn): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2np): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2nn): Likewise.
+	(__builtin_mma_dmxvf16gerx2_internal): New internal builtin.
+	(__builtin_mma_dmxvf16gerx2pp_internal): Likewise.
+	(__builtin_mma_dmxvf16gerx2pn_internal): Likewise.
+	(__builtin_mma_dmxvf16gerx2np_internal): Likewise.
+	(__builtin_mma_dmxvf16gerx2nn_internal): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2_internal): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2pp_internal): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2pn_internal): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2np_internal): Likewise.
+	(__builtin_mma_pmdmxvf16gerx2nn_internal): Likewise.
+	* doc/extend.texi (PowerPC Matrix-Multiply Assist Built-in Functions):
+	Document new MMA+ builtins for f16 operations.
+
+2026-07-23  Odysseas Georgoudis  <odygrd@hotmail.com>
+
+	PR middle-end/122715
+	* match.pd: Fold IFN_AVG_FLOOR and IFN_AVG_CEIL with equal
+	operands.
+
+2026-07-23  Philipp Tomsich  <philipp.tomsich@vrull.eu>
+
+	PR rtl-optimization/126347
+	* ifcvt.cc (noce_emit_store_flag): Return NULL_RTX when the
+	comparison code is UNKNOWN.
+
+2026-07-23  Surya Kumari Jangala  <jskumari@linux.ibm.com>
+
+	* config/rs6000/mma.md (UNSPEC_DMF_DMXVI8GERX4SPP): New UNSPEC entry.
+	(UNSPEC_DMF_PMDMXVI8GERX4SPP): Likewise.
+	(UNSPEC_DMF_DMXVBF16GERX2): Likewise.
+	(UNSPEC_DMF_DMXVBF16GERX2PP): Likewise.
+	(UNSPEC_DMF_DMXVBF16GERX2PN): Likewise.
+	(UNSPEC_DMF_DMXVBF16GERX2NP): Likewise.
+	(UNSPEC_DMF_DMXVBF16GERX2NN): Likewise.
+	(UNSPEC_DMF_PMDMXVBF16GERX2): Likewise.
+	(UNSPEC_DMF_PMDMXVBF16GERX2PP): Likewise.
+	(UNSPEC_DMF_PMDMXVBF16GERX2PN): Likewise.
+	(UNSPEC_DMF_PMDMXVBF16GERX2NP): Likewise.
+	(UNSPEC_DMF_PMDMXVBF16GERX2NN): Likewise.
+	(DMF_PV): Add UNSPEC_DMF_DMXVBF16GERX2.
+	(DMF_DPV): Add bf16 and int8 signed accumulate variants.
+	(DMF_DPVI8I4I4): Add UNSPEC_DMF_PMDMXVI8GERX4SPP.
+	(DMF_PVI8I4I2): New int iterator.
+	(DMF_DPVI8I4I2): Likewise.
+	(pv): Add dmxvbf16gerx2 attribute.
+	(apv): Removed dmxvi8gerx4pp attribute.
+	(dpv): New attribute.
+	(dpvi8i4i4): Add pmdmxvi8gerx4spp attribute.
+	(pvi8i4i2): New attribute.
+	(dpvi8i4i2): Likewise.
+	(dmf_<dpv>): Rename from dmf_<apv> and update to use dpv attribute.
+	(dmf_<pvi8i4i2>): New insn pattern.
+	(dmf_<dpvi8i4i2>): Likewise.
+	* config/rs6000/rs6000-builtins.def (__builtin_mma_dmxvi8gerx4spp): New
+	builtin.
+	(__builtin_mma_pmdmxvi8gerx4spp): Likewise.
+	(__builtin_mma_dmxvbf16gerx2): Likewise.
+	(__builtin_mma_dmxvbf16gerx2pp): Likewise.
+	(__builtin_mma_dmxvbf16gerx2pn): Likewise.
+	(__builtin_mma_dmxvbf16gerx2np): Likewise.
+	(__builtin_mma_dmxvbf16gerx2nn): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2pp): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2pn): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2np): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2nn): Likewise.
+	(__builtin_mma_dmxvi8gerx4spp_internal): New internal builtin.
+	(__builtin_mma_pmdmxvi8gerx4spp_internal): Likewise.
+	(__builtin_mma_dmxvbf16gerx2_internal): Likewise.
+	(__builtin_mma_dmxvbf16gerx2pp_internal): Likewise.
+	(__builtin_mma_dmxvbf16gerx2pn_internal): Likewise.
+	(__builtin_mma_dmxvbf16gerx2np_internal): Likewise.
+	(__builtin_mma_dmxvbf16gerx2nn_internal): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2_internal): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2pp_internal): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2pn_internal): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2np_internal): Likewise.
+	(__builtin_mma_pmdmxvbf16gerx2nn_internal): Likewise.
+	* doc/extend.texi (PowerPC Matrix-Multiply Assist Built-in Functions):
+	Document new MMA+ builtins for int8 and bf16 operations.
+
+2026-07-23  Surya Kumari Jangala  <jskumari@linux.ibm.com>
+
+	* config/rs6000/rs6000-builtins.def (__builtin_dmr_extract512): New
+	built-in.
+	(__builtin_disassemble_dmr): Likewise.
+	(__builtin_dmr_extract512_internal): New internal built-in.
+	* config/rs6000/rs6000-builtin.cc (rs6000_gimple_fold_mma_builtin):
+	Exempt RS6000_BIF_DISASSEMBLE_DMR from the early-return guard.
+	Generate appropriate gimple code for the extract builtins.
+
+2026-07-23  Tobias Burnus  <tburnus@baylibre.com>
+
+	* config/gcn/gcn-devices.def (gfx9-4-generic): Set sram-ecc
+	default to HSACO_ATTR_ANY.
+
+2026-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* configure.ac: Fix a typo, respones -> response.
+	* configure: Regenerate.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* configure.ac (HAVE_GAS_SECTION_LINK_ORDER): Clarify comment.
+	* config.in: Regenerate.
+	* doc/sourcebuild.texi (Effective-Target Keywords)
+	(o_flag_in_section): Rename to shf_link_order.  Update description.
+
+2026-07-23  Richard Biener  <rguenther@suse.de>
+
+	PR tree-optimization/126028
+	* tree-vect-slp.cc (vect_slp_check_for_roots): Move
+	fold-left reduction check ...
+	(vectorizable_bb_reduc_epilogue): ... here and allow
+	two reduction lanes to be unaffected.  Handle the two
+	vector lane without target support for the reduction.
+	(vectorize_slp_instance_root_stmt): Implement manual two-lane
+	reduction.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* configure.ac (HAVE_GAS_SHF_GNU_RETAIN): Clarify comment.
+	* config.in: Regenerate.
+	* doc/sourcebuild.texi (Effective-Target Keywords)
+	(R_flag_in_section): Remove.
+	(Effective-Target Keywords, gnu_retain): New keyword.
+	(Effective-Target Keywords, shf_gnu_retain): Likewise.
+	(Effective-Target Keywords, sht_init_array): Likewise.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* doc/sourcebuild.texi (Effective-Target Keywords, Other
+	attributes): Document solaris_ld.
+
+2026-07-23  Rainer Orth  <ro@CeBiTec.Uni-Bielefeld.DE>
+
+	* doc/sourcebuild.texi (Effective-Target Keywords, Other
+	attributes): Document solaris_as.
+
+2026-07-23  Hu, Lin1  <lin1.hu@intel.com>
+
+	* config/i386/avx10_2satcvtintrin.h
+	(_mm_cvtts_sd_i32): Renamed from _mm_cvtts_sd_epi32.
+	(_mm_cvtts_sd_si32): New alias of _mm_cvtts_sd_i32.
+	(_mm_cvtts_sd_u32): Renamed from _mm_cvtts_sd_epu32.
+	(_mm_cvtts_ss_i32): Renamed from _mm_cvtts_ss_epi32.
+	(_mm_cvtts_ss_si32): New alias of _mm_cvtts_ss_i32.
+	(_mm_cvtts_ss_u32): Renamed from _mm_cvtts_ss_epu32.
+	(_mm_cvtts_roundsd_i32): Renamed from _mm_cvtts_roundsd_epi32.
+	(_mm_cvtts_roundsd_si32): New alias of _mm_cvtts_roundsd_i32.
+	(_mm_cvtts_roundsd_u32): Renamed from _mm_cvtts_roundsd_epu32.
+	(_mm_cvtts_roundss_i32): Renamed from _mm_cvtts_roundss_epi32.
+	(_mm_cvtts_roundss_si32): New alias of _mm_cvtts_roundss_i32.
+	(_mm_cvtts_roundss_u32): Renamed from _mm_cvtts_roundss_epu32.
+	(_mm_cvtts_sd_i64): Renamed from _mm_cvtts_sd_epi64.
+	(_mm_cvtts_sd_si64): New alias of _mm_cvtts_sd_i64.
+	(_mm_cvtts_sd_u64): Renamed from _mm_cvtts_sd_epu64.
+	(_mm_cvtts_ss_i64): Renamed from _mm_cvtts_ss_epi64.
+	(_mm_cvtts_ss_si64): New alias of _mm_cvtts_ss_i64.
+	(_mm_cvtts_ss_u64): Renamed from _mm_cvtts_ss_epu64.
+	(_mm_cvtts_roundsd_i64): Renamed from _mm_cvtts_roundsd_epi64.
+	(_mm_cvtts_roundsd_si64): New alias of _mm_cvtts_roundsd_i64.
+	(_mm_cvtts_roundsd_u64): Renamed from _mm_cvtts_roundsd_epu64.
+	(_mm_cvtts_roundss_i64): Renamed from _mm_cvtts_roundss_epi64.
+	(_mm_cvtts_roundss_si64): New alias of _mm_cvtts_roundss_i64.
+	(_mm_cvtts_roundss_u64): Renamed from _mm_cvtts_roundss_epu64.
+
+2026-07-23  liuhongt  <hongtao.liu@intel.com>
+
+	PR target/126160
+	* config/i386/sse.md (lrint<ssePSmode2lower><mode>2): New expander.
+	(lrintv2sfv2di2): Likewise.
+	(ssedfsimode): New mode attribute.
+	(ssedfsimodelower): Likewise.
+	(lrint<mode><ssedfsimodelower>2): New expander.
+
+2026-07-23  Avinash Jayakar  <avinashd@linux.ibm.com>
+	    Vijay Shankar  <vijay@linux.ibm.com>
+
+	* config/rs6000/mma.md (mma_xxsetaccz): Use wD constraint and
+	accumulator operand.
+	(mma_<vv>): Likewise.
+	(mma_<avv>): Likewise.
+	(mma_<pv>): Likewise.
+	(mma_<apv>): Likewise.
+	(mma_<vvi4i4i8>): Likewise.
+	(mma_<avvi4i4i8>): Likewise.
+	(mma_<vvi4i4i2>): Likewise.
+	(mma_<avvi4i4i2>): Likewise.
+	(mma_<vvi4i4>): Likewise.
+	(mma_<avvi4i4>): Likewise.
+	(mma_<pvi4i2>): Likewise.
+	(mma_<apvi4i2>): Likewise.
+	(mma_<vvi4i4i4>): Likewise.
+	(mma_<avvi4i4i4>): Likewise.
+	* config/rs6000/rs6000.cc (print_operand): Print DMR register
+	numbers if dense math option enabled.
+
+2026-07-23  Aldy Hernandez  <aldy@quesejoda.com>
+
+	* value-range.cc (frange_cmp): New.
+	(frange::combine_zeros): Remove.
+	(frange::union_): Use frange_cmp to merge endpoints.
+	(frange::intersect): Likewise.
+	(frange::contains_p): Use frange_cmp.
+	(frange::verify_range): Use frange_cmp.
+	* value-range.h (class frange): Remove combine_zeros.
+
+2026-07-23  Peter Bergner  <bergner@linux.ibm.com>
+	    Surya Kumari Jangala  <jskumari@linux.ibm.com>
+	    Kishan Parmar  <kishan@linux.ibm.com>
+
+	* config/rs6000/mma.md (MAX_MMA_OPERANDS): Increase from 7 to 9.
+	(UNSPEC_DMF_DMXOR): New unspec.
+	(UNSPEC_DMF_DMXVI8GERX4): Likewise.
+	(UNSPEC_DMF_DMXVI8GERX4PP): Likewise.
+	(UNSPEC_DMF_PMDMXVI8GERX4): Likewise.
+	(UNSPEC_DMF_PMDMXVI8GERX4PP): Likewise.
+	(UNSPEC_DMF_DMSETDMRZ): Likewise.
+	(DMF_PV): New iterator.
+	(DMF_DPV): Likewise.
+	(DMF_PVI8I4I4): Likewise.
+	(DMF_DPVI8I4I4): Likewise.
+	(pv): Add DMF mappings.
+	(apv): Likewise.
+	(pvi8i4i4): New attribute.
+	(dpvi8i4i4): Likewise.
+	(dmf_build_dmr): New define_expand.
+	(dmf_dmsetdmrz): New insn.
+	(dmf_dmxor): Likewise.
+	(dmf_<pv>): New insn pattern.
+	(dmf_<apv>): Likewise.
+	(dmf_<pvi8i4i4>): Likewise.
+	(dmf_<dpvi8i4i4>): Likewise.
+	* config/rs6000/rs6000-builtin.cc (rs6000_gimple_fold_mma_builtin): Add
+	DMF builtin support. Handle DMR pass-by-reference semantics.
+	Support up to nine builtin operands.
+	(mma_expand_builtin): Likewise.
+	(rs6000_expand_builtin): Handle DMF builtins.
+	* config/rs6000/rs6000-builtins.def: Add DMF and MMA+ builtin
+	definitions.
+	* doc/extend.texi
+	(PowerPC Matrix-Multiply Assist Built-in Functions): Document
+	MMA+ builtins.
+	(PowerPC Dense Math Facility Built-in Functions): Document DMF builtins.
+
+2026-07-23  Manjunath Matti  <mmatti@linux.ibm.com>
+
+	* config/rs6000/rs6000.h (RS6000_BTI_dmr1024): New enumerator.
+	(RS6000_BTI_ptr_dmr1024): New enumerator.
+	(dmr1024_type_node): New macro.
+	(ptr_dmr1024_type_node): New macro.
+	* config/rs6000/rs6000-builtin.cc (rs6000_type_string): Handle
+	dmr1024_type_node.
+	(rs6000_init_builtins): Register the __dmr1024 opaque type and
+	its pointer-to-const variant, with 512-bit alignment.
+	* config/rs6000/rs6000.cc (rs6000_mangle_type): Handle
+	dmr1024_type_node.
+	(rs6000_invalid_conversion): Reject conversions to/from TDOmode.
+	(rs6000_opaque_type_invalid_use_p): Gate __vector_quad and
+	__vector_pair on TARGET_MMA and __dmr1024 on TARGET_DMF
+	independently, and require -mdense-math for __dmr1024.
+
+2026-07-23  Filip Kastl  <fkastl@suse.cz>
+
+	* lto-streamer.h: Remove the field 'stream_linemap_order' from
+	the class 'lto_location_cache'.
+
+2026-07-23  Pan Li  <pan2.li@intel.com>
+
+	* config/riscv/vector.md: Leverage Wvr constraint.
+
 2026-07-23  Andrew Pinski  <andrew.pinski@oss.qualcomm.com>
 
 	* tree-ssa-phiopt.cc (factor_out_all): Call

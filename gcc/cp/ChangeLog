@@ -1,3 +1,41 @@
+2026-07-23  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/112908
+	* method.cc (build_prvalue_trait_object): New.
+	(ref_xes_from_temporary): Use build_prvalue_trait_object.
+	Use deferring_access_check_sentinel and cp_unevaluated.  Don't
+	call force_rvalue or rvalue.
+	* semantics.cc (finish_trait_expr)
+	<case CPTK_REF_CONSTRUCTS_FROM_TEMPORARY>: Actually check
+	completeness.
+
+2026-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	PR c++/126354
+	* constexpr.cc (cxx_eval_call_expression): Diagnose return from
+	[[noreturn]] function.
+
+2026-07-23  Marek Polacek  <polacek@redhat.com>
+
+	PR c++/126215
+	* constexpr.cc (lookup_placeholder): Do unshare_expr.
+
+2026-07-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* typeck2.cc: Implement part of CWG3130 - Naming function members of
+	anonymous unions.
+	(abstract_virtuals_error): Diagnose trying to create
+	an object with anonymous union or struct type.
+	* semantics.cc (finish_compound_literal): Call abstract_virtuals_error.
+	(finish_member_declaration): Diagnose named members with anonymous
+	union or struct type.
+	* decl.cc (xref_basetypes): Diagnose anonymous structs as bases.
+
+2026-07-23  Thomas Schwinge  <tschwinge@baylibre.com>
+
+	PR c++/119102
+	* module.cc (module_state): Update comment for 'SE_BITS' change.
+
 2026-07-20  Ville Voutilainen  <ville.voutilainen@gmail.com>
 
 	PR c++/125904
