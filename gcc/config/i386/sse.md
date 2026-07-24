@@ -12945,6 +12945,36 @@
    (set_attr "prefix" "orig,orig,maybe_evex")
    (set_attr "mode" "V4SF")])
 
+;; Use sse4_1_insertps_v4s[if] to zero values in a vector.
+;; operands[3] indicates which elements to preserve.
+(define_insn "sse4_1_insertps_<mode>_zero"
+  [(set (match_operand:VI4F_128 0 "register_operand" "=x,v")
+	(vec_merge:VI4F_128
+	  (match_operand:VI4F_128 1 "register_operand" "0,v")
+	  (match_operand:VI4F_128 2 "const0_operand")
+	  (match_operand:SI 3 "const_0_to_15_operand")))]
+  "TARGET_SSE4_1
+   && IN_RANGE (INTVAL (operands[3]), 1, 14)"
+{
+  operands[3] = GEN_INT (INTVAL (operands[3]) ^ 15);
+  switch (which_alternative)
+    {
+    case 0:
+      return "insertps\t{%3, %1, %0|%0, %1, %3}";
+    case 1:
+      return "vinsertps\t{%3, %1, %1, %0|%0, %1, %1, %3}";
+    default:
+      gcc_unreachable ();
+    }
+}
+  [(set_attr "isa" "noavx,avx")
+   (set_attr "type" "sselog")
+   (set_attr "prefix_data16" "1,*")
+   (set_attr "prefix_extra" "1")
+   (set_attr "length_immediate" "1")
+   (set_attr "prefix" "orig,maybe_evex")
+   (set_attr "mode" "V4SF")])
+
 (define_split
   [(set (match_operand:VI4F_128 0 "memory_operand")
 	(vec_merge:VI4F_128
@@ -12977,7 +13007,7 @@
 
 (define_expand "vec_set<mode>"
   [(match_operand:V_128 0 "register_operand")
-   (match_operand:<ssescalarmode> 1 "register_operand")
+   (match_operand:<ssescalarmode> 1 "reg_or_0_operand")
    (match_operand 2 "vec_setm_sse41_operand")]
   "TARGET_SSE"
 {

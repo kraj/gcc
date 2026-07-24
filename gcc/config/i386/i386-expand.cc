@@ -14787,7 +14787,8 @@ ix86_expand_vec_set_builtin (tree exp)
     op1 = convert_modes (mode1, GET_MODE (op1), op1, true);
 
   op0 = force_reg (tmode, op0);
-  op1 = force_reg (mode1, op1);
+  if (op1 != CONST0_RTX (mode1))
+    op1 = force_reg (mode1, op1);
 
   /* OP0 is the source of these builtin functions and shouldn't be
      modified.  Create a copy, use it and return it as target.  */
@@ -18987,6 +18988,8 @@ ix86_expand_vector_set_var (rtx target, rtx val, rtx idx)
   rtx valv,idxv,constv,idx_tmp;
   bool ok = false;
 
+  val = force_reg (GET_MODE_INNER (mode), val);
+
   /* 512-bits vector byte/word broadcast and comparison only available
      under TARGET_AVX512BW, break 512-bits vector into two 256-bits vector
      when without TARGET_AVX512BW.  */
@@ -19153,6 +19156,23 @@ ix86_expand_vector_set (bool mmx_ok, rtx target, rtx val, int elt)
   int i, j, n;
   machine_mode mmode = VOIDmode;
   rtx (*gen_blendm) (rtx, rtx, rtx, rtx);
+
+  if (TARGET_SSE4_1 && mode == V4SImode && val == const0_rtx)
+    {
+      emit_insn (gen_sse4_1_insertps_v4si_zero (target, target,
+						CONST0_RTX (V4SImode),
+						GEN_INT ((1 << elt) ^ 15)));
+      return;
+    }
+  if (TARGET_SSE4_1 && mode == V4SFmode && val == CONST0_RTX (SFmode))
+    {
+      emit_insn (gen_sse4_1_insertps_v4sf_zero (target, target,
+						CONST0_RTX (V4SFmode),
+						GEN_INT ((1 << elt) ^ 15)));
+      return;
+    }
+
+  val = force_reg (GET_MODE_INNER (mode), val);
 
   switch (mode)
     {
