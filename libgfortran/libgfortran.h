@@ -59,6 +59,14 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <string.h>
 #endif
 
+/* Use libquadlib math routines.  HP-UX on PA-RISC uses the 16-byte
+IEEE format for long double but doesn't implement any of the standard
+mathmetical routines.  However, since the long double and __float128
+types are identical, we can use the routines in libquadmath.  */
+#if defined(__hpux__) && defined(__hppa__)
+#define USE_LIBQUADLIB
+#endif
+
 #if HAVE_COMPLEX_H
 /* Must appear before math.h on VMS systems.  */
 # include <complex.h>

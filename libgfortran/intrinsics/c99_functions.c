@@ -26,6 +26,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #define C99_PROTOS_H WE_DONT_WANT_PROTOS_NOW
 #include "libgfortran.h"
+#include "math_imp.h"
 
 /* On a C99 system "I" (with I*I = -1) should be defined in complex.h;
    if not, we define a fallback version here.  */
@@ -47,138 +48,6 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 /* Prototypes are included to silence -Wstrict-prototypes
    -Wmissing-prototypes.  */
-
-/* Main union type we use to manipulate the floating-point type.  */
-typedef union
-{
-  long double value;
-
-  struct
-#ifdef __MINGW32__
-  /* On mingw targets the ms-bitfields option is active by default.
-     Therefore enforce gnu-bitfield style.  */
-  __attribute__ ((gcc_struct))
-#endif
-  {
-#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-    unsigned negative:1;
-    unsigned exponent:15;
-    unsigned mantissa0:16;
-    unsigned mantissa1:32;
-    unsigned mantissa2:32;
-    unsigned mantissa3:32;
-#else
-    unsigned mantissa3:32;
-    unsigned mantissa2:32;
-    unsigned mantissa1:32;
-    unsigned mantissa0:16;
-    unsigned exponent:15;
-    unsigned negative:1;
-#endif
-  } ieee;
-
-  struct
-  {
-#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-    uint64_t high;
-    uint64_t low;
-#else
-    uint64_t low;
-    uint64_t high;
-#endif
-  } words64;
-
-  struct
-  {
-#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-    uint32_t w0;
-    uint32_t w1;
-    uint32_t w2;
-    uint32_t w3;
-#else
-    uint32_t w3;
-    uint32_t w2;
-    uint32_t w1;
-    uint32_t w0;
-#endif
-  } words32;
-
-  struct
-#ifdef __MINGW32__
-  /* Make sure we are using gnu-style bitfield handling.  */
-  __attribute__ ((gcc_struct))
-#endif
-  {
-#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
-    unsigned negative:1;
-    unsigned exponent:15;
-    unsigned quiet_nan:1;
-    unsigned mantissa0:15;
-    unsigned mantissa1:32;
-    unsigned mantissa2:32;
-    unsigned mantissa3:32;
-#else
-    unsigned mantissa3:32;
-    unsigned mantissa2:32;
-    unsigned mantissa1:32;
-    unsigned mantissa0:15;
-    unsigned quiet_nan:1;
-    unsigned exponent:15;
-    unsigned negative:1;
-#endif
-  } ieee_nan;
-
-} ieee754_long_double;
-
-
-/* Get two 64 bit ints from a long double.  */
-#define GET_LDOUBLE_WORDS64(ix0,ix1,d)  \
-do {                                   \
-  ieee754_long_double u;               \
-  u.value = (d);                       \
-  (ix0) = u.words64.high;              \
-  (ix1) = u.words64.low;               \
-} while (0)
-
-/* Set a long double from two 64 bit ints.  */
-#define SET_LDOUBLE_WORDS64(d,ix0,ix1)  \
-do {                                   \
-  ieee754_long_double u;               \
-  u.words64.high = (ix0);              \
-  u.words64.low = (ix1);               \
-  (d) = u.value;                       \
-} while (0)
-
-/* Get the more significant 64 bits of a long double mantissa.  */
-#define GET_LDOUBLE_MSW64(v,d)          \
-do {                                   \
-  ieee754_long_double u;               \
-  u.value = (d);                       \
-  (v) = u.words64.high;                \
-} while (0)
-
-/* Set the more significant 64 bits of a long double mantissa from an int.  */
-#define SET_LDOUBLE_MSW64(d,v)          \
-do {                                   \
-  ieee754_long_double u;               \
-  u.value = (d);                       \
-  u.words64.high = (v);                \
-  (d) = u.value;                       \
-} while (0)
-
-/* Get the least significant 64 bits of a long double mantissa.  */
-#define GET_LDOUBLE_LSW64(v,d)          \
-do {                                   \
-  ieee754_long_double u;               \
-  u.value = (d);                       \
-  (v) = u.words64.low;                 \
-} while (0)
-
-static const long double
-two114 = 2.0769187434139310514121985316880384E+34L, /* 0x4071000000000000, 0 */
-twom114 = 4.8148248609680896326399448564623183E-35L, /* 0x3F8D000000000000, 0 */
-huge   = 1.0E+4900L,
-tiny   = 1.0E-4900L;
 
 /* Wrapper for systems without strnlen function.  */
 
@@ -276,6 +145,25 @@ erff (float x)
 }
 #endif
 
+/* On HPUX, some long double functions are mapped to functions in
+   libquadmath, e.g., erfl(x) maps to erfq((__float128)x).  */
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ERF)) && !defined(HAVE_ERFL)
+#define HAVE_ERFL 1
+long double erfl (long double);
+
+long double
+erfl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) erfq ((__float128) x);
+#else
+  return (long double) erf ((double) x);
+#endif
+}
+#endif
+
+
 #if defined(HAVE_ERFC) && !defined(HAVE_ERFCF)
 #define HAVE_ERFCF 1
 float erfcf (float);
@@ -284,6 +172,21 @@ float
 erfcf (float x)
 {
   return (float) erfc ((double) x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ERFC)) && !defined(HAVE_ERFCL)
+#define HAVE_ERFCL 1
+long double erfcl (long double);
+
+long double
+erfcl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) erfcq ((__float128) x);
+#else
+  return (long double) erfc ((double) x);
+#endif
 }
 #endif
 
@@ -299,6 +202,21 @@ acosf (float x)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ACOS)) && !defined(HAVE_ACOSL)
+#define HAVE_ACOSL 1
+long double acosl (long double);
+
+long double
+acosl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) acosq ((__float128) x);
+#else
+  return (long double) acos ((double) x);
+#endif
+}
+#endif
+
 #if HAVE_ACOSH && !HAVE_ACOSHF
 float acoshf (float x);
 
@@ -306,6 +224,21 @@ float
 acoshf (float x)
 {
   return (float) acosh ((double) x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ACOS)) && !defined(HAVE_ACOSHL)
+#define HAVE_ACOSHL 1
+long double acoshl (long double);
+
+long double
+acoshl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) acoshq ((__float128) x);
+#else
+  return (long double) acosh ((double) x);
+#endif
 }
 #endif
 
@@ -320,6 +253,21 @@ asinf (float x)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ASIN)) && !defined(HAVE_ASINL)
+#define HAVE_ASINL 1
+long double asinl(long double);
+
+long double
+asinl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) asinq ((__float128) x);
+#else
+  return (long double) asin ((double) x);
+#endif
+}
+#endif
+
 #if HAVE_ASINH && !HAVE_ASINHF
 float asinhf (float x);
 
@@ -327,6 +275,21 @@ float
 asinhf (float x)
 {
   return (float) asinh ((double) x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ASINH)) && !defined(HAVE_ASINHL)
+#define HAVE_ASINHL 1
+long double asinhl(long double);
+
+long double
+asinhl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) asinhq ((__float128) x);
+#else
+  return (long double) asinh ((double) x);
+#endif
 }
 #endif
 
@@ -341,6 +304,21 @@ atan2f (float y, float x)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ATAN2)) && !defined(HAVE_ATAN2L)
+#define HAVE_ATAN2L 1
+long double atan2l(long double, long double);
+
+long double
+atan2l (long double x, long double y)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) atan2q ((__float128) x, (__float128) y);
+#else
+  return (long double) atan2 ((double) x, (double) y);
+#endif
+}
+#endif
+
 #ifndef HAVE_ATANF
 #define HAVE_ATANF 1
 float atanf (float x);
@@ -349,6 +327,21 @@ float
 atanf (float x)
 {
   return (float) atan (x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ATAN)) && !defined(HAVE_ATANL)
+#define HAVE_ATANL 1
+long double atanl (long double);
+
+long double
+atanl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) atanq ((__float128) x);
+#else
+  return (long double) atan ((double) x);
+#endif
 }
 #endif
 
@@ -362,6 +355,21 @@ atanhf (float x)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ATANH)) && !defined(HAVE_ATANHL)
+#define HAVE_ATANHL 1
+long double atanhl (long double);
+
+long double
+atanhl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) atanhq ((__float128) x);
+#else
+  return (long double) atanh ((double) x);
+#endif
+}
+#endif
+
 #ifndef HAVE_CEILF
 #define HAVE_CEILF 1
 float ceilf (float x);
@@ -372,6 +380,13 @@ ceilf (float x)
   return (float) ceil (x);
 }
 #endif
+
+#if !defined(HAVE_CEILL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
+#define HAVE_CEILL 1
+long double ceill (long double);
+#include "ceill_16.c"
+#endif
+
 
 #if !defined(HAVE_COPYSIGN) && defined(HAVE_INLINE_BUILTIN_COPYSIGN)
 #define HAVE_COPYSIGN 1
@@ -417,6 +432,21 @@ cosf (float x)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_COS)) && !defined(HAVE_COSL)
+#define HAVE_COSL 1
+long double cosl (long double);
+
+long double
+cosl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) cosq ((__float128) x);
+#else
+  return (long double) cos ((double) x);
+#endif
+}
+#endif
+
 #ifndef HAVE_COSHF
 #define HAVE_COSHF 1
 float coshf (float x);
@@ -428,6 +458,21 @@ coshf (float x)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_COSH)) && !defined(HAVE_COSHL)
+#define HAVE_COSHL 1
+long double coshl (long double);
+
+long double
+coshl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) coshq ((__float128) x);
+#else
+  return (long double) cosh ((double) x);
+#endif
+}
+#endif
+
 #ifndef HAVE_EXPF
 #define HAVE_EXPF 1
 float expf (float x);
@@ -436,6 +481,21 @@ float
 expf (float x)
 {
   return (float) exp (x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_EXP)) && !defined(HAVE_EXPL)
+#define HAVE_EXPL 1
+long double expl (long double);
+
+long double
+expl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) expq ((__float128) x);
+#else
+  return (long double) exp ((double) x);
+#endif
 }
 #endif
 
@@ -483,6 +543,37 @@ floorf (float x)
 }
 #endif
 
+#if !defined(HAVE_FLOORL)
+#define HAVE_FLOORL 1
+long double floorl (long double);
+
+#if (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
+#include "floorl_16.c"
+#else
+long double
+floorl (long double x);
+{
+  /* Zero, possibly signed.  */
+  if (x == 0)
+    return x;
+
+  /* Large magnitude.  */
+  if (x > DBL_MAX || x < (-DBL_MAX))
+    return x;
+
+  /* Small positive values.  */
+  if (x >= 0 && x < DBL_MIN)
+    return 0;
+
+  /* Small negative values.  */
+  if (x < 0 && x > (-DBL_MIN))
+    return -1;
+
+  return floor (x);
+}
+#endif
+#endif
+
 #ifndef HAVE_FMODF
 #define HAVE_FMODF 1
 float fmodf (float x, float y);
@@ -491,6 +582,26 @@ float
 fmodf (float x, float y)
 {
   return (float) fmod (x, y);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_FLOORL)) && !defined(HAVE_FMODL)
+#define HAVE_FMODL 1
+long double fmodl (long double, long double);
+
+long double
+fmodl (long double x, long double y)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) fmodq ((__float128) x, (__float128) y);
+#else
+  if (y == 0.0L)
+    return 0.0L;
+
+  /* Need to check that the result has the same sign as x and magnitude
+     less than the magnitude of y.  */
+  return x - floorl (x / y) * y;
+#endif
 }
 #endif
 
@@ -505,55 +616,10 @@ frexpf (float x, int *exp)
 }
 #endif
 
-#if !defined(HAVE_FREXPL)
+#if !defined(HAVE_FREXPL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
 #define HAVE_FREXPL 1
-long double frexpl (long double x, int *eptr);
-
-/* s_frexpl.c -- long double version of s_frexp.c.
- * Conversion to IEEE quad long double by Jakub Jelinek, jj@ultra.linux.cz.
- */
-
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
-
-long double
-frexpl (long double x, int *eptr)
-{
-  if (sizeof (long double) == 16)
-    {
-      uint64_t hx, lx, ix;
-
-      GET_LDOUBLE_WORDS64(hx,lx,x);
-      ix = 0x7fffffffffffffffULL&hx;
-      *eptr = 0;
-      if(ix >= 0x7fff000000000000ULL || ((ix|lx) == 0))
-	/* 0,inf,nan */
-	return x + x;
-      if (ix < 0x0001000000000000ULL)
-	{
-	  /* subnormal */
-	  x *= two114;
-	  GET_LDOUBLE_MSW64(hx,x);
-	  ix = hx & 0x7fffffffffffffffULL;
-	  *eptr = -114;
-	}
-      *eptr += (ix>>48) - 16382;
-      hx = (hx & 0x8000ffffffffffffULL) | 0x3ffe000000000000ULL;
-      SET_LDOUBLE_MSW64(x,hx);
-      return x;
-    }
-  else
-    /* Intel 80 bit */
-    abort();
-}
+long double frexpl (long double, int *);
+#include "frexpl_16.c"
 #endif
 
 #ifndef HAVE_HYPOTF
@@ -567,6 +633,21 @@ hypotf (float x, float y)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_HYPOT)) && !defined(HAVE_HYPOTL)
+#define HAVE_HYPOTL 1
+long double hypotl (long double, long double);
+
+long double
+hypotl (long double x, long double y)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) hypotq ((__float128) x, (__float128) y);
+#else
+  return (long double) hypot ((double) x, (double) y);
+#endif
+}
+#endif
+
 #ifndef HAVE_LOGF
 #define HAVE_LOGF 1
 float logf (float x);
@@ -575,6 +656,21 @@ float
 logf (float x)
 {
   return (float) log (x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_LOG)) && !defined(HAVE_LOGL)
+#define HAVE_LOGL 1
+long double logl (long double);
+
+long double
+logl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) logq ((__float128) x);
+#else
+  return (long double) log ((double) x);
+#endif
 }
 #endif
 
@@ -615,74 +711,10 @@ scalbnf (float x, int y)
 }
 #endif
 
-#if !defined(HAVE_SCALBNL)
+#if !defined(HAVE_SCALBNL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
 #define HAVE_SCALBNL 1
-long double scalbnl (long double x, int n);
-
-/* s_scalbnl.c -- long double version of s_scalbn.c.
- * Conversion to IEEE quad long double by Jakub Jelinek, jj@ultra.linux.cz.
- */
-
-/* @(#)s_scalbn.c 5.1 93/09/24 */
-/*
- * ====================================================
- * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.
- *
- * Developed at SunPro, a Sun Microsystems, Inc. business.
- * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice
- * is preserved.
- * ====================================================
- */
-
-long double
-scalbnl (long double x, int n)
-{
-  if (sizeof (long double) == 16)
-    {
-      int64_t k, hx, lx;
-
-      GET_LDOUBLE_WORDS64(hx,lx,x);
-
-      /* extract exponent */
-      k = (hx >> 48) & 0x7fff;
-      if (k == 0)
-	{
-	  /* 0 or subnormal x */
-	  if ((lx | (hx & 0x7fffffffffffffffULL)) == 0)
-	    return x; /* +-0 */
-	  x *= two114;
-	  GET_LDOUBLE_MSW64(hx,x);
-	  k = ((hx >> 48) & 0x7fff) - 114;
-	}
-      if (k == 0x7fff)
-	/* NaN or Inf */
-	return x+x;
-      if (n < -50000)
-	/*underflow*/
-	return tiny * copysignl (tiny, x);
-      if (n > 50000 || k + n > 0x7ffe)
-	/* overflow  */
-	return huge * copysignl (huge, x);
-      /* Now k and n are bounded we know that k = k+n does not overflow.  */
-      k = k + n;
-      if (k > 0)
-	{
-	  /* normal result */
-	  SET_LDOUBLE_MSW64(x,(hx&0x8000ffffffffffffULL)|(k<<48));
-	  return x;
-	}
-      if (k <= -114)
-	/*underflow*/
-	return tiny * copysignl (tiny, x);
-      k += 114;				/* subnormal result */
-      SET_LDOUBLE_MSW64(x,(hx&0x8000ffffffffffffULL)|(k<<48));
-      return x * twom114;
-    }
-  else
-    /* Intel 80 bit */
-    abort();
-}
+long double scalbnl (long double, int);
+#include "scalbnl_16.c"
 #endif
 
 #ifndef HAVE_SINF
@@ -693,6 +725,21 @@ float
 sinf (float x)
 {
   return (float) sin (x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_SIN)) && !defined(HAVE_SINL)
+#define HAVE_SINL 1
+long double sinl(long double);
+
+long double
+sinl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) sinq ((__float128) x);
+#else
+  return (long double) sin ((double) x);
+#endif
 }
 #endif
 
@@ -707,6 +754,21 @@ sinhf (float x)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_SINH)) && !defined(HAVE_SINHL)
+#define HAVE_SINHL 1
+long double sinhl(long double);
+
+long double
+sinhl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) sinhq ((__float128) x);
+#else
+  return (long double) sinh ((double) x);
+#endif
+}
+#endif
+
 #ifndef HAVE_SQRTF
 #define HAVE_SQRTF 1
 float sqrtf (float x);
@@ -715,6 +777,21 @@ float
 sqrtf (float x)
 {
   return (float) sqrt (x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_SQRT)) && !defined(HAVE_SQRTL)
+#define HAVE_SQRTL 1
+long double sqrtl(long double);
+
+long double
+sqrtl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) sqrtq ((__float128) x);
+#else
+  return (long double) sqrt ((double) x);
+#endif
 }
 #endif
 
@@ -729,6 +806,21 @@ tanf (float x)
 }
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_TAN)) && !defined(HAVE_TANL)
+#define HAVE_TANL 1
+long double tanl(long double);
+
+long double
+tanl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) tanq ((__float128) x);
+#else
+  return (long double) tan ((double) x);
+#endif
+}
+#endif
+
 #ifndef HAVE_TANHF
 #define HAVE_TANHF 1
 float tanhf (float x);
@@ -737,6 +829,21 @@ float
 tanhf (float x)
 {
   return (float) tanh (x);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_TANH)) && !defined(HAVE_TANHL)
+#define HAVE_TANHL 1
+long double tanhl(long double);
+
+long double
+tanhl (long double x)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) tanhq ((__float128) x);
+#else
+  return (long double) tanh ((double) x);
+#endif
 }
 #endif
 
@@ -766,6 +873,12 @@ truncf (float x)
 {
   return (float) trunc (x);
 }
+#endif
+
+#if !defined(HAVE_TRUNCL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
+#define HAVE_TRUNCL 1
+long double truncl(long double);
+#include "truncl_16.c"
 #endif
 
 #ifndef HAVE_NEXTAFTERF
@@ -833,6 +946,11 @@ nextafterf (float x, float y)
 }
 #endif
 
+#if !defined(HAVE_NEXTAFTERL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
+#define HAVE_NEXTAFTERL 1
+long double nextafterl (long double, long double);
+#include "nextafterl_16.c"
+#endif
 
 #ifndef HAVE_POWF
 #define HAVE_POWF 1
@@ -842,6 +960,21 @@ float
 powf (float x, float y)
 {
   return (float) pow (x, y);
+}
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_POW)) && !defined(HAVE_POWL)
+#define HAVE_POWL 1
+long double powl (long double, long double);
+
+long double
+powl (long double x, long double y)
+{
+#if defined(USE_LIBQUADLIB)
+  return (long double) powq ((__float128) x, (__float128) y);
+#else
+  return (long double) pow ((double) x, (double) y);
+#endif
 }
 #endif
 
@@ -1041,6 +1174,9 @@ long double log10l (long double x);
 long double
 log10l (long double x)
 {
+#if defined(USE_LIBQUADLIB)
+  return (long double) log10q ((__float128) x);
+#else
 #if LDBL_MAX_EXP > DBL_MAX_EXP
   if (x > DBL_MAX)
     {
@@ -1070,51 +1206,7 @@ log10l (long double x)
     }
 #endif
     return log10 (x);
-}
 #endif
-
-
-#ifndef HAVE_FLOORL
-#define HAVE_FLOORL 1
-long double floorl (long double x);
-
-long double
-floorl (long double x)
-{
-  /* Zero, possibly signed.  */
-  if (x == 0)
-    return x;
-
-  /* Large magnitude.  */
-  if (x > DBL_MAX || x < (-DBL_MAX))
-    return x;
-
-  /* Small positive values.  */
-  if (x >= 0 && x < DBL_MIN)
-    return 0;
-
-  /* Small negative values.  */
-  if (x < 0 && x > (-DBL_MIN))
-    return -1;
-
-  return floor (x);
-}
-#endif
-
-
-#ifndef HAVE_FMODL
-#define HAVE_FMODL 1
-long double fmodl (long double x, long double y);
-
-long double
-fmodl (long double x, long double y)
-{
-  if (y == 0.0L)
-    return 0.0L;
-
-  /* Need to check that the result has the same sign as x and magnitude
-     less than the magnitude of y.  */
-  return x - floorl (x / y) * y;
 }
 #endif
 

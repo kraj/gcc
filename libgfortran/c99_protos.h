@@ -37,9 +37,22 @@ extern size_t strnlen(const char *, size_t);
 extern float acosf(float);
 #endif
 
+/* On HPUX, some long double functions are mapped to functions in
+   libquadmath, e.g., acosl(x) maps to acosq((__float128)x).  */
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ACOS)) && !defined(HAVE_ACOSL)
+#define HAVE_ACOSL 1
+extern long double acosl(long double);
+#endif
+
 #if HAVE_ACOSH && !HAVE_ACOSHF
 #define HAVE_ACOSHF 1
 extern float acoshf(float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ACOS)) && !defined(HAVE_ACOSHL)
+#define HAVE_ACOSHL 1
+extern long double acoshl(long double);
 #endif
 
 #ifndef HAVE_ASINF
@@ -47,9 +60,19 @@ extern float acoshf(float);
 extern float asinf(float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ASIN)) && !defined(HAVE_ASINL)
+#define HAVE_ASINL 1
+extern long double asinl(long double);
+#endif
+
 #if HAVE_ASINH && !HAVE_ASINHF
 #define HAVE_ASINHF 1
 extern float asinhf(float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ASINH)) && !defined(HAVE_ASINHL)
+#define HAVE_ASINHL 1
+extern long double asinhl(long double);
 #endif
 
 #ifndef HAVE_ATAN2F
@@ -57,9 +80,19 @@ extern float asinhf(float);
 extern float atan2f(float, float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ATAN2)) && !defined(HAVE_ATAN2L)
+#define HAVE_ATAN2L 1
+extern long double atan2l(long double, long double);
+#endif
+
 #ifndef HAVE_ATANF
 #define HAVE_ATANF 1
 extern float atanf(float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ATAN)) && !defined(HAVE_ATANL)
+#define HAVE_ATANL 1
+extern long double atanl(long double);
 #endif
 
 #if HAVE_ATANH && !HAVE_ATANHF
@@ -67,9 +100,19 @@ extern float atanf(float);
 extern float atanhf(float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ATANH)) && !defined(HAVE_ATANHL)
+#define HAVE_ATANHL 1
+extern long double atanhl (long double);
+#endif
+
 #ifndef HAVE_CEILF
 #define HAVE_CEILF 1
 extern float ceilf(float);
+#endif
+
+#if !defined(HAVE_CEILL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
+#define HAVE_CEILL 1
+extern long double ceill(long double);
 #endif
 
 #ifndef HAVE_COPYSIGNF
@@ -92,14 +135,29 @@ extern long double copysignl(long double, long double);
 extern float cosf(float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_COS)) && !defined(HAVE_COSL)
+#define HAVE_COSL 1
+extern long double cosl (long double);
+#endif
+
 #ifndef HAVE_COSHF
 #define HAVE_COSHF 1
 extern float coshf(float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_COSH)) && !defined(HAVE_COSHL)
+#define HAVE_COSHL 1
+extern long double coshl(long double);
+#endif
+
 #ifndef HAVE_EXPF
 #define HAVE_EXPF 1
 extern float expf(float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_EXP)) && !defined(HAVE_EXPL)
+#define HAVE_EXPL 1
+extern long double expl(long double);
 #endif
 
 #ifndef HAVE_FABSF
@@ -142,7 +200,7 @@ extern long double fmodl (long double x, long double y);
 extern float frexpf(float, int *);
 #endif
 
-#ifndef HAVE_FREXPL
+#if !defined(HAVE_FREXPL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
 #define HAVE_FREXPL 1
 extern long double frexpl(long double, int *);
 #endif
@@ -152,9 +210,19 @@ extern long double frexpl(long double, int *);
 extern float hypotf(float, float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_HYPOT)) && !defined(HAVE_HYPOTL)
+#define HAVE_HYPOTL 1
+extern long double hypotl(long double, long double);
+#endif
+
 #ifndef HAVE_LOGF
 #define HAVE_LOGF 1
 extern float logf(float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_LOG)) && !defined(HAVE_LOGL)
+#define HAVE_LOGL 1
+extern long double logl(long double);
 #endif
 
 #ifndef HAVE_LOG10F
@@ -172,7 +240,7 @@ extern double scalbn(double, int);
 extern float scalbnf(float, int);
 #endif
 
-#ifndef HAVE_SCALBNL
+#if !defined(HAVE_SCALBNL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
 #define HAVE_SCALBNL 1
 extern long double scalbnl(long double, int);
 #endif
@@ -182,9 +250,19 @@ extern long double scalbnl(long double, int);
 extern float sinf(float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_SIN)) && !defined(HAVE_SINL)
+#define HAVE_SINL 1
+extern long double sinl(long double);
+#endif
+
 #ifndef HAVE_SINHF
 #define HAVE_SINHF 1
 extern float sinhf(float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_SINH)) && !defined(HAVE_SINHL)
+#define HAVE_SINHL 1
+extern long double sinhl(long double);
 #endif
 
 #ifndef HAVE_SQRTF
@@ -192,14 +270,29 @@ extern float sinhf(float);
 extern float sqrtf(float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_SQRT)) && !defined(HAVE_SQRTL)
+#define HAVE_SQRTL 1
+extern long double sqrtl(long double);
+#endif
+
 #ifndef HAVE_TANF
 #define HAVE_TANF 1
 extern float tanf(float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_TAN)) && !defined(HAVE_TANL)
+#define HAVE_TANL 1
+extern long double tanl(long double);
+#endif
+
 #ifndef HAVE_TANHF
 #define HAVE_TANHF 1
 extern float tanhf(float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_TANH)) && !defined(HAVE_TANHL)
+#define HAVE_TANHL 1
+extern long double tanhl(long double);
 #endif
 
 #ifndef HAVE_TRUNC
@@ -212,14 +305,29 @@ extern double trunc(double);
 extern float truncf(float);
 #endif
 
+#if !defined(HAVE_TRUNCL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
+#define HAVE_TRUNCL 1
+extern long double truncl(long double);
+#endif
+
 #ifndef HAVE_NEXTAFTERF
 #define HAVE_NEXTAFTERF 1
 extern float nextafterf(float, float);
 #endif
 
+#if !defined(HAVE_NEXTAFTERL) && (__SIZEOF_LONG_DOUBLE__ == 16) && (__LDBL_IS_IEC_60559__ > 0)
+#define HAVE_NEXTAFTERL 1
+extern long double nextafterl(long double, long double);
+#endif
+
 #ifndef HAVE_POWF
 #define HAVE_POWF 1
 extern float powf(float, float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_POW)) && !defined(HAVE_POWL)
+#define HAVE_POWL 1
+extern long double powl(long double, long double);
 #endif
 
 #ifndef HAVE_ROUND
@@ -310,9 +418,19 @@ extern float ynf (int, float);
 extern float erff (float);
 #endif
 
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ERF)) && !defined(HAVE_ERFL)
+#define HAVE_ERFL 1
+long double erfl(long double);
+#endif
+
 #if defined(HAVE_ERFC) && !defined(HAVE_ERFCF)
 #define HAVE_ERFCF 1
 extern float erfcf (float);
+#endif
+
+#if (defined(USE_LIBQUADLIB) || defined(HAVE_ERFC)) && !defined(HAVE_ERFCL)
+#define HAVE_ERFL 1
+long double erfcl(long double);
 #endif
 
 

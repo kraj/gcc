@@ -22860,6 +22860,54 @@ _ACEOF
 
 
 
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for powl" >&5
+$as_echo_n "checking for powl... " >&6; }
+if ${gcc_cv_math_func_powl+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test x$gcc_no_link = xyes; then
+  as_fn_error $? "Link tests are not allowed after GCC_NO_EXECUTABLES." "$LINENO" 5
+fi
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#ifdef HAVE_COMPLEX_H
+#include <complex.h>
+#endif
+#ifdef HAVE_MATH_H
+#include <math.h>
+#endif
+
+int (*ptr)() = (int (*)())powl;
+
+int
+main ()
+{
+  return 0;
+}
+
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  gcc_cv_math_func_powl=yes
+else
+  gcc_cv_math_func_powl=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gcc_cv_math_func_powl" >&5
+$as_echo "$gcc_cv_math_func_powl" >&6; }
+  if test $gcc_cv_math_func_powl = yes; then
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_POWL 1
+_ACEOF
+
+  fi
+
+
+
+
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for cpowf" >&5
 $as_echo_n "checking for cpowf... " >&6; }
 if ${gcc_cv_math_func_cpowf+:} false; then :
@@ -25253,6 +25301,54 @@ $as_echo "$gcc_cv_math_func_erf" >&6; }
 
 cat >>confdefs.h <<_ACEOF
 #define HAVE_ERF 1
+_ACEOF
+
+  fi
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for erfl" >&5
+$as_echo_n "checking for erfl... " >&6; }
+if ${gcc_cv_math_func_erfl+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test x$gcc_no_link = xyes; then
+  as_fn_error $? "Link tests are not allowed after GCC_NO_EXECUTABLES." "$LINENO" 5
+fi
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#ifdef HAVE_COMPLEX_H
+#include <complex.h>
+#endif
+#ifdef HAVE_MATH_H
+#include <math.h>
+#endif
+
+int (*ptr)() = (int (*)())erfl;
+
+int
+main ()
+{
+  return 0;
+}
+
+_ACEOF
+if ac_fn_c_try_link "$LINENO"; then :
+  gcc_cv_math_func_erfl=yes
+else
+  gcc_cv_math_func_erfl=no
+fi
+rm -f core conftest.err conftest.$ac_objext \
+    conftest$ac_exeext conftest.$ac_ext
+fi
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $gcc_cv_math_func_erfl" >&5
+$as_echo "$gcc_cv_math_func_erfl" >&6; }
+  if test $gcc_cv_math_func_erfl = yes; then
+
+cat >>confdefs.h <<_ACEOF
+#define HAVE_ERFL 1
 _ACEOF
 
   fi

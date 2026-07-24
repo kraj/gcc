@@ -435,6 +435,9 @@
 /* Define to 1 if you have the `erff128' function. */
 #undef HAVE_ERFF128
 
+/* Define to 1 if you have the `erfl' function. */
+#undef HAVE_ERFL
+
 /* Define to 1 if you have the `exp' function. */
 #undef HAVE_EXP
 
@@ -809,6 +812,9 @@
 
 /* Define to 1 if you have the `powf128' function. */
 #undef HAVE_POWF128
+
+/* Define to 1 if you have the `powl' function. */
+#undef HAVE_POWL
 
 /* Have PTHREAD_PRIO_INHERIT. */
 #undef HAVE_PTHREAD_PRIO_INHERIT
