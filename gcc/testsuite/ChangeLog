@@ -1,3 +1,31 @@
+2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/118407
+	* gcc.dg/tree-ssa/predcom-8.c: Use arm_neon as xfail condition.
+
+2026-07-23  Hu, Lin1  <lin1.hu@intel.com>
+
+	* gcc.target/i386/avx10_2-satcvt-1.c: Update intrin names and
+	add _si alias tests.
+	* gcc.target/i386/sse-14.c: Ditto.
+	* gcc.target/i386/sse-22.c: Ditto.
+	* gcc.target/i386/avx10_2-vcvttsd2sis-2.c: Update intrin names.
+	* gcc.target/i386/avx10_2-vcvttsd2usis-2.c: Ditto.
+	* gcc.target/i386/avx10_2-vcvttss2sis-2.c: Ditto.
+	* gcc.target/i386/avx10_2-vcvttss2usis-2.c: Ditto.
+
+2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	Backported from master:
+	2026-07-23  Torbjörn SVENSSON  <torbjorn.svensson@foss.st.com>
+
+	PR testsuite/124112
+	* gcc.dg/vect/vect-early-break_65.c: Prevent packing enum to a
+	smaller object.
+
 2026-07-22  Martin Jambor  <mjambor@suse.cz>
 
 	Backported from master:

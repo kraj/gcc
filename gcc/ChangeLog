@@ -1,3 +1,31 @@
+2026-07-23  Hu, Lin1  <lin1.hu@intel.com>
+
+	* config/i386/avx10_2satcvtintrin.h
+	(_mm_cvtts_sd_i32): Renamed from _mm_cvtts_sd_epi32.
+	(_mm_cvtts_sd_si32): New alias of _mm_cvtts_sd_i32.
+	(_mm_cvtts_sd_u32): Renamed from _mm_cvtts_sd_epu32.
+	(_mm_cvtts_ss_i32): Renamed from _mm_cvtts_ss_epi32.
+	(_mm_cvtts_ss_si32): New alias of _mm_cvtts_ss_i32.
+	(_mm_cvtts_ss_u32): Renamed from _mm_cvtts_ss_epu32.
+	(_mm_cvtts_roundsd_i32): Renamed from _mm_cvtts_roundsd_epi32.
+	(_mm_cvtts_roundsd_si32): New alias of _mm_cvtts_roundsd_i32.
+	(_mm_cvtts_roundsd_u32): Renamed from _mm_cvtts_roundsd_epu32.
+	(_mm_cvtts_roundss_i32): Renamed from _mm_cvtts_roundss_epi32.
+	(_mm_cvtts_roundss_si32): New alias of _mm_cvtts_roundss_i32.
+	(_mm_cvtts_roundss_u32): Renamed from _mm_cvtts_roundss_epu32.
+	(_mm_cvtts_sd_i64): Renamed from _mm_cvtts_sd_epi64.
+	(_mm_cvtts_sd_si64): New alias of _mm_cvtts_sd_i64.
+	(_mm_cvtts_sd_u64): Renamed from _mm_cvtts_sd_epu64.
+	(_mm_cvtts_ss_i64): Renamed from _mm_cvtts_ss_epi64.
+	(_mm_cvtts_ss_si64): New alias of _mm_cvtts_ss_i64.
+	(_mm_cvtts_ss_u64): Renamed from _mm_cvtts_ss_epu64.
+	(_mm_cvtts_roundsd_i64): Renamed from _mm_cvtts_roundsd_epi64.
+	(_mm_cvtts_roundsd_si64): New alias of _mm_cvtts_roundsd_i64.
+	(_mm_cvtts_roundsd_u64): Renamed from _mm_cvtts_roundsd_epu64.
+	(_mm_cvtts_roundss_i64): Renamed from _mm_cvtts_roundss_epi64.
+	(_mm_cvtts_roundss_si64): New alias of _mm_cvtts_roundss_i64.
+	(_mm_cvtts_roundss_u64): Renamed from _mm_cvtts_roundss_epu64.
+
 2026-07-22  Martin Jambor  <mjambor@suse.cz>
 
 	Backported from master:
